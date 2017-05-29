@@ -16,7 +16,7 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
-			e.printStackTrace()   ;//k
+			e.printStackTrace()   ;//k maor thee gaydsadasd
 		}
 	}
 	
