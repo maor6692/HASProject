@@ -8,14 +8,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="788.0" prefWidth="1076.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <Pane prefHeight="788.0" prefWidth="228.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="14.0" layoutY="31.0">
                <image>
-                  <Image url="@../../../../../Downloads/new-user-image-default.png" />
+                  <Image url="@../../new-user-image-default.png" />
                </image>
             </ImageView>
             <Label fx:id="lblUser" layoutX="64.0" layoutY="30.0" text="UserName" textFill="#d7d7d7">
@@ -56,7 +55,7 @@
          <children>
             <ImageView fitHeight="200.0" fitWidth="200.0" layoutY="-59.0">
                <image>
-                  <Image url="@../../../../../Downloads/2bd62c9a-92f9-40b0-af2f-58be327ec947.png" />
+                  <Image url="@../../2bd62c9a-92f9-40b0-af2f-58be327ec947.png" />
                </image>
             </ImageView>
          </children>
