@@ -1,9 +1,13 @@
-כל אחד יוצר את ה GUI  שלו ביחד עם controller  מתאים. 
-אין controller שמעאחד כמה guiים.
-שליחה לשרת sendtoserver(HashMap<String,Object> params)
-ה HashMap תמיד יהיה עם פרמטרים <String,Object> 
-כל שורה של ה HashMap תמיד יהיה String="actionName"  והשדה השני יהיה Object=parameter
-לדוגמה:
+Each one creates its own GUI along with an appropriate controller.
+
+There is no controller that unifies some gui s.
+
+Send to server sendtoserver (HashMap <String, Object> params)
+The HashMap will always have parameters <String, Object>
+Each line of the HashMap will always have String = "actionName" and the second field will be Object = parameter
+
+
+for example:
 add subject:  <"addSubject","Java">
 params.put("addSubject","Java");
 params.put("addStudent",student1);
@@ -13,7 +17,7 @@ switch(act){
 	break;
 }
 
-פעולות לפי שם:
+actions by name:
 
 -----\\\\\
 
