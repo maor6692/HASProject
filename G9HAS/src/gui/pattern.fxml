@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="788.0" prefWidth="1076.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <Pane prefHeight="788.0" prefWidth="228.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="14.0" layoutY="31.0">
+               <image>
+                  <Image url="@../../../../../Downloads/new-user-image-default.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="lblUser" layoutX="64.0" layoutY="30.0" text="UserName" textFill="#d7d7d7">
+               <font>
+                  <Font name="System Bold" size="29.0" />
+               </font>
+            </Label>
+            <Hyperlink fx:id="linkLogout" layoutX="154.0" layoutY="63.0" text="Logout" textFill="#7c7c7c">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Hyperlink>
+            <FlowPane layoutX="1.0" layoutY="95.0" prefHeight="691.0" prefWidth="222.0">
+               <children>
+                  <Hyperlink prefHeight="23.0" prefWidth="223.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+               </children>
+            </FlowPane>
+         </children>
+      </Pane>
+   </left>
+   <center>
+      <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="200.0" fitWidth="200.0" layoutY="-59.0">
+               <image>
+                  <Image url="@../../../../../Downloads/2bd62c9a-92f9-40b0-af2f-58be327ec947.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+   </center>
+</BorderPane>
