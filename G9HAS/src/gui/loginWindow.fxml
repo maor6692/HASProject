@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="545.0" prefWidth="655.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="application.LoginController">
+   <children>
+      <ImageView fx:id="ivBackground" fitHeight="545.0" fitWidth="675.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../resources/background.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblWelcome" layoutX="98.0" layoutY="74.0" prefHeight="154.0" prefWidth="404.0" text="Welcome">
+         <font>
+            <Font size="66.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="HASLogo" fitHeight="200.0" fitWidth="200.0" layoutX="10.0" layoutY="-49.0">
+         <image>
+            <Image url="@../../2bd62c9a-92f9-40b0-af2f-58be327ec947.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="187.0" layoutY="228.0" prefHeight="49.0" prefWidth="125.0" text="password:">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label layoutX="187.0" layoutY="179.0" prefHeight="49.0" prefWidth="136.0" text="user name:">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="tfPassword" layoutX="323.0" layoutY="240.0" prefHeight="31.0" prefWidth="149.0" />
+      <Button fx:id="btnSignIn" layoutX="382.0" layoutY="286.0" mnemonicParsing="false" onAction="#signinHandler" prefHeight="17.0" prefWidth="90.0" text="Sign In">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+      <TextField fx:id="tfUserName" layoutX="323.0" layoutY="191.0" prefHeight="31.0" prefWidth="149.0" />
+   </children>
+</AnchorPane>
