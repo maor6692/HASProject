@@ -50,7 +50,7 @@ public class LoginController extends Application implements Initializable {
 			ans = new ArrayList<String>();
 			userClient.sendServer(msg);
 			syncWithServer();
-			if(ans.get(0) != null && ans.get(0).equals("yes")){	
+			if(ans.size()!=0){	
 				userName=tfUserName.getText();
 				Parent user_parent;
 				try {
