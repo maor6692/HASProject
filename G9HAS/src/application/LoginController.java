@@ -2,6 +2,8 @@ package application;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -24,33 +26,68 @@ import javafx.scene.image.ImageView;
 public class LoginController extends Application implements Initializable {
 
 	@FXML
-	private ImageView HASLogo,ivBackground;
-	@FXML
-	private Label lblWelcome;
-	@FXML
 	private Button btnSignIn;
+	@FXML
+	private Label lblWrongUser,lblConnection;
 	@FXML
 	private PasswordField tfPassword;
 	@FXML
-	public TextField tfUserName;
-	
+	public TextField tfUserName,tfPort,tfHost;
+	public static HashMap<String, ArrayList<String>> msg;
 	public static String userName;
+	public static UserClient userClient;
+	public static ArrayList<String> ans ;
 
 	@FXML
 	void signinHandler(ActionEvent event) {
-		if(tfUserName.getText().length()>0 && tfPassword.getText().equals("123456")) {
-			userName=tfUserName.getText();
-			Parent user_parent;
-			try {
-				user_parent = FXMLLoader.load(getClass().getResource("../gui/pattern.fxml"));
-				Scene user_scene = new Scene(user_parent);
-				Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-				stage.setScene(user_scene);
-				stage.show();  
+		try {
+			userClient = new UserClient(tfHost.getText(),Integer.parseInt(tfPort.getText()));
+			msg = new HashMap<String, ArrayList<String>>();
+			ArrayList<String> userInfo = new ArrayList<String>();
+			userInfo.add(tfUserName.getText());
+			userInfo.add(tfPassword.getText());
+			msg.put("validateUser",userInfo);
+			ans = new ArrayList<String>();
+			userClient.sendServer(msg);
+			syncWithServer();
+			if(ans.get(0) != null && ans.get(0).equals("yes")){	
+				userName=tfUserName.getText();
+				Parent user_parent;
+				try {
+					user_parent = FXMLLoader.load(getClass().getResource("../gui/pattern.fxml"));
+					Scene user_scene = new Scene(user_parent);
+					Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+					stage.setScene(user_scene);
+					stage.show();  
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			else{
+				lblWrongUser.setVisible(true);
+			}
+		} catch (NumberFormatException e1) {
+			e1.printStackTrace();
+		} catch (Exception e1) {
+			lblConnection.setVisible(true);
+		}
+	
+	}
+
+	public static void syncWithServer()
+	{
+		synchronized(userClient)
+		{
+			while(!userClient.isready())
+			{
+				try{
+					userClient.wait();	
+				}
+				catch (InterruptedException e) {
+					//e.printStackTrace();
+				}
 			}
 		}
 	}
