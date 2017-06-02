@@ -29,8 +29,8 @@
             </Hyperlink>
             <FlowPane layoutX="1.0" layoutY="95.0" prefHeight="691.0" prefWidth="222.0">
                <children>
-                  <Hyperlink prefHeight="23.0" prefWidth="92.0" text="Hyperlink" />
-                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="50.0" prefWidth="223.0" text="View Student Information" />
+                  <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Submit Task" />
                   <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
                   <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
                   <Hyperlink prefHeight="28.0" prefWidth="221.0" text="Hyperlink" />
