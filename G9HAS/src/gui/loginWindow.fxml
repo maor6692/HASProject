@@ -21,7 +21,7 @@
       </Label>
       <ImageView fx:id="HASLogo" fitHeight="200.0" fitWidth="200.0" layoutX="10.0" layoutY="-49.0">
          <image>
-            <Image url="@../../2bd62c9a-92f9-40b0-af2f-58be327ec947.png" />
+            <Image url="@../../resources/logo.png" />
          </image>
       </ImageView>
       <Label layoutX="188.0" layoutY="216.0" prefHeight="49.0" prefWidth="125.0" text="password:">
