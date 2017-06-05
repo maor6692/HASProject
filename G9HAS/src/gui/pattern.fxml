@@ -29,7 +29,7 @@
             </Hyperlink>
             <FlowPane layoutX="1.0" layoutY="95.0" prefHeight="691.0" prefWidth="222.0">
                <children>
-                  <Hyperlink prefHeight="55.0" prefWidth="228.0" text="Hyperlink" />
+                  <Hyperlink prefHeight="55.0" prefWidth="228.0" text="Hyperlink" textFill="#529ceb" />
                </children>
             </FlowPane>
          </children>
@@ -38,7 +38,7 @@
    <center>
       <Pane prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="500.0" fitWidth="654.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitWidth="654.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../resources/background.jpg" />
                </image>

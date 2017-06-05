@@ -97,9 +97,10 @@ public class LoginController extends Application implements Initializable {
 			Parent root = FXMLLoader.load(getClass().getResource("../gui/loginWindow.fxml"));
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
+			primaryStage.setResizable(false);
 			primaryStage.show(); 
 		} catch(Exception e) {
-			e.printStackTrace()   ;
+			e.printStackTrace();
 		}
 	}
 
