@@ -13,7 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import common.*;
-
+import common.Class;
 
 
 
@@ -83,6 +83,11 @@ import common.*;
 	    	int year = Integer.parseInt(txtFieldYear.getText());
 	    	int semester = Integer.parseInt(txtFieldSemester.getText());
 	    	Class c1 = new Class(id,name,year,semester);
+	    	try{
+	    	LoginController.userClient.sendToServer(c1);
+	    	}catch(Exception ex){
+	    		
+	    	}
 	    }
 	    
     
