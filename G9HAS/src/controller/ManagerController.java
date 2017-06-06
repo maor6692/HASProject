@@ -1,4 +1,4 @@
-package application;
+package controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,7 +15,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class TeacherController implements Initializable{
+public class ManagerController implements Initializable{
 
 	@FXML
 	private Hyperlink linkLogout;

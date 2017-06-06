@@ -1,4 +1,4 @@
-package application;
+package controller;
 
 import ocsf.client.*;
 import java.io.*;

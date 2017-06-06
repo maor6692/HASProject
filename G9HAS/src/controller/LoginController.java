@@ -1,4 +1,4 @@
-package application;
+package controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -94,7 +94,7 @@ public class LoginController extends Application implements Initializable {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("../gui/loginWindow.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("../gui/defineClass.fxml"));
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);

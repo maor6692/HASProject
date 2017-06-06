@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="781.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.defineClassController">
+   <left>
+      <Pane prefHeight="498.0" prefWidth="171.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="14.0" layoutY="31.0">
+               <image>
+                  <Image url="@../../resources/new-user-image-default.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="lblUser" layoutX="64.0" layoutY="30.0" text="UserName" textFill="#d7d7d7">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Hyperlink fx:id="linkLogout" layoutX="64.0" layoutY="52.0" onAction="#logoutHandler" text="Logout" textFill="#7c7c7c">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Hyperlink>
+            <FlowPane layoutX="1.0" layoutY="95.0" prefHeight="691.0" prefWidth="222.0">
+               <children>
+                  <Hyperlink prefHeight="35.0" prefWidth="169.0" text="assign student to class" textFill="#529ceb" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink prefHeight="41.0" prefWidth="228.0" text="define class" textFill="#529ceb">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Hyperlink>
+                  <Hyperlink prefHeight="39.0" prefWidth="169.0" text="assign student to course" textFill="#529ceb" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink prefHeight="59.0" prefWidth="169.0" text="remove student from course" textFill="#529ceb" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink prefHeight="36.0" prefWidth="169.0" text="create semester" textFill="#529ceb" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink prefHeight="41.0" prefWidth="169.0" text="assign classes to course" textFill="#529ceb" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink prefHeight="58.0" prefWidth="169.0" text="change teachers appointment" textFill="#529ceb" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink prefHeight="41.0" prefWidth="169.0" text="assign teacher to class" textFill="#529ceb" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+               </children>
+            </FlowPane>
+         </children>
+      </Pane>
+   </left>
+   <center>
+      <Pane prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitWidth="654.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../resources/background.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="200.0" fitWidth="200.0" layoutY="-59.0">
+               <image>
+                  <Image url="@../../resources/logo.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="183.0" layoutY="48.0" prefHeight="53.0" prefWidth="245.0" text="Define Class" underline="true">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblClassId" layoutX="118.0" layoutY="132.0" text="Class ID">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtFieldClassId" layoutX="223.0" layoutY="130.0" />
+            <Label fx:id="lblClassName" layoutX="77.0" layoutY="180.0" text="Class Name">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtFieldClassName" layoutX="223.0" layoutY="178.0" />
+            <Label fx:id="lblYear" layoutX="153.0" layoutY="228.0" text="Year">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtFieldYear" layoutX="223.0" layoutY="228.0" />
+            <Label fx:id="lblSemester" layoutX="104.0" layoutY="274.0" text="Semester">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtFieldSemester" layoutX="223.0" layoutY="276.0" />
+            <Button fx:id="btnAdd" layoutX="273.0" layoutY="361.0" mnemonicParsing="false" onAction="#addClassHandler" text="Add Class" />
+            <Label fx:id="lblErr" alignment="CENTER" layoutX="225.0" layoutY="328.0" prefHeight="27.0" prefWidth="222.0" textFill="RED" />
+         </children>
+      </Pane>
+   </center>
+</BorderPane>
