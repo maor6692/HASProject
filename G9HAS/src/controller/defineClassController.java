@@ -12,7 +12,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import common.*;
+
 import common.Class;
 
 
@@ -62,19 +62,19 @@ import common.Class;
 	    @FXML
 	    void addClassHandler(ActionEvent event){
 	    	lblErr.setText("");
-	    	if(txtFieldClassName.getText().equals(null)){
+	    	if(txtFieldClassName.getText().equals("")){
 	    		lblErr.setText("fill class name!");
 	    		return;
 	    	}
-	    	if(txtFieldClassId.getText().equals(null)){
+	    	if(txtFieldClassId.getText().equals("")){
 	    		lblErr.setText("fill class id!");
 	    		return;
 	    	}
-	    	if(txtFieldYear.getText().equals(null)){
+	    	if(txtFieldYear.getText().equals("")){
 	    		lblErr.setText("fill class year!");
 	    		return;
 	    	}
-	    	if(txtFieldSemester.getText().equals(null)){
+	    	if(txtFieldSemester.getText().equals("")){
 	    		lblErr.setText("fill class semester!");
 	    		return;
 	    	}
@@ -82,7 +82,10 @@ import common.Class;
 	    	String name = txtFieldClassName.getText();
 	    	int year = Integer.parseInt(txtFieldYear.getText());
 	    	int semester = Integer.parseInt(txtFieldSemester.getText());
+	    	
+	    	
 	    	Class c1 = new Class(id,name,year,semester);
+	    	
 	    	try{
 	    	LoginController.userClient.sendToServer(c1);
 	    	}catch(Exception ex){
