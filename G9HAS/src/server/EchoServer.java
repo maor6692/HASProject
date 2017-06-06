@@ -4,6 +4,7 @@ package server;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,6 +12,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
+
+
+
+import common.SClass;
 import ocsf.server.*;
 
 public class EchoServer extends AbstractServer {
@@ -49,46 +54,63 @@ public class EchoServer extends AbstractServer {
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
 
-		Statement stmt;
+		PreparedStatement pstmt;
 		ResultSet rs;
-		HashMap<String,ArrayList<String>> message = new HashMap<String,ArrayList<String>>();
-		ArrayList<String> arr=null;
-		String temp;
-		message = (HashMap<String,ArrayList<String>>)msg;
-		   for(String key : message.keySet()){
-			   if(key!= null)
-			   	arr=message.get(key);
-			   break;
-			      }
-		
-		
-		String query = "Select * FROM users WHERE user_name='"+arr.get(0)+"' AND password='"+arr.get(1)+"'";
-		try {
-			
-			if(query.charAt(0)=='U')//checks if the query is an update.
-			{
-				stmt = conn.createStatement();
-				stmt.executeUpdate(query);
-			}
-			else // select query.
-			{
-				stmt = conn.createStatement();
-				rs = stmt.executeQuery(query);
-				arr.clear();
-				while (rs.next()) {    //insert each row's columns to array list.
-					arr.add(rs.getString(7));
-
+		HashMap<String,Object> message = new HashMap<String,Object>();
+		Object entity=null;
+		String query,temp=null;
+		message = (HashMap<String,Object>)msg;
+		for(String key : message.keySet()){
+			if(key!= null){
+				temp=key;
+				switch(temp){
+				case "define class":
+					try{
+					entity=(SClass)message.get(key);
+					query = "INSERT INTO class (id,name) values (?,?)";
+					pstmt = conn.prepareStatement(query);
+					pstmt.setInt(1, ((SClass)message.get(key)).getId());
+					pstmt.setString(2, ((SClass)message.get(key)).getName());
+					pstmt.executeUpdate();
+					}
+					catch(Exception e){
+						
+					}
+					break;
+					
 				}
-				rs.close();
-				client.sendToClient(arr);//sends the answer to client.
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-
 	}
+	
+//		 query = "Select * FROM users WHERE user_name='"+arr.get(0)+"' AND password='"+arr.get(1)+"'";
+//		try {
+//
+//			if(query.charAt(0)=='U')//checks if the query is an update.
+//			{
+//				stmt = conn.createStatement();
+//				stmt.executeUpdate(query);
+//			}
+//			else // select query.
+//			{
+//				stmt = conn.createStatement();
+//				rs = stmt.executeQuery(query);
+//				arr.clear();
+//				while (rs.next()) {    //insert each row's columns to array list.
+//					arr.add(rs.getString(7));
+//
+//				}
+//				rs.close();
+//				client.sendToClient(arr);//sends the answer to client.
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//
+//	}
 
 	/**
 	 * This method overrides the one in the superclass. Called when the server

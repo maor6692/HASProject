@@ -1,5 +1,6 @@
 package controller;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,8 +13,8 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import common.SClass;
 
-import common.Class;
 
 
 
@@ -21,14 +22,10 @@ import common.Class;
 
 	    @FXML
 	    private TextField txtFieldClassId;
-	    @FXML
-	    private TextField txtFieldYear;
-	    @FXML
-	    private TextField txtFieldSemester;
+
 	    @FXML
 	    private Hyperlink linkLogout;
-	    @FXML
-	    private Label lblYear;
+
 	    @FXML
 	    private Button btnAdd;
 	    @FXML
@@ -37,8 +34,7 @@ import common.Class;
 	    private Label lblClassName;
 	    @FXML
 	    private Label lblErr;
-	    @FXML
-	    private Label lblSemester;
+
 	    @FXML
 	    private Label lblClassId;
 	    @FXML
@@ -70,28 +66,22 @@ import common.Class;
 	    		lblErr.setText("fill class id!");
 	    		return;
 	    	}
-	    	if(txtFieldYear.getText().equals("")){
-	    		lblErr.setText("fill class year!");
-	    		return;
-	    	}
-	    	if(txtFieldSemester.getText().equals("")){
-	    		lblErr.setText("fill class semester!");
-	    		return;
-	    	}
+
 	    	int id = Integer.parseInt(txtFieldClassId.getText());
 	    	String name = txtFieldClassName.getText();
-	    	int year = Integer.parseInt(txtFieldYear.getText());
-	    	int semester = Integer.parseInt(txtFieldSemester.getText());
+
 	    	
 	    	
-	    	Class c1 = new Class(id,name,year,semester);
-	    	
+	    	SClass c1 = new SClass(id,name);
+	    	HashMap<String,Object> msg=new HashMap<String,Object>();
+	    	msg.put("define class", c1);
 	    	try{
-	    	LoginController.userClient.sendToServer(c1);
+	    	LoginController.userClient.sendToServer(msg);
 	    	}catch(Exception ex){
-	    		
+	    		System.out.println("");
 	    	}
 	    }
+	    
 	    
     
 
