@@ -57,22 +57,20 @@ public class EchoServer extends AbstractServer {
 		Statement stmt;
 		PreparedStatement pstmt;
 		ResultSet rs;
-		HashMap<String,Object> message = new HashMap<String,Object>();
+		HashMap<String,Object> message ;
 		Object entity=null;
 		String query,temp=null;
-		message = (HashMap<String,>)msg;
+		message = (HashMap<String, Object>)msg;
 		ArrayList<String> ans;
 		for(String key : message.keySet()){
 			if(key!= null){
-				temp=key;
-				switch(temp){
+				switch(key){
 				case "validate user":
 					try{
-						ans=(ArrayList<String>) message.get(temp);
-						query = "Select * FROM users WHERE user_name='"+ans.get(1)+"' AND password='"+ans.get(2)+"'";
+						ans=(ArrayList<String>) message.get(key);
+						query = "Select * FROM users WHERE user_name='"+ans.get(0)+"' AND password='"+ans.get(1)+"'";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
-						message.clear();
 						ans.clear();
 						while (rs.next()) {    //insert each row's columns to array list.
 							ans.add(rs.getString(1));
