@@ -57,10 +57,10 @@ public class EchoServer extends AbstractServer {
 		Statement stmt;
 		PreparedStatement pstmt;
 		ResultSet rs;
-		HashMap<String, ArrayList<String>> message = (HashMap<String,ArrayList<String>>)msg;
+		HashMap<String,Object> message = new HashMap<String,Object>();
 		Object entity=null;
 		String query,temp=null;
-		message = (HashMap<String,ArrayList<String>>)msg;
+		message = (HashMap<String,>)msg;
 		ArrayList<String> ans;
 		for(String key : message.keySet()){
 			if(key!= null){
@@ -68,7 +68,7 @@ public class EchoServer extends AbstractServer {
 				switch(temp){
 				case "validate user":
 					try{
-						ans= message.get(temp);
+						ans=(ArrayList<String>) message.get(temp);
 						query = "Select * FROM users WHERE user_name='"+ans.get(1)+"' AND password='"+ans.get(2)+"'";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
@@ -88,14 +88,11 @@ public class EchoServer extends AbstractServer {
 							e.printStackTrace();
 						}
 				
-				}
-			}
-		}
-	}
+				
 
 
 
-	/*			case "define class":
+				case "define class":
 					try{
 					entity=(SClass)message.get(key);
 					query = "INSERT INTO class (id,name) values (?,?)";
@@ -109,10 +106,10 @@ public class EchoServer extends AbstractServer {
 					}
 					break;
 					
-				}*/
-			
-		
-	
+				}
+			}
+		}
+	}
 	
 //		 query = "Select * FROM users WHERE user_name='"+arr.get(0)+"' AND password='"+arr.get(1)+"'";
 //		try {
