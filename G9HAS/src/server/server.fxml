@@ -11,7 +11,6 @@
       <TextField fx:id="txtBoxHost" layoutX="91.0" layoutY="29.0" text="localhost" />
       <TextField fx:id="txtBoxDBname" layoutX="91.0" layoutY="64.0" text="project" />
       <TextField fx:id="txtBoxDBuser" layoutX="91.0" layoutY="99.0" text="root" />
-      <TextField fx:id="txtBoxDBpassword" layoutX="91.0" layoutY="135.0" text="Braude" />
       <Label layoutX="27.0" layoutY="33.0" text="Host:" />
       <Label layoutX="22.0" layoutY="68.0" text="dbname:" />
       <Label layoutX="22.0" layoutY="103.0" text="dbuser:" />
@@ -20,5 +19,6 @@
       <TextField fx:id="txtBoxport" layoutX="91.0" layoutY="162.0" text="5555" />
       <Button fx:id="btnDisconnect" layoutX="181.0" layoutY="197.0" mnemonicParsing="false" text="Disconnect" visible="false" />
       <Label fx:id="lblConnected" layoutX="103.0" layoutY="197.0" style="-fx-text-fill: green;" text="Connected!" visible="false" />
+      <PasswordField fx:id="txtBoxDBpassword" layoutX="91.0" layoutY="134.0" />
    </children>
 </AnchorPane>

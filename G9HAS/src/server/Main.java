@@ -16,11 +16,12 @@ import javafx.stage.WindowEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class Main extends Application {
-	@FXML
-	private TextField txtBoxDBpassword;
+    @FXML
+    private PasswordField txtBoxDBpassword;
 
 	@FXML
 	private Button btnConnect;

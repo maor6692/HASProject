@@ -54,17 +54,48 @@ public class EchoServer extends AbstractServer {
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
 
+		Statement stmt;
 		PreparedStatement pstmt;
 		ResultSet rs;
-		HashMap<String,Object> message = new HashMap<String,Object>();
+		HashMap<String, ArrayList<String>> message = (HashMap<String,ArrayList<String>>)msg;
 		Object entity=null;
 		String query,temp=null;
-		message = (HashMap<String,Object>)msg;
+		message = (HashMap<String,ArrayList<String>>)msg;
+		ArrayList<String> ans;
 		for(String key : message.keySet()){
 			if(key!= null){
 				temp=key;
 				switch(temp){
-				case "define class":
+				case "validate user":
+					try{
+						ans= message.get(temp);
+						query = "Select * FROM users WHERE user_name='"+ans.get(1)+"' AND password='"+ans.get(2)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						message.clear();
+						ans.clear();
+						while (rs.next()) {    //insert each row's columns to array list.
+							ans.add(rs.getString(1));
+							ans.add(rs.getString(2));
+				
+						}
+						rs.close();
+						client.sendToClient(ans);//sends the answer to client.
+			
+						} catch (SQLException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+				
+				}
+			}
+		}
+	}
+
+
+
+	/*			case "define class":
 					try{
 					entity=(SClass)message.get(key);
 					query = "INSERT INTO class (id,name) values (?,?)";
@@ -78,10 +109,10 @@ public class EchoServer extends AbstractServer {
 					}
 					break;
 					
-				}
-			}
-		}
-	}
+				}*/
+			
+		
+	
 	
 //		 query = "Select * FROM users WHERE user_name='"+arr.get(0)+"' AND password='"+arr.get(1)+"'";
 //		try {
