@@ -36,7 +36,6 @@ public class LoginController extends Application implements Initializable {
 	public static HashMap<String, ArrayList<String>> msg;
 	public static String userName;
 	public static UserClient userClient;
-	public static ArrayList<String> ans ;
 
 	@FXML
 	void signinHandler(ActionEvent event) {
@@ -47,10 +46,9 @@ public class LoginController extends Application implements Initializable {
 			userInfo.add(tfUserName.getText());
 			userInfo.add(tfPassword.getText());
 			msg.put("validateUser",userInfo);
-			ans = new ArrayList<String>();
 			userClient.sendServer(msg);
 			syncWithServer();
-			if(ans.size()!=0){	
+			if(userClient.ans.size()!=0){	
 				userName=tfUserName.getText();
 				Parent user_parent;
 				try {

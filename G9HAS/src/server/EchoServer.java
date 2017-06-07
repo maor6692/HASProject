@@ -65,7 +65,7 @@ public class EchoServer extends AbstractServer {
 		for(String key : message.keySet()){
 			if(key!= null){
 				switch(key){
-				case "validate user":
+				case "validateUser":
 					try{
 						ans=(ArrayList<String>) message.get(key);
 						query = "Select * FROM users WHERE user_name='"+ans.get(0)+"' AND password='"+ans.get(1)+"'";
