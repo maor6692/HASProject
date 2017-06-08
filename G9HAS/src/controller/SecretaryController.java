@@ -17,17 +17,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class SecretaryController implements Initializable{
-
 	@FXML
-	private Hyperlink linkLogout;
+	private Pane paneRemoveStudent,paneChangeAppointment,paneCreateSemester,paneDefineClass,paneAddStudent;
 
 	@FXML
 	private Label lblUser;
-
+	
 	@FXML
 	void logoutHandler(ActionEvent event) {//goes back to login window
 		Parent nextWindow;
@@ -51,10 +52,36 @@ public class SecretaryController implements Initializable{
 			e.printStackTrace();
 		}
 	}
+	void setPane(Pane pane){
+		paneRemoveStudent.setVisible(false);
+		paneChangeAppointment.setVisible(false);
+		paneCreateSemester.setVisible(false);
+		paneDefineClass.setVisible(false);
+		paneAddStudent.setVisible(false);
+		pane.setVisible(true);
+	}
+
 	@FXML
 	void createSemesterHandler(ActionEvent event) {
-		
+		setPane(paneCreateSemester);
 	}
+	@FXML
+	void addStudentToCourseHandler(ActionEvent event) {
+		setPane(paneAddStudent);
+	}
+	@FXML
+	void removeStudentFromCourseHandler(ActionEvent event) {
+		setPane(paneRemoveStudent);
+	}
+	@FXML
+	void changeAppointmentHandler(ActionEvent event) {
+		setPane(paneChangeAppointment);
+	}
+	@FXML
+	void defineClassHandler(ActionEvent event) {
+		setPane(paneDefineClass);
+	}
+
 
 
 
