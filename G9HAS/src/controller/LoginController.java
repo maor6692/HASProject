@@ -1,6 +1,4 @@
 package controller;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,64 +17,73 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 
 
-//
+
 public class LoginController extends Application implements Initializable {
 
 	@FXML
-	private Button btnSignIn;
-	@FXML
-	private Label lblWrongUser,lblConnection;
+	private Label lblWrongUser,lblConnection; //use to pop up login connections issues
 	@FXML
 	private PasswordField tfPassword;
 	@FXML
 	public TextField tfUserName,tfPort,tfHost;
+	
 	public static HashMap<String, ArrayList<String>> msg;
 	public static UserClient userClient;
-
+	
+/**
+ * change user status to 'offline' in DB
+ */
+	static void logout(){
+		HashMap<String, ArrayList<String>> msg = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> arr = new ArrayList<String>();
+		arr.add(UserClient.userName);
+		msg.put("logout",arr);
+		LoginController.userClient.sendServer(msg);
+	}
+	/**
+	 * change user status to 'online' in DB and open appropriate window due to user_type
+	 */
 	@FXML
 	void signinHandler(ActionEvent event) {
+		lblWrongUser.setVisible(false);
+		lblConnection.setVisible(false);
 		try {
-			lblWrongUser.setVisible(false);
-			lblConnection.setVisible(false);
 			userClient = new UserClient(tfHost.getText(),Integer.parseInt(tfPort.getText()));
-			msg = new HashMap<String, ArrayList<String>>();
-			ArrayList<String> userInfo = new ArrayList<String>();
-			userInfo.add(tfUserName.getText());
-			userInfo.add(tfPassword.getText());
-			msg.put("login",userInfo);
-			userClient.sendServer(msg);
-			syncWithServer();
-			if(UserClient.ans.size()!=0){	
-				userClient.fullName = UserClient.ans.get(1)+UserClient.ans.get(2);//first+last name
-				userClient.userName = tfUserName.getText();
-				String user_type = UserClient.ans.get(0);
-				Parent nextWindow;
-				try {
-					nextWindow = FXMLLoader.load(getClass().getResource("../gui/"+user_type+".fxml"));
-					Scene nextScene = new Scene(nextWindow);
-					Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-					stage.setScene(nextScene);
-					stage.show();  
-				}
-				catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			else{
-				lblWrongUser.setVisible(true);
-			}
-		} catch (NumberFormatException e1) {
-			e1.printStackTrace();
 		} catch (Exception e1) {
-			lblConnection.setVisible(true);
+			lblConnection.setVisible(false);
 		}
-	
+		msg = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> userInfo = new ArrayList<String>();
+		userInfo.add(tfUserName.getText());
+		userInfo.add(tfPassword.getText());
+		msg.put("login",userInfo);
+		userClient.sendServer(msg);//send to server user info to verify user details 
+		syncWithServer();
+		if(UserClient.ans!=null && UserClient.ans.size()!=0){//if user details are OK
+			userClient.fullName = UserClient.ans.get(1)+" "+UserClient.ans.get(2);//first+last name
+			userClient.userName = tfUserName.getText();
+			String user_type = UserClient.ans.get(0);
+			Parent nextWindow;
+			try {
+				nextWindow = FXMLLoader.load(getClass().getResource("../gui/"+user_type+".fxml"));//Prepare appropriate window due to user_type
+				Scene nextScene = new Scene(nextWindow);
+				Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+				stage.setScene(nextScene);
+				stage.show();  //change to user_type window
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		else{
+			lblWrongUser.setVisible(true);
+		}
 	}
-
+	/**
+	 * this method waits for new answer from server
+	 */
 	public static void syncWithServer()
 	{
 		synchronized(userClient)
@@ -87,9 +94,10 @@ public class LoginController extends Application implements Initializable {
 					userClient.wait();	
 				}
 				catch (InterruptedException e) {
-					//e.printStackTrace();
+					e.printStackTrace();
 				}
 			}
+			UserClient.setFlagFalse();
 		}
 	}
 	@Override

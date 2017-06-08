@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import javafx.application.Platform;
 
 public class UserClient extends AbstractClient {
-	public boolean flag = false; //flag to indicate if there is new answer from server
+	public static boolean flag = false; //flag to indicate if there is new answer from server
 	public static ArrayList<String> ans;
 	public static String userName;
 	public static String fullName;
@@ -31,11 +31,17 @@ public class UserClient extends AbstractClient {
 	}
 
 	// Instance methods ************************************************
-	public boolean isready() { //checks if there is new answer from server
+	/**
+	 * indicates if there is new answer from server
+	 */
+	public boolean isready() { 
 		return flag;
 	}
 
-	public void setFlagFalse() { //wait for new answer from server
+	/**
+	 * indicates that answer was accepted 
+	 */
+	public static void setFlagFalse() { 
 		flag = false;
 	}
 	//Insert server answer to global array list and set the flag to show there is new answer from server.
@@ -61,8 +67,7 @@ public class UserClient extends AbstractClient {
 			sendToServer(msg);
 		} catch (Exception e) {//if the server is not listening we will end the program.
 			JOptionPane.showMessageDialog(null, "Server is not responding, try again later");
-			Platform.exit();
-			System.exit(0);
+			quit();
 		}
 	}
 
@@ -74,6 +79,7 @@ public class UserClient extends AbstractClient {
 			closeConnection();
 		} catch (IOException e) {
 		}
+		LoginController.logout();
 		Platform.exit();
 		System.exit(0);
 	}

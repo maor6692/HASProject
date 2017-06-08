@@ -12,33 +12,28 @@
    <left>
       <Pane prefHeight="498.0" prefWidth="171.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="14.0" layoutY="31.0">
+            <ImageView fitHeight="38.0" fitWidth="33.0" layoutX="14.0" layoutY="28.0">
                <image>
                   <Image url="@../../resources/new-user-image-default.png" />
                </image>
             </ImageView>
-            <Label fx:id="lblUser" layoutX="64.0" layoutY="30.0" text="UserName" textFill="#d7d7d7">
+            <Label fx:id="lblUser" layoutX="50.0" layoutY="28.0" text="UserName" textFill="WHITE">
                <font>
-                  <Font name="System Bold" size="18.0" />
+                  <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Hyperlink fx:id="linkLogout" layoutX="64.0" layoutY="52.0" onAction="#logoutHandler" text="Logout" textFill="#7c7c7c">
+            <Hyperlink fx:id="linkLogout" focusTraversable="false" layoutX="47.0" layoutY="48.0" onAction="#logoutHandler" text="Logout" textFill="#7c7c7c">
                <font>
                   <Font size="11.0" />
                </font>
             </Hyperlink>
-            <FlowPane layoutX="1.0" layoutY="95.0" prefHeight="691.0" prefWidth="222.0">
-               <children>
-                  <Hyperlink prefHeight="55.0" prefWidth="228.0" text="Hyperlink" textFill="#529ceb" />
-               </children>
-            </FlowPane>
          </children>
       </Pane>
    </left>
    <center>
       <Pane prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitWidth="654.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="508.0" fitWidth="611.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../resources/background.jpg" />
                </image>
@@ -48,6 +43,7 @@
                   <Image url="@../../resources/logo.png" />
                </image>
             </ImageView>
+            <Pagination fx:id="pageNum" layoutX="-7.0" layoutY="-4.0" maxPageIndicatorCount="5" pageCount="5" prefHeight="515.0" prefWidth="619.0" />
          </children>
       </Pane>
    </center>

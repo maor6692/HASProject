@@ -61,7 +61,7 @@ public class EchoServer extends AbstractServer {
 		Object entity=null;
 		String query,temp=null;
 		message = (HashMap<String, Object>)msg;
-		ArrayList<String> ans;
+		ArrayList<String> ans=null;
 		for(String key : message.keySet()){
 			if(key!= null){
 				switch(key){
@@ -74,10 +74,11 @@ public class EchoServer extends AbstractServer {
 						ans.clear();
 						while (rs.next()) {    //insert each row's columns to array list.
 							query = "UPDATE users SET status="+"'online'"+" WHERE user_name='"+rs.getString(1)+"'";
-							ans.add(rs.getString(3));//status
+							ans.add(rs.getString(7));//status
 							ans.add(rs.getString(4));//first name
 							ans.add(rs.getString(5));//last name
-							stmt.executeQuery(query);
+							stmt.executeUpdate(query);
+							break;
 						}
 						stmt.close();
 						rs.close();
@@ -95,11 +96,10 @@ public class EchoServer extends AbstractServer {
 						ans=(ArrayList<String>) message.get(key);
 						query = "UPDATE users SET status='offline' WHERE user_name='"+ans.get(0)+"'";
 						stmt = conn.createStatement();
-						rs = stmt.executeQuery(query);
+						stmt.executeUpdate(query);
 						ans.clear();
 						stmt.close();
-						rs.close();
-
+						
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
