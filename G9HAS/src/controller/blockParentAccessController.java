@@ -73,7 +73,7 @@ public class blockParentAccessController implements Initializable{
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lblUser.setText(UserClient.userName);
 		
-		
+		System.out.println("intiallize block parent user");
 		
     	//**** get information for the page
 		// we need all classes only id maybe name
@@ -83,9 +83,14 @@ public class blockParentAccessController implements Initializable{
     	msg.put("get info for blockParentAccess", null);
     	try{
     	LoginController.userClient.sendToServer(msg);
+    	//syncWithServer(); ----- need??
     	}catch(Exception ex){
     		System.out.println("");
     	}
+    	if(UserClient.ans == null ) // no DB info!
+    		return;
+    	
+    	
     }
 	
 }

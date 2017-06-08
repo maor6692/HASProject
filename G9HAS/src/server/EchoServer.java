@@ -119,7 +119,42 @@ public class EchoServer extends AbstractServer {
 
 					}
 					break;
-
+				case "get info for blockParentAccess":
+					HashMap<Integer, ArrayList<String>> classes = new HashMap<Integer, ArrayList<String>>();
+					HashMap<Integer, ArrayList<String>> students = new HashMap<Integer, ArrayList<String>>();
+					query = "SELECT * FROM class";
+					try {
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						while (rs.next()) {
+							ans = new ArrayList<>();
+							ans.add(rs.getString(2)); // add name to array list
+							ans.add(rs.getString(3)); // add year to array list
+							ans.add(rs.getString(4)); // add semester to array list
+							classes.put(Integer.parseInt(rs.getString(1)), ans); // add key and array list
+						}
+						query = "SELECT id,pblocked,class_id FROM student";
+						rs = stmt.executeQuery(query);
+						while (rs.next()) {
+							ans = new ArrayList<>();
+							ans.add(rs.getString(2)); // add pblocked to array list
+							ans.add(rs.getString(3)); // add class_id to array list
+							students.put(Integer.parseInt(rs.getString(1)), ans); // add key and array list
+							stmt.close();
+							HashMap<String,Object> replay = new HashMap<String,Object>();
+							replay.put("class", classes);
+							replay.put("student", students);
+							client.sendToClient(replay);
+							System.out.println("query for itay");
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					break;
 				}
 			}
 		}
