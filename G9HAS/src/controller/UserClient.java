@@ -11,6 +11,8 @@ import javafx.application.Platform;
 public class UserClient extends AbstractClient {
 	public boolean flag = false; //flag to indicate if there is new answer from server
 	public static ArrayList<String> ans;
+	public static String userName;
+	public static String fullName;
 	// Constructors ****************************************************
 
 	/**

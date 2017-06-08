@@ -2,6 +2,8 @@ package controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -25,13 +27,18 @@ public class ManagerController implements Initializable{
 
 	@FXML
 	void logoutHandler(ActionEvent event) {
-		Parent user_parent;
+		Parent nextWindow;
 		try {
-			user_parent = FXMLLoader.load(getClass().getResource("../gui/loginWindow.fxml"));
-			Scene user_scene = new Scene(user_parent);
+			HashMap<String, ArrayList<String>> msg = new HashMap<String, ArrayList<String>>();
+			ArrayList<String> arr = new ArrayList<String>();
+			arr.add(UserClient.userName);
+			msg.put("logout",arr);
+			LoginController.userClient.sendServer(msg);
+			nextWindow = FXMLLoader.load(getClass().getResource("../gui/loginWindow.fxml"));
+			Scene nextScene = new Scene(nextWindow);
 			Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-			stage.setScene(user_scene);
-			stage.show();  
+			stage.setScene(nextScene);
+			stage.show();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -41,6 +48,6 @@ public class ManagerController implements Initializable{
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		lblUser.setText(LoginController.userName);
+		lblUser.setText(UserClient.fullName);
 	}
 }

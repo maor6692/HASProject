@@ -65,79 +65,67 @@ public class EchoServer extends AbstractServer {
 		for(String key : message.keySet()){
 			if(key!= null){
 				switch(key){
-				case "validateUser":
+				case "login":
 					try{
 						ans=(ArrayList<String>) message.get(key);
-						query = "Select * FROM users WHERE user_name='"+ans.get(0)+"' AND password='"+ans.get(1)+"'";
+						query = "Select * FROM users WHERE user_name ='"+ans.get(0)+"' AND password='"+ans.get(1)+"'";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						ans.clear();
 						while (rs.next()) {    //insert each row's columns to array list.
-							ans.add(rs.getString(1));
-							ans.add(rs.getString(2));
-				
+							query = "UPDATE users SET status="+"'online'"+" WHERE user_name='"+rs.getString(1)+"'";
+							ans.add(rs.getString(3));//status
+							ans.add(rs.getString(4));//first name
+							ans.add(rs.getString(5));//last name
+							stmt.executeQuery(query);
 						}
+						stmt.close();
 						rs.close();
 						client.sendToClient(ans);//sends the answer to client.
-			
-						} catch (SQLException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-				
-				
 
+					} catch (SQLException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
+					
+				case "logout":
+					try{
+						ans=(ArrayList<String>) message.get(key);
+						query = "UPDATE users SET status='offline' WHERE user_name='"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						stmt.close();
+						rs.close();
+
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					break;
 
 
 				case "define class":
 					try{
-					entity=(SClass)message.get(key);
-					query = "INSERT INTO class (id,name) values (?,?)";
-					pstmt = conn.prepareStatement(query);
-					pstmt.setInt(1, ((SClass)message.get(key)).getId());
-					pstmt.setString(2, ((SClass)message.get(key)).getName());
-					pstmt.executeUpdate();
+						entity=(SClass)message.get(key);
+						query = "INSERT INTO class (id,name) values (?,?)";
+						pstmt = conn.prepareStatement(query);
+						pstmt.setInt(1, ((SClass)message.get(key)).getId());
+						pstmt.setString(2, ((SClass)message.get(key)).getName());
+						pstmt.executeUpdate();
 					}
 					catch(Exception e){
-						
+
 					}
 					break;
-					
+
 				}
 			}
 		}
 	}
-	
-//		 query = "Select * FROM users WHERE user_name='"+arr.get(0)+"' AND password='"+arr.get(1)+"'";
-//		try {
-//
-//			if(query.charAt(0)=='U')//checks if the query is an update.
-//			{
-//				stmt = conn.createStatement();
-//				stmt.executeUpdate(query);
-//			}
-//			else // select query.
-//			{
-//				stmt = conn.createStatement();
-//				rs = stmt.executeQuery(query);
-//				arr.clear();
-//				while (rs.next()) {    //insert each row's columns to array list.
-//					arr.add(rs.getString(7));
-//
-//				}
-//				rs.close();
-//				client.sendToClient(arr);//sends the answer to client.
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//
-//
-//	}
 
+	
 	/**
 	 * This method overrides the one in the superclass. Called when the server
 	 * starts listening for connections.

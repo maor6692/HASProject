@@ -34,28 +34,31 @@ public class LoginController extends Application implements Initializable {
 	@FXML
 	public TextField tfUserName,tfPort,tfHost;
 	public static HashMap<String, ArrayList<String>> msg;
-	public static String userName;
 	public static UserClient userClient;
 
 	@FXML
 	void signinHandler(ActionEvent event) {
 		try {
+			lblWrongUser.setVisible(false);
+			lblConnection.setVisible(false);
 			userClient = new UserClient(tfHost.getText(),Integer.parseInt(tfPort.getText()));
 			msg = new HashMap<String, ArrayList<String>>();
 			ArrayList<String> userInfo = new ArrayList<String>();
 			userInfo.add(tfUserName.getText());
 			userInfo.add(tfPassword.getText());
-			msg.put("validateUser",userInfo);
+			msg.put("login",userInfo);
 			userClient.sendServer(msg);
 			syncWithServer();
-			if(userClient.ans.size()!=0){	
-				userName=tfUserName.getText();
-				Parent user_parent;
+			if(UserClient.ans.size()!=0){	
+				userClient.fullName = UserClient.ans.get(1)+UserClient.ans.get(2);//first+last name
+				userClient.userName = tfUserName.getText();
+				String user_type = UserClient.ans.get(0);
+				Parent nextWindow;
 				try {
-					user_parent = FXMLLoader.load(getClass().getResource("../gui/pattern.fxml"));
-					Scene user_scene = new Scene(user_parent);
+					nextWindow = FXMLLoader.load(getClass().getResource("../gui/"+user_type+".fxml"));
+					Scene nextScene = new Scene(nextWindow);
 					Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-					stage.setScene(user_scene);
+					stage.setScene(nextScene);
 					stage.show();  
 				}
 				catch (IOException e) {
