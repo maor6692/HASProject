@@ -74,9 +74,10 @@ public class EchoServer extends AbstractServer {
 						ans.clear();
 						while (rs.next()) {    //insert each row's columns to array list.
 							query = "UPDATE users SET status="+"'online'"+" WHERE user_name='"+rs.getString(1)+"'";
-							ans.add(rs.getString(7));//status
+							ans.add(rs.getString(7));//user type
 							ans.add(rs.getString(4));//first name
 							ans.add(rs.getString(5));//last name
+							ans.add(rs.getString(3));//status
 							stmt.executeUpdate(query);
 							break;
 						}

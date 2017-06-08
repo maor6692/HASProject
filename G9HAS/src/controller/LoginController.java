@@ -47,6 +47,7 @@ public class LoginController extends Application implements Initializable {
 	 */
 	@FXML
 	void signinHandler(ActionEvent event) {
+		lblWrongUser.setText("Wrong User Name or Password!");
 		lblWrongUser.setVisible(false);
 		lblConnection.setVisible(false);
 		try {
@@ -66,6 +67,11 @@ public class LoginController extends Application implements Initializable {
 			userClient.userName = tfUserName.getText();
 			String user_type = UserClient.ans.get(0);
 			Parent nextWindow;
+			if(UserClient.ans.get(3).equals("online")){
+				lblWrongUser.setText("User Already Connected!");
+				lblWrongUser.setVisible(true);
+				return;
+			}
 			try {
 				nextWindow = FXMLLoader.load(getClass().getResource("../gui/"+user_type+".fxml"));//Prepare appropriate window due to user_type
 				Scene nextScene = new Scene(nextWindow);
