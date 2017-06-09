@@ -11,7 +11,7 @@
 
 
    <children>
-      <ImageView fx:id="ivBackground" fitHeight="545.0" fitWidth="675.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="ivBackground" fitHeight="598.0" fitWidth="728.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../resources/background.jpg" />
          </image>
@@ -37,7 +37,7 @@
          </font>
       </Label>
       <PasswordField fx:id="tfPassword" layoutX="323.0" layoutY="225.0" prefHeight="31.0" prefWidth="149.0" text="maor" />
-      <Button fx:id="btnSignIn" layoutX="278.0" layoutY="364.0" mnemonicParsing="false" onAction="#signinHandler" prefHeight="17.0" prefWidth="90.0" text="Sign In" textFill="#b2790e">
+      <Button fx:id="btnSignIn" layoutX="341.0" layoutY="368.0" mnemonicParsing="false" onAction="#signinHandler" prefHeight="17.0" prefWidth="90.0" text="Sign In" textFill="#b2790e">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
