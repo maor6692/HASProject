@@ -28,6 +28,7 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	private Label lblUser;
+	 
 	
 	@FXML
 	void logoutHandler(ActionEvent event) {//goes back to login window
