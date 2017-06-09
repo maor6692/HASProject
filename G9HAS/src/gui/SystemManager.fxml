@@ -50,43 +50,43 @@
                         <Font name="System Bold" size="28.0" />
                      </font>
                   </Label>
-            <Label fx:id="lblCourseID" layoutX="94.0" layoutY="128.0" text="Course ID:">
+            <Label fx:id="lblCourseID" layoutX="109.0" layoutY="158.0" text="Course ID:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="tfCourseID" layoutX="221.0" layoutY="129.0" />
-            <Label fx:id="lblCourseName" layoutX="94.0" layoutY="154.0" text="Course Name:">
+            <TextField fx:id="tfCourseID" layoutX="221.0" layoutY="156.0"  />
+            <Label fx:id="lblCourseName" layoutX="94.0" layoutY="202.0" text="Course Name:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="tfCourseName" layoutX="221.0" layoutY="155.0" />
-            <Label fx:id="lblTeachingUnit" layoutX="94.0" layoutY="180.0" text="Teaching Unit:">
+            <TextField fx:id="tfCourseName" layoutX="221.0" layoutY="200.0" />
+            <Label fx:id="lblTeachingUnit" layoutX="93.0" layoutY="118.0" text="Teaching Unit:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <ComboBox fx:id="cbTeachingUnit" layoutX="220.0" layoutY="181.0" prefWidth="150.0" />
-            <Label fx:id="lblWeeklyHours" layoutX="93.0" layoutY="207.0" text="Weekly Hours:">
+            <ComboBox fx:id="cbTeachingUnit" layoutX="221.0" layoutY="116.0" prefHeight="31.0" prefWidth="187.0" promptText="Choose teaching unit" />
+            <Label fx:id="lblWeeklyHours" layoutX="93.0" layoutY="237.0" text="Weekly Hours:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="tfWeeklyHours" layoutX="221.0" layoutY="208.0" />
-            <Label fx:id="lblYear" layoutX="94.0" layoutY="233.0" text="Year:">
+            <TextField fx:id="tfWeeklyHours" layoutX="221.0" layoutY="235.0" />
+            <Label fx:id="lblYear" layoutX="139.0" layoutY="282.0" text="Year:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="lblSemester" layoutX="94.0" layoutY="260.0" text="Semester:">
+            <Label fx:id="lblSemester" layoutX="111.0" layoutY="317.0" text="Semester:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="tfYear" layoutX="221.0" layoutY="234.0" />
-            <TextField fx:id="tfSemester" layoutX="221.0" layoutY="261.0" />
-            <Button fx:id="btnCreateCourse" layoutX="243.0" layoutY="303.0" mnemonicParsing="false" onAction="#createCourseHandler" text="Create Course!" />
+            <TextField fx:id="tfYear" layoutX="221.0" layoutY="278.0" />
+            <TextField fx:id="tfSemester" layoutX="221.0" layoutY="315.0" />
+            <Button fx:id="btnCreateCourse" layoutX="246.0" layoutY="374.0" mnemonicParsing="false" onAction="#createCourseHandler" text="Create Course!" />
          </children>
       </Pane>
    </center>

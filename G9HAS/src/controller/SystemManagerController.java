@@ -86,13 +86,24 @@ public class SystemManagerController implements Initializable{
     void createCourseHandler(ActionEvent event) {
 		msg = new HashMap<String, ArrayList<String>>();
 		ArrayList<String> courseInfo = new ArrayList<String>();
-		courseInfo.add(tfCourseID.getText());
+		try{
+		if(String.valueOf(Integer.parseInt(tfCourseID.getText())).length()==3)	
+			courseInfo.add(String.valueOf(Integer.parseInt(tfCourseID.getText())));
+		else{
+			JOptionPane.showMessageDialog(null, "Illegal value");
+			return;
+		}
 		courseInfo.add(tfCourseName.getText());
 		courseInfo.add(cbTeachingUnit.getValue().toString());
 		courseInfo.add(tfWeeklyHours.getText());
 		courseInfo.add(tfYear.getText());
 		courseInfo.add(tfSemester.getText());
 		msg.put("Create Course",courseInfo);
+		JOptionPane.showMessageDialog(null, "Course added successfully");
+		}
+		catch(NumberFormatException e){
+			JOptionPane.showMessageDialog(null, "Illegal value");
+		}
 		try{
 		LoginController.userClient.sendServer(msg);
 		}
@@ -100,8 +111,7 @@ public class SystemManagerController implements Initializable{
 		{
 			JOptionPane.showMessageDialog(null, "Error, the course not added.");
 		}
-		
-		JOptionPane.showMessageDialog(null, "Course added successfully!");
+			
     }
 	@FXML
 	void logoutHandler(ActionEvent event) {
