@@ -28,7 +28,7 @@ public class LoginController extends Application implements Initializable {
 	private PasswordField tfPassword;
 	@FXML
 	public TextField tfUserName,tfPort,tfHost;
-	
+	public ArrayList<String> arrans;
 	public static HashMap<String, ArrayList<String>> msg;
 	public static UserClient userClient;
 	
@@ -47,6 +47,7 @@ public class LoginController extends Application implements Initializable {
 	 */
 	@FXML
 	void signinHandler(ActionEvent event) {
+		
 		lblWrongUser.setText("Wrong User Name or Password!");
 		lblWrongUser.setVisible(false);
 		lblConnection.setVisible(false);
@@ -55,6 +56,7 @@ public class LoginController extends Application implements Initializable {
 		} catch (Exception e1) {
 			lblConnection.setVisible(false);
 		}
+		
 		msg = new HashMap<String, ArrayList<String>>();
 		ArrayList<String> userInfo = new ArrayList<String>();
 		userInfo.add(tfUserName.getText());
@@ -62,12 +64,13 @@ public class LoginController extends Application implements Initializable {
 		msg.put("login",userInfo);
 		userClient.sendServer(msg);//send to server user info to verify user details 
 		syncWithServer();
-		if(UserClient.ans!=null && UserClient.ans.size()!=0){//if user details are OK
-			userClient.fullName = UserClient.ans.get(1)+" "+UserClient.ans.get(2);//first+last name
+		arrans =  (ArrayList<String>)(UserClient.ans);
+		if(arrans!=null && arrans.size()!=0){//if user details are OK
+			userClient.fullName = arrans.get(1)+" "+arrans.get(2);//first+last name
 			userClient.userName = tfUserName.getText();
-			String user_type = UserClient.ans.get(0);
+			String user_type = arrans.get(0);
 			Parent nextWindow;
-			if(UserClient.ans.get(3).equals("online")){
+			if(arrans.get(3).equals("online")){
 				lblWrongUser.setText("User Already Connected!");
 				lblWrongUser.setVisible(true);
 				return;

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="781.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SystemManagerController">
+   <left>
+      <Pane prefHeight="498.0" prefWidth="171.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="38.0" fitWidth="33.0" layoutX="14.0" layoutY="28.0">
+               <image>
+                  <Image url="@../../resources/new-user-image-default.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="lblUser" layoutX="50.0" layoutY="28.0" text="UserName" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Hyperlink fx:id="linkLogout" focusTraversable="false" layoutX="47.0" layoutY="48.0" onAction="#logoutHandler" text="Logout" textFill="#7c7c7c">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink layoutX="14.0" layoutY="103.0" onAction="#defineCourseHandler" prefHeight="23.0" prefWidth="169.0" text="Define Course" textFill="#529ceb" />
+         </children>
+      </Pane>
+   </left>
+   <center>
+      <Pane fx:id="defineCoursePane" prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="508.0" fitWidth="611.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../resources/background.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="200.0" fitWidth="200.0" layoutY="-59.0">
+               <image>
+                  <Image url="@../../resources/logo.png" />
+               </image>
+            </ImageView>
+         <Label fx:id="lblDefineCourse" layoutX="178.0" layoutY="63.0" prefHeight="41.0" prefWidth="219.0" text="Define Course" textAlignment="CENTER" textFill="#c7a958">
+                        <font>
+                        <Font name="System Bold" size="28.0" />
+                     </font>
+                  </Label>
+            <Label fx:id="lblCourseID" layoutX="94.0" layoutY="128.0" text="Course ID:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfCourseID" layoutX="221.0" layoutY="129.0" />
+            <Label fx:id="lblCourseName" layoutX="94.0" layoutY="154.0" text="Course Name:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfCourseName" layoutX="221.0" layoutY="155.0" />
+            <Label fx:id="lblTeachingUnit" layoutX="94.0" layoutY="180.0" text="Teaching Unit:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="cbTeachingUnit" layoutX="220.0" layoutY="181.0" prefWidth="150.0" />
+            <Label fx:id="lblWeeklyHours" layoutX="93.0" layoutY="207.0" text="Weekly Hours:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfWeeklyHours" layoutX="221.0" layoutY="208.0" />
+            <Label fx:id="lblYear" layoutX="94.0" layoutY="233.0" text="Year:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblSemester" layoutX="94.0" layoutY="260.0" text="Semester:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfYear" layoutX="221.0" layoutY="234.0" />
+            <TextField fx:id="tfSemester" layoutX="221.0" layoutY="261.0" />
+            <Button fx:id="btnCreateCourse" layoutX="243.0" layoutY="303.0" mnemonicParsing="false" onAction="#createCourseHandler" text="Create Course!" />
+         </children>
+      </Pane>
+   </center>
+</BorderPane>

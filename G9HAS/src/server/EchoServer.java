@@ -91,7 +91,55 @@ public class EchoServer extends AbstractServer {
 						e.printStackTrace();
 					}
 					break;
-					
+				case "Get teaching unit":
+					try{
+						ans=(ArrayList<String>) message.get(key);
+						query = "SELECT id,name FROM teaching_unit";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) { 
+							ans.add(rs.getString(1)+" - "+ rs.getString(2));
+						}
+						stmt.close();
+						rs.close();
+						client.sendToClient(ans);//sends the answer to client.
+					}
+					catch (SQLException e) {
+						e.printStackTrace();
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
+				case "Create Course":
+					try{
+						ans=(ArrayList<String>) message.get(key);
+						query = "INSERT INTO Course(id,name,teaching_unit,weekly_hours,year,semester) VALUES (?,?,?,?,?,?)";
+						pstmt = conn.prepareStatement(query);
+						pstmt.setInt(1, Integer.parseInt(ans.get(0)));
+						pstmt.setString(2, ans.get(1));
+						if(ans.get(2).charAt(1) == ' ')
+						pstmt.setInt(3, Character.getNumericValue(ans.get(2).charAt(0)));
+						else
+						{
+						pstmt.setInt(3, Integer.parseInt(Character.getNumericValue(ans.get(2).charAt(0)) + ""+Character.getNumericValue(ans.get(2).charAt(1))));
+						}
+						pstmt.setInt(4, Integer.parseInt(ans.get(3)));
+						pstmt.setInt(5, Integer.parseInt(ans.get(4)));
+						pstmt.setInt(6, Integer.parseInt(ans.get(5)));
+
+						pstmt.executeUpdate();
+
+						//client.sendToClient(ans);//sends the answer to client.
+					}
+					catch (SQLException e) {
+						e.printStackTrace();
+					}
+//					catch (IOException e) {
+//						e.printStackTrace();
+//					}
+					break;
 				case "logout":
 					try{
 						ans=(ArrayList<String>) message.get(key);

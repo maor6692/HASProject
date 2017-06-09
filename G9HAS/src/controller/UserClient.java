@@ -10,7 +10,7 @@ import javafx.application.Platform;
 
 public class UserClient extends AbstractClient {
 	public static boolean flag = false; //flag to indicate if there is new answer from server
-	public static ArrayList<String> ans;
+	public static Object ans;
 	public static String userName;
 	public static String fullName;
 	// Constructors ****************************************************
@@ -49,7 +49,7 @@ public class UserClient extends AbstractClient {
 	public void handleMessageFromServer(Object msg) {
 
 		synchronized (this) {
-			ans=(ArrayList<String>) msg;
+			ans = msg;
 			flag = true;
 			notifyAll();//release the GUI thread from wait to new answer from server
 		}
