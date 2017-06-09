@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,73 +31,84 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class SecretaryController implements Initializable{
+	ComboBoxTableCell cb = new ComboBoxTableCell();
+	
+	private final ObservableList<Row> rows =
+			FXCollections.observableArrayList(
+					new Row("A", new ComboBoxTableCell("gsdfg","jfdssfk")),
+					new Row("B", new ComboBoxTableCell("gsdfg","jfdssfk")),
+					new Row("C", new ComboBoxTableCell("gdg","jdsfsdk")),
+					new Row("D", new ComboBoxTableCell("gfg","jhgftdk")),
+					new Row("E", new ComboBoxTableCell("gdsfg","sdf"))
+					);
+
+
 	@FXML
 	private Pane paneRemoveStudent,paneChangeAppointment,paneCreateSemester,paneDefineClass,paneAddStudent;
 
 	@FXML
 	private Label lblUser;
-	
 
-	
-	
-	    @FXML
-	    private ComboBox<?> cmbChooseCourse;
-	    
-	    private ComboBox<String> cmbTeacher;
+	@FXML
+	private ComboBox<?> cmbChooseCourse;
 
-	    @FXML
-	    private ComboBox<?> cmbYear;
+	private ComboBox<String> cmbTeacher;
 
-	    @FXML
-	    private ListView<String> lvClasses;
-	    
-	    @FXML
-	    private TableView<String> tblClassTeacher;
-	    
-	    @FXML
-	    private TableView<String> tblExceptions;
-	    
-	    @FXML
-	    private Button btnAssign;
-	   
-	    
+	@FXML
+	private ComboBox<?> cmbYear;
 
-	    @FXML
-	    private TableColumn<String,String> teachers;
-	    
-	    @FXML
-	    private TableColumn<String,String> classes;
+	@FXML
+	private ListView<String> lvClasses;
 
-	    @FXML
-	    void listViewEditChoise(ActionEvent event) {
+	@FXML
+	private TableView<Row> tblClassTeacher;
 
-	    }
+	@FXML
+	private TableView<String> tblExceptions;
 
-	    @FXML
-	    void classClickHandler(ActionEvent event) {
+	@FXML
+	private Button btnAssign;
 
-	    }
-	    
 
-	    @FXML
-	    void chooseCourseHandler(ActionEvent event) {
 
-	    }
+	@FXML
+	private TableColumn<ComboBoxTableCell,String> teachers;
 
-	    @FXML
-	    void chooseYearHandler(ActionEvent event) {
+	@FXML
+	private TableColumn<String,String> classes;
 
-	    }
+	@FXML
+	void listViewEditChoise(ActionEvent event) {
 
-	    @FXML
-	    void chooseSemesterHandler(ActionEvent event) {
+	}
 
-	    }
+	@FXML
+	void classClickHandler(ActionEvent event) {
+
+	}
+
+
+	@FXML
+	void chooseCourseHandler(ActionEvent event) {
+
+	}
+
+	@FXML
+	void chooseYearHandler(ActionEvent event) {
+
+	}
+
+	@FXML
+	void chooseSemesterHandler(ActionEvent event) {
+
+	}
 	@FXML
 	void logoutHandler(ActionEvent event) {//goes back to login window
 		Parent nextWindow;
@@ -149,28 +162,52 @@ public class SecretaryController implements Initializable{
 		setPane(paneDefineClass);
 	}
 
-
-
-
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		lblUser.setText(UserClient.fullName);
-	        lvClasses.getItems().addAll("a","b","c","d","e","f");
-	        lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-	        cmbTeacher = new ComboBox<>();
-	        //TableColumn<String,ComboBox<String>> column = new TableColumn<>();
-	        ObservableList <String> a = FXCollections.observableArrayList();
-	        for(int i=0;i<10;i++)
-	        	a.add("abs");
-	        
-	        tblClassTeacher.setItems(a);
-	        
+		initializeCreateSemester();
 
-	    
-	
-	
-	        
 	}
-}
+
+	void initializeCreateSemester(){
+		lblUser.setText(UserClient.fullName);
+		lvClasses.getItems().addAll("Algebra","Hedva","computers","real time");
+		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		cmbTeacher = new ComboBox<>();
+		classes.setCellValueFactory(new PropertyValueFactory<>("classi"));
+		//classes.setCellValueFactory(new PropertyValueFactory<>("teacher"));
+		teachers.setCellFactory(ComboBoxTableCell.forTableColumn("avi sofer ben zona","Malki","Ilya"));
+		tblClassTeacher.setItems(rows);
+	
+	}
+	public static class Row {
+
+		private final SimpleStringProperty classi;
+		private final ComboBoxTableCell teacher;
+
+		private Row(String classi, ComboBoxTableCell teacher) {
+			this.classi = new SimpleStringProperty(classi);
+			this.teacher = new ComboBoxTableCell(teacher);
+		}
+
+		public String getClassi() {
+			return classi.get();
+		}
+
+		public void setClass(String class1) {
+			classi.set(class1);
+		}
+
+		public ComboBoxTableCell getTeacher() {
+			return teacher;
+		}
+
+		public void setTeacher(ComboBoxTableCell teacher1) {
+			
+		}
+
+	}
+
+} 
+
 
 
