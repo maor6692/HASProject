@@ -78,6 +78,7 @@ public class LoginController extends Application implements Initializable {
 //				lblWrongUser.setVisible(true);
 //				return;
 //			}
+			
 			try {
 				nextWindow = FXMLLoader.load(getClass().getResource("../gui/"+user_type+".fxml"));//Prepare appropriate window due to user_type
 				Scene nextScene = new Scene(nextWindow);
