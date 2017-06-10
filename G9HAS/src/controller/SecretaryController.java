@@ -4,9 +4,17 @@ package controller;
 import java.awt.List;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+
+import javax.swing.JOptionPane;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -39,36 +47,27 @@ import javafx.stage.WindowEvent;
 
 public class SecretaryController implements Initializable{
 	ComboBoxTableCell cb = new ComboBoxTableCell();
-	
-	private final ObservableList<Row> rows =
-			FXCollections.observableArrayList(
-					new Row("A", new ComboBoxTableCell("gsdfg","jfdssfk")),
-					new Row("B", new ComboBoxTableCell("gsdfg","jfdssfk")),
-					new Row("C", new ComboBoxTableCell("gdg","jdsfsdk")),
-					new Row("D", new ComboBoxTableCell("gfg","jhgftdk")),
-					new Row("E", new ComboBoxTableCell("gdsfg","sdf"))
-					);
 
+	private final ObservableList<ClassInCourse> classesInCourse = FXCollections.observableArrayList(new ClassInCourse("A"));
+	int newYear,newSemester;
+	String currSemester="";
 
 	@FXML
 	private Pane paneRemoveStudent,paneChangeAppointment,paneCreateSemester,paneDefineClass,paneAddStudent;
 
 	@FXML
-	private Label lblUser;
+	private Label lblUser,lblSemester;
 
 	@FXML
-	private ComboBox<?> cmbChooseCourse;
+	private ComboBox<String> cmbChooseCourse;
 
 	private ComboBox<String> cmbTeacher;
-
-	@FXML
-	private ComboBox<?> cmbYear;
 
 	@FXML
 	private ListView<String> lvClasses;
 
 	@FXML
-	private TableView<Row> tblClassTeacher;
+	private TableView<ClassInCourse> tblClassTeacher;
 
 	@FXML
 	private TableView<String> tblExceptions;
@@ -90,7 +89,7 @@ public class SecretaryController implements Initializable{
 	}
 
 	@FXML
-	void classClickHandler(ActionEvent event) {
+	void classClickHandler(ActionEvent event) {//enable multiple choice
 
 	}
 
@@ -107,6 +106,10 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	void chooseSemesterHandler(ActionEvent event) {
+
+	}
+	@FXML
+	void assignClassesAndTeachersHandler(ActionEvent event) {
 
 	}
 	@FXML
@@ -164,46 +167,63 @@ public class SecretaryController implements Initializable{
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		lblUser.setText(UserClient.fullName);
 		initializeCreateSemester();
 
 	}
 
 	void initializeCreateSemester(){
-		lblUser.setText(UserClient.fullName);
+		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
+		msg.put("getCurrentSemester",null);
+		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
+		LoginController.syncWithServer();
+		msg.clear();
+		currSemester=(String) UserClient.ans;
+		if(currSemester.equals("")){
+			LocalDate localDate = LocalDate.now();
+			newYear=Integer.parseInt(DateTimeFormatter.ofPattern("yyyy/MM/dd").format(localDate).substring(0, 4));
+			newSemester=1;
+		}else{
+			newYear=Integer.parseInt(currSemester.substring(0, 4));
+			newSemester=currSemester.charAt(4);
+			if(newSemester==2){
+				newSemester=1;
+				newYear++;
+			}else newSemester = 1;
+		}
+		char sem = newSemester > 1 ? 'B' : 'A';
+		lblSemester.setText("The new semester : "+newYear+"/"+sem);
+		ArrayList<String> arr = new ArrayList<String>();
+		arr.add(String.valueOf(newYear));
+		arr.add(String.valueOf(newSemester));
+		msg.put("getCurrentCourses",arr);
+		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
+		LoginController.syncWithServer();
+		cmbChooseCourse.getItems().addAll((String[]) UserClient.ans);
 		lvClasses.getItems().addAll("Algebra","Hedva","computers","real time");
 		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		cmbTeacher = new ComboBox<>();
-		classes.setCellValueFactory(new PropertyValueFactory<>("classi"));
-		//classes.setCellValueFactory(new PropertyValueFactory<>("teacher"));
+		classes.setCellValueFactory(new PropertyValueFactory<>("classInCourse"));
 		teachers.setCellFactory(ComboBoxTableCell.forTableColumn("avi sofer ben zona","Malki","Ilya"));
-		tblClassTeacher.setItems(rows);
-	
+		tblClassTeacher.setItems(classesInCourse);
+
 	}
-	public static class Row {
+	public static class ClassInCourse {
 
-		private final SimpleStringProperty classi;
-		private final ComboBoxTableCell teacher;
+		private final SimpleStringProperty classInCourse;
 
-		private Row(String classi, ComboBoxTableCell teacher) {
-			this.classi = new SimpleStringProperty(classi);
-			this.teacher = new ComboBoxTableCell(teacher);
+		private ClassInCourse(String classInCourse) {
+			this.classInCourse = new SimpleStringProperty(classInCourse);
+
 		}
 
-		public String getClassi() {
-			return classi.get();
+		public String ClassInCourse() {
+			return classInCourse.get();
 		}
 
-		public void setClass(String class1) {
-			classi.set(class1);
+		public void ClassInCourse(String class1) {
+			classInCourse.set(class1);
 		}
 
-		public ComboBoxTableCell getTeacher() {
-			return teacher;
-		}
-
-		public void setTeacher(ComboBoxTableCell teacher1) {
-			
-		}
 
 	}
 

@@ -1,6 +1,7 @@
 package server;
 
 
+import java.awt.List;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,11 +10,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
-
-
+import javax.swing.event.ListSelectionEvent;
 
 import common.SClass;
 import ocsf.server.*;
@@ -63,10 +64,11 @@ public class EchoServer extends AbstractServer {
 		message = (HashMap<String, Object>)msg;
 		ArrayList<String> ans=null;
 		for(String key : message.keySet()){
-			if(key!= null){
-				switch(key){
-				case "login":
-					try{
+			try{
+				if(key!= null){
+					switch(key){
+					case "login":
+
 						ans=(ArrayList<String>) message.get(key);
 						query = "Select * FROM users WHERE user_name ='"+ans.get(0)+"' AND password='"+ans.get(1)+"'";
 						stmt = conn.createStatement();
@@ -84,15 +86,38 @@ public class EchoServer extends AbstractServer {
 						stmt.close();
 						rs.close();
 						client.sendToClient(ans);//sends the answer to client.
+						break;
+						
+					case "getCurrentCourses":
+						ans = (ArrayList<String>) message.get("getCurrentCourses");
+						query = "SELECT name FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) { 
+							ans.add(rs.getString(1));
+						}
+						stmt.close();
+						rs.close();
+						client.sendToClient(ans.toArray());//sends currSemester to SecretaryController.
+						break;
 
-					} catch (SQLException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					break;
-				case "Get teaching unit":
-					try{
+					case "getCurrentSemester":
+
+						query = "SELECT year,sem FROM semester WHERE iscurrent=1";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						String currSemester="";
+						while (rs.next()) { 
+							currSemester=rs.getString(1)+rs.getString(2);
+						}
+						stmt.close();
+						rs.close();
+						client.sendToClient(currSemester);//sends currSemester to SecretaryController.
+						break;
+
+					case "Get teaching unit":
+
 						ans=(ArrayList<String>) message.get(key);
 						query = "SELECT id,name FROM teaching_unit";
 						stmt = conn.createStatement();
@@ -104,75 +129,54 @@ public class EchoServer extends AbstractServer {
 						stmt.close();
 						rs.close();
 						client.sendToClient(ans);//sends the answer to client.
-					}
-					catch (SQLException e) {
-						e.printStackTrace();
-					}
-					catch (IOException e) {
-						e.printStackTrace();
-					}
-					break;
-				case "Create Course":
-					try{
+						break;
+
+					case "Create Course":
+
 						ans=(ArrayList<String>) message.get(key);
 						query = "INSERT INTO Course(id,name,teaching_unit,weekly_hours,year,semester) VALUES (?,?,?,?,?,?)";
 						pstmt = conn.prepareStatement(query);
 						pstmt.setInt(1, Integer.parseInt(ans.get(0)));
 						pstmt.setString(2, ans.get(1));
 						if(ans.get(2).charAt(1) == ' ')
-						pstmt.setInt(3, Character.getNumericValue(ans.get(2).charAt(0)));
+							pstmt.setInt(3, Character.getNumericValue(ans.get(2).charAt(0)));
 						else
 						{
-						pstmt.setInt(3, Integer.parseInt(Character.getNumericValue(ans.get(2).charAt(0)) + ""+Character.getNumericValue(ans.get(2).charAt(1))));
+							pstmt.setInt(3, Integer.parseInt(Character.getNumericValue(ans.get(2).charAt(0)) + ""+Character.getNumericValue(ans.get(2).charAt(1))));
 						}
 						pstmt.setInt(4, Integer.parseInt(ans.get(3)));
 						pstmt.setInt(5, Integer.parseInt(ans.get(4)));
 						pstmt.setInt(6, Integer.parseInt(ans.get(5)));
 
 						pstmt.executeUpdate();
-
 						//client.sendToClient(ans);//sends the answer to client.
-					}
-					catch (SQLException e) {
-						e.printStackTrace();
-					}
-//					catch (IOException e) {
-//						e.printStackTrace();
-//					}
-					break;
-				case "logout":
-					try{
+						break;
+
+					case "logout":
+
 						ans=(ArrayList<String>) message.get(key);
 						query = "UPDATE users SET status='offline' WHERE user_name='"+ans.get(0)+"'";
 						stmt = conn.createStatement();
 						stmt.executeUpdate(query);
 						ans.clear();
 						stmt.close();
-						
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-					break;
+						break;
 
+					case "define class":
 
-				case "define class":
-					try{
 						entity=(SClass)message.get(key);
 						query = "INSERT INTO class (id,name) values (?,?)";
 						pstmt = conn.prepareStatement(query);
 						pstmt.setInt(1, ((SClass)message.get(key)).getId());
 						pstmt.setString(2, ((SClass)message.get(key)).getName());
 						pstmt.executeUpdate();
-					}
-					catch(Exception e){
 
-					}
-					break;
-				case "get info for blockParentAccess":
-					HashMap<Integer, ArrayList<String>> classes = new HashMap<Integer, ArrayList<String>>();
-					HashMap<Integer, ArrayList<String>> students = new HashMap<Integer, ArrayList<String>>();
-					query = "SELECT * FROM class";
-					try {
+						break;
+					case "get info for blockParentAccess":
+						HashMap<Integer, ArrayList<String>> classes = new HashMap<Integer, ArrayList<String>>();
+						HashMap<Integer, ArrayList<String>> students = new HashMap<Integer, ArrayList<String>>();
+						query = "SELECT * FROM class";
+
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						while (rs.next()) {
@@ -196,20 +200,21 @@ public class EchoServer extends AbstractServer {
 							client.sendToClient(replay);
 							System.out.println("query for itay");
 						}
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						break;
 					}
-					break;
 				}
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
 
-	
+
 	/**
 	 * This method overrides the one in the superclass. Called when the server
 	 * starts listening for connections.
