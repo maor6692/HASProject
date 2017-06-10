@@ -82,7 +82,6 @@ public class SecretaryController implements Initializable{
 	@FXML
 	private TableColumn<String,String> classes;
    
-	
 	@FXML
 	void listViewEditChoise(ActionEvent event) {
 
