@@ -3,6 +3,9 @@ package server;
 
 import java.awt.List;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -117,6 +120,14 @@ public class EchoServer extends AbstractServer {
 						client.sendToClient(ans);//sends currSemester to SecretaryController.
 						break;
 
+					case "upload":
+						try {
+							Files.write((Paths.get("sagi.docx")), (byte[])message.get(key), StandardOpenOption.CREATE_NEW);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						break;
 
 					case "getCurrentSemester":
 
