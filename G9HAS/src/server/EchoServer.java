@@ -98,7 +98,6 @@ public class EchoServer extends AbstractServer {
 							ans.add(rs.getString(1));
 						}
 						
-						
 						stmt.close();
 						rs.close();
 						client.sendToClient(ans);//sends currSemester to SecretaryController.
