@@ -76,7 +76,6 @@ public class SecretaryController implements Initializable{
 	private Button btnAssign;
 
 
-
 	@FXML
 	private TableColumn<ComboBoxTableCell,String> teachers;
 

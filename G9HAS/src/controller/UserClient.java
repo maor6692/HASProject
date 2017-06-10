@@ -16,7 +16,6 @@ public class UserClient extends AbstractClient {
 	// Constructors ****************************************************
 
 	/**
-	 * 
 	 * Constructs an instance of the UserClient.
 	 *
 	 * @param host
