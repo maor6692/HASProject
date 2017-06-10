@@ -90,7 +90,7 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	void classClickHandler(ActionEvent event) {//enable multiple choice
-
+		
 	}
 
 
