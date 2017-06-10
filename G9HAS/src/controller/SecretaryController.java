@@ -48,7 +48,9 @@ import javafx.stage.WindowEvent;
 public class SecretaryController implements Initializable{
 	ComboBoxTableCell cb = new ComboBoxTableCell();
 
-	private final ObservableList<ClassInCourse> classesInCourse = FXCollections.observableArrayList(new ClassInCourse("A"));
+	private ObservableList<ClassInCourse> classesInCourse = FXCollections.observableArrayList();
+	
+	
 	int newYear,newSemester;
 	String currSemester="";
 
@@ -81,7 +83,51 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	private TableColumn<String,String> classes;
-   
+
+    @FXML
+    private Button btnMoveRight;
+
+    @FXML
+    private Button btnMoveLeft;
+    ObservableList<String> selectedClasses;
+    
+    
+	private boolean checkClassExists(String className){ // checks if class is exists in right table
+		for(ClassInCourse temp : classesInCourse){
+			if(temp.getClassInCourse().equals(className))
+				return true;
+		}
+		return false;
+	}
+	  @FXML
+	  
+	  
+	  
+	    void addClassesToCourseHandler(ActionEvent event) {
+		  
+		  selectedClasses = lvClasses.getSelectionModel().getSelectedItems(); // get selected elements from the left
+		 
+		  for(String temp : selectedClasses){ 
+			  if(checkClassExists(temp)) continue; // returns true if class exists
+			  classesInCourse.add(new ClassInCourse(temp));
+		  }
+		  
+		  tblClassTeacher.setItems(classesInCourse); // set table from starter
+	    }
+
+	    @FXML
+	    void removeClassesFromCourseHandler(ActionEvent event) {
+	    	ClassInCourse selectedClass = tblClassTeacher.getSelectionModel().getSelectedItem();
+	    	ObservableList<ClassInCourse> tempClassesInCourse = FXCollections.observableArrayList();
+	    	for(ClassInCourse temp : classesInCourse){
+	    		if(selectedClass.equals(temp)) continue;
+	    		tempClassesInCourse.add(temp);
+	    	}
+	    	classesInCourse = tempClassesInCourse;
+			  tblClassTeacher.setItems(classesInCourse); // set table from starter
+	    }
+
+	
 	@FXML
 	void listViewEditChoise(ActionEvent event) {
 
@@ -208,9 +254,10 @@ public class SecretaryController implements Initializable{
 		LoginController.syncWithServer();
 		ArrayList<String> comboClasses = (ArrayList<String>) UserClient.ans;
 		for(String comboClass: comboClasses)
-		lvClasses.getItems().add(comboClass);
+			lvClasses.getItems().add(comboClass);
 		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		classes.setCellValueFactory(new PropertyValueFactory<>("classInCourse"));
+		
 		teachers.setCellFactory(ComboBoxTableCell.forTableColumn("avi sofer ben zona","Malki","Ilya"));
 		tblClassTeacher.setItems(classesInCourse);
 
@@ -232,7 +279,16 @@ public class SecretaryController implements Initializable{
 			classInCourse.set(class1);
 		}
 
-
+		public String getClassInCourse() {
+			return classInCourse.get();
+		}
+		
+		public boolean equals(ClassInCourse a){
+			if(this.getClassInCourse().equals(a.getClassInCourse())){
+				return true;
+			}
+			return false;
+		}
 	}
 
 } 
