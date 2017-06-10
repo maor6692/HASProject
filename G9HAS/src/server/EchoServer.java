@@ -99,8 +99,23 @@ public class EchoServer extends AbstractServer {
 						}
 						stmt.close();
 						rs.close();
-						client.sendToClient(ans.toArray());//sends currSemester to SecretaryController.
+						client.sendToClient(ans);//sends currSemester to SecretaryController.
 						break;
+						
+					case "getCurrentClasses":
+						ans = (ArrayList<String>) message.get("getCurrentClasses");
+						query = "SELECT name FROM class WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) { 
+							ans.add(rs.getString(1));
+						}
+						stmt.close();
+						rs.close();
+						client.sendToClient(ans);//sends currSemester to SecretaryController.
+						break;
+
 
 					case "getCurrentSemester":
 

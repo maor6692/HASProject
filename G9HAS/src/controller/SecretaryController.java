@@ -59,7 +59,7 @@ public class SecretaryController implements Initializable{
 	private Label lblUser,lblSemester;
 
 	@FXML
-	private ComboBox<String> cmbChooseCourse;
+	private ComboBox<String> cmbCourse;
 
 	private ComboBox<String> cmbTeacher;
 
@@ -199,8 +199,17 @@ public class SecretaryController implements Initializable{
 		msg.put("getCurrentCourses",arr);
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
-		cmbChooseCourse.getItems().addAll((String[]) UserClient.ans);
-		lvClasses.getItems().addAll("Algebra","Hedva","computers","real time");
+		ArrayList<String> courses = (ArrayList<String>) UserClient.ans;
+		for(String course: courses)
+			cmbCourse.getItems().add(course);
+		msg.clear();
+		
+		msg.put("getCurrentClasses",arr);
+		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
+		LoginController.syncWithServer();
+		ArrayList<String> comboClasses = (ArrayList<String>) UserClient.ans;
+		for(String comboClass: comboClasses)
+		lvClasses.getItems().add(comboClass);
 		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		classes.setCellValueFactory(new PropertyValueFactory<>("classInCourse"));
 		teachers.setCellFactory(ComboBoxTableCell.forTableColumn("avi sofer ben zona","Malki","Ilya"));

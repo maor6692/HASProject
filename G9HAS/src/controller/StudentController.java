@@ -47,7 +47,7 @@ public class StudentController implements Initializable{
 				public void handle(WindowEvent t) {
 					LoginController.logout();
 					Platform.exit();
-					System.exit(0);
+					System.exit(0);						
 				}
 			});
 			
