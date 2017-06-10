@@ -58,7 +58,7 @@ public class TeacherController implements Initializable{
 			e.printStackTrace();
 		}
 	}
-
+//
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
 		lblUser.setText(UserClient.fullName);
