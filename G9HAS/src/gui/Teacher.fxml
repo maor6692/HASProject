@@ -28,7 +28,7 @@
                   <Font size="11.0" />
                </font>
             </Hyperlink>
-            <Hyperlink fx:id="hlCreateTask" layoutX="14.0" layoutY="103.0" onAction="#defineCourseHandler" prefHeight="23.0" prefWidth="169.0" text="Create task" textFill="#529ceb" />
+            <Hyperlink fx:id="hlCreateTask" layoutX="14.0" layoutY="103.0" onAction="#createTaskHandler" prefHeight="23.0" prefWidth="169.0" text="Create task" textFill="#529ceb" />
             <Hyperlink fx:id="hlCheckTask" layoutX="14.0" layoutY="138.0" text="Check Task" textFill="#529ceb" />
          </children>
       </Pane>
@@ -51,19 +51,32 @@
                         <Font name="System Bold" size="28.0" />
                      </font>
                   </Label>
-            <Label fx:id="lblCourseID" layoutX="177.0" layoutY="95.0" text="Course:">
+            <Label fx:id="lblCourseID" layoutX="65.0" layoutY="99.0" text="Course:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <ComboBox fx:id="cbCourseID" layoutX="133.0" layoutY="126.0" prefHeight="31.0" prefWidth="132.0" promptText="Choose Course" />
-            <Label fx:id="lblClass" layoutX="326.0" layoutY="96.0" text="Class:">
+            <ComboBox fx:id="cbCourseID" layoutX="134.0" layoutY="97.0" onAction="#cbCourseHandler" prefHeight="31.0" prefWidth="132.0" promptText="Choose Course" />
+            <Label fx:id="lblClass" layoutX="77.0" layoutY="142.0" text="Class:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button fx:id="btnCreateTask" layoutX="247.0" layoutY="345.0" mnemonicParsing="false" onAction="#createCourseHandler" text="Create Task!" />
-            <ComboBox fx:id="cbClass" layoutX="288.0" layoutY="126.0" prefHeight="31.0" prefWidth="132.0" promptText="Choose Class" />
+            <Button fx:id="btnCreateTask" layoutX="247.0" layoutY="345.0" mnemonicParsing="false" onAction="#createTaskHandler" text="Create Task!" />
+            <ComboBox fx:id="cbClass" layoutX="134.0" layoutY="140.0" prefHeight="31.0" prefWidth="132.0" promptText="Choose Class" />
+            <TextField fx:id="tfUploadPath" layoutX="133.0" layoutY="184.0" prefHeight="25.0" prefWidth="154.0" />
+            <Button fx:id="btnUpload" layoutX="287.0" layoutY="184.0" mnemonicParsing="false" onAction="#fileChooserHandler" prefHeight="25.0" prefWidth="112.0" text="Choose File..." />
+            <Label fx:id="lblTask" layoutX="80.0" layoutY="183.0" text="Task:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblSubmissionDate" layoutX="12.0" layoutY="236.0" text="Submission Date:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfSubmissionDate" layoutX="166.0" layoutY="237.0" />
          </children>
       </Pane>
    </center>

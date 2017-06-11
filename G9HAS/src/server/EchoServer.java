@@ -128,6 +128,60 @@ public class EchoServer extends AbstractServer {
 							e1.printStackTrace();
 						}
 						break;
+					case "Search for teacher courses":
+						String sans = (String) message.get(key);
+						ans = new ArrayList<String>();
+						query = "SELECT course_id FROM class_in_course WHERE teacher_id='"+sans+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						while (rs.next()) { 
+							ans.add(rs.getString(1));
+						}
+						stmt.close();
+						rs.close();
+						client.sendToClient(ans);
+						break;
+					case "Search for course name":
+						ans = (ArrayList<String>) message.get("Search for course name");
+						ArrayList<String> newans = new ArrayList<String>();
+						for(int i=0;i<ans.size();i++)
+						{
+							query = "SELECT name FROM course WHERE id='"+ans.get(i)+"'";
+							stmt = conn.createStatement();
+							rs = stmt.executeQuery(query);
+							while (rs.next()) { 
+								newans.add(rs.getString(1));
+							}
+							stmt.close();
+							rs.close();
+						}
+						client.sendToClient(newans);
+						break;
+					case "Get class id for task":
+						ArrayList<String> snewans = (ArrayList<String>)message.get(key);
+						int i;
+						query = "SELECT class_id FROM class_in_course WHERE course_id="+Integer.parseInt(snewans.get(0))+" AND teacher_id='"+snewans.get(1)+"'";	
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						snewans.clear();
+						while (rs.next()) { 
+							snewans.add(rs.getString(1));
+						}
+						stmt.close();
+						rs.close();
+						for(i=0;i<snewans.size();i++)
+						{
+							query = "SELECT name FROM class WHERE id="+snewans.get(i);
+							stmt = conn.createStatement();
+							rs = stmt.executeQuery(query);
+							while (rs.next()) { 
+								snewans.set(i, snewans.get(i) + " - " + rs.getString(1));
+							}
+							stmt.close();
+							rs.close();
+						}
+						client.sendToClient(snewans);
+						break;
 
 					case "getCurrentSemester":
 
