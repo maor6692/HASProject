@@ -118,6 +118,8 @@ public class SecretaryController implements Initializable{
 	    @FXML
 	    void removeClassesFromCourseHandler(ActionEvent event) {
 	    	ClassInCourse selectedClass = tblClassTeacher.getSelectionModel().getSelectedItem();
+	    	if(selectedClass == null)
+	    		return;
 	    	ObservableList<ClassInCourse> tempClassesInCourse = FXCollections.observableArrayList();
 	    	for(ClassInCourse temp : classesInCourse){
 	    		if(selectedClass.equals(temp)) continue;
