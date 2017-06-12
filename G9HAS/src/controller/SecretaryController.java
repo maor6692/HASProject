@@ -94,8 +94,8 @@ public class SecretaryController implements Initializable{
     private String currCourseBox=null;
     
   //out hashmap <teaching unit id,map of teachers in this teaching unit>;
-    //inner hashmaps <teacher id,teacher name>
-    private HashMap<Integer,HashMap<Integer,String>> teachersInfo; 
+    //inner hashmaps <teacher id,arraylist of teacher name and max hours>
+    private HashMap<Integer,HashMap<Integer,ArrayList<String>>> teachersInfo; 
     
 	private boolean checkClassExists(String className){ // checks if class is exists in right table
 		for(ClassInCourse temp : classesInCourse){
