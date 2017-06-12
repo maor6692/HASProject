@@ -136,11 +136,11 @@ public class EchoServer extends AbstractServer {
 							while (rs2.next()) {
 								teacherDetails.add(rs2.getString(2));//first_name
 								teacherDetails.add(rs2.getString(3));//last_name
-								teacherDetails.add(rs2.getString(4));//teaching_unit
-								teachers.put(rs2.getString(1), teacherDetails);//<id,teacherDetails>
+								teacherDetails.add(rs2.getString(4));//hours_limit
+								teachers.put(rs2.getString(1), new ArrayList<String>(teacherDetails));//<id,teacherDetails>
 								teacherDetails.clear();
 							}
-							units.put(rs.getString(1), teachers);//<teaching_unit,teachers>
+							units.put(rs.getString(1), new HashMap<String, ArrayList<String>>(teachers));//<teaching_unit,teachers>
 							teachers.clear();
 							stmt2.close();
 						}

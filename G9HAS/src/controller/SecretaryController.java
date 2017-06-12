@@ -276,7 +276,6 @@ public class SecretaryController implements Initializable{
 		LoginController.syncWithServer();
 		msg.clear();
 		teachersInfo=(HashMap<String,HashMap<String,ArrayList<String>>>) UserClient.ans;
-		teachersInfo.toString();//checking hashmap
 		
 		teachers.setCellFactory(ComboBoxTableCell.forTableColumn("avi sofer ben zona","Malki","Ilya"));
 		tblClassTeacher.setItems(classesInCourse);
