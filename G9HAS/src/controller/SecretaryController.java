@@ -95,7 +95,7 @@ public class SecretaryController implements Initializable{
     
   //out hashmap <teaching unit id,map of teachers in this teaching unit>;
     //inner hashmaps <teacher id,arraylist of teacher name and max hours>
-    private HashMap<Integer,HashMap<Integer,ArrayList<String>>> teachersInfo; 
+    private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo; 
     
 	private boolean checkClassExists(String className){ // checks if class is exists in right table
 		for(ClassInCourse temp : classesInCourse){
@@ -145,7 +145,6 @@ public class SecretaryController implements Initializable{
 	void classClickHandler(ActionEvent event) {//enable multiple choice
 		
 	}
-
 
 	@FXML
 	void chooseCourseHandler(ActionEvent event) {
@@ -272,12 +271,12 @@ public class SecretaryController implements Initializable{
 		classes.setCellValueFactory(new PropertyValueFactory<>("classInCourse"));
 		
 		//get teachers
-		msg.put("getTeachers",arr);
+		msg.put("getTeachers",null);
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
 		msg.clear();
-		
-		//teachersInfo=(HashMap<Integer,HashMap<Integer,String>>) UserClient.ans;
+		teachersInfo=(HashMap<String,HashMap<String,ArrayList<String>>>) UserClient.ans;
+		teachersInfo.toString();//checking hashmap
 		
 		teachers.setCellFactory(ComboBoxTableCell.forTableColumn("avi sofer ben zona","Malki","Ilya"));
 		tblClassTeacher.setItems(classesInCourse);

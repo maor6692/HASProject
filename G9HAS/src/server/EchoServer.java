@@ -1,7 +1,5 @@
 package server;
 
-
-import java.awt.List;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -90,7 +88,7 @@ public class EchoServer extends AbstractServer {
 						rs.close();
 						client.sendToClient(ans);//sends the answer to client.
 						break;
-						
+
 					case "getCurrentCourses":
 						ans = (ArrayList<String>) message.get("getCurrentCourses");
 						query = "SELECT name FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
@@ -100,12 +98,12 @@ public class EchoServer extends AbstractServer {
 						while (rs.next()) { 
 							ans.add(rs.getString(1));
 						}
-						
+
 						stmt.close();
 						rs.close();
 						client.sendToClient(ans);//sends currSemester to SecretaryController.
 						break;
-						
+
 					case "getCurrentClasses":
 						ans = (ArrayList<String>) message.get("getCurrentClasses");
 						query = "SELECT name FROM class WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
@@ -118,6 +116,38 @@ public class EchoServer extends AbstractServer {
 						stmt.close();
 						rs.close();
 						client.sendToClient(ans);//sends currSemester to SecretaryController.
+						break;
+
+					case "getTeachers":
+						ResultSet rs2 = null;
+						Statement stmt2;
+						HashMap<String ,HashMap<String,ArrayList<String>>> units = new HashMap<String, HashMap<String, ArrayList<String>>>();//outer hashMap
+						HashMap<String,ArrayList<String>> teachers = new HashMap<String, ArrayList<String>>();//inner hashMap
+						ArrayList<String> teacherDetails = new ArrayList<String>();//contains teacher name and hours_limit
+						query = "SELECT id FROM teaching_unit";//get all teaching units
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						while (rs.next()) { //for each teaching unit get teachers list with their names and our limit
+							query = "SELECT t.id,u.first_name,u.last_name,t.hours_limit "
+									+ "From teacher t,users u,teacher_teaching_unit ttu "
+									+ "Where u.user_name=t.id AND ttu.teaching_unit="+rs.getString(1) +" AND ttu.teacher_id=t.id";
+							 stmt2 = conn.createStatement();
+							rs2 = stmt2.executeQuery(query);
+							while (rs2.next()) {
+								teacherDetails.add(rs2.getString(2));//first_name
+								teacherDetails.add(rs2.getString(3));//last_name
+								teacherDetails.add(rs2.getString(4));//teaching_unit
+								teachers.put(rs2.getString(1), teacherDetails);//<id,teacherDetails>
+								teacherDetails.clear();
+							}
+							units.put(rs.getString(1), teachers);//<teaching_unit,teachers>
+							teachers.clear();
+							stmt2.close();
+						}
+						stmt.close();
+						rs.close();
+						rs2.close();
+						client.sendToClient(units);//sends units to Secretary controller
 						break;
 
 					case "upload":
@@ -253,6 +283,7 @@ public class EchoServer extends AbstractServer {
 						pstmt.executeUpdate();
 
 						break;
+
 					case "get info for blockParentAccess":
 						HashMap<Integer, ArrayList<String>> classes = new HashMap<Integer, ArrayList<String>>();
 						HashMap<Integer, ArrayList<String>> students = new HashMap<Integer, ArrayList<String>>();
