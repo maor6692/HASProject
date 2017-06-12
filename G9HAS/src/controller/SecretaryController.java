@@ -91,6 +91,11 @@ public class SecretaryController implements Initializable{
     private Button btnMoveLeft;
     ObservableList<String> selectedClasses;
     
+    private String currCourseBox=null;
+    
+  //out hashmap <teaching unit id,map of teachers in this teaching unit>;
+    //inner hashmaps <teacher id,teacher name>
+    private HashMap<Integer,HashMap<Integer,String>> teachersInfo; 
     
 	private boolean checkClassExists(String className){ // checks if class is exists in right table
 		for(ClassInCourse temp : classesInCourse){
@@ -104,7 +109,8 @@ public class SecretaryController implements Initializable{
 	  
 	  
 	    void addClassesToCourseHandler(ActionEvent event) {
-		  
+		  if(cmbCourse.getValue() == null)
+			  return;
 		  selectedClasses = lvClasses.getSelectionModel().getSelectedItems(); // get selected elements from the left
 		 
 		  for(String temp : selectedClasses){ 
@@ -143,7 +149,11 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	void chooseCourseHandler(ActionEvent event) {
-
+		currCourseBox = cmbCourse.getValue();
+		// clean class in course table
+    	classesInCourse =  FXCollections.observableArrayList();
+    	tblClassTeacher.setItems(classesInCourse); // set table from starter
+    	
 	}
 
 	@FXML
@@ -225,6 +235,7 @@ public class SecretaryController implements Initializable{
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
 		msg.clear();
+		tblClassTeacher.setPlaceholder(new Label("Select A Course And Add classes"));
 		currSemester=(String) UserClient.ans;
 		if(currSemester.equals("")){
 			LocalDate localDate = LocalDate.now();
@@ -259,6 +270,14 @@ public class SecretaryController implements Initializable{
 			lvClasses.getItems().add(comboClass);
 		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		classes.setCellValueFactory(new PropertyValueFactory<>("classInCourse"));
+		
+		//get teachers
+		msg.put("getTeachers",arr);
+		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
+		LoginController.syncWithServer();
+		msg.clear();
+		
+		//teachersInfo=(HashMap<Integer,HashMap<Integer,String>>) UserClient.ans;
 		
 		teachers.setCellFactory(ComboBoxTableCell.forTableColumn("avi sofer ben zona","Malki","Ilya"));
 		tblClassTeacher.setItems(classesInCourse);
