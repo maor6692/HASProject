@@ -52,7 +52,7 @@ public class UserClient extends AbstractClient {
 		synchronized (this) {
 			ans = msg;
 			flag = true;
-			notifyAll();//release the GUI thread from wait to new answer from server
+			notify();//release the GUI thread from wait to new answer from server
 		}
 
 	}
@@ -68,7 +68,6 @@ public class UserClient extends AbstractClient {
 			sendToServer(msg);
 		} catch (Exception e) {//if the server is not listening we will end the program.
 			JOptionPane.showMessageDialog(null, "Server is not responding, try again later");
-			quit();
 		}
 	}
 

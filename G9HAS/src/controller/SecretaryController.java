@@ -1,23 +1,16 @@
 package controller;
 
 
-import java.awt.List;
+
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-
-import javax.swing.JOptionPane;
-
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,12 +23,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -44,13 +34,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.converter.DefaultStringConverter;
 
 public class SecretaryController implements Initializable{
 	ComboBoxTableCell cb = new ComboBoxTableCell();
 
 	private ObservableList<ClassInCourse> classesInCourse = FXCollections.observableArrayList();
-	
-	
+	private ObservableList<String> teachersnames = FXCollections.observableArrayList();
+
 	int newYear,newSemester;
 	String currSemester="";
 
@@ -84,58 +75,60 @@ public class SecretaryController implements Initializable{
 	@FXML
 	private TableColumn<String,String> classes;
 
-    @FXML
-    private Button btnMoveRight;
+	@FXML
+	private Button btnMoveRight;
 
-    @FXML
-    private Button btnMoveLeft;
-    ObservableList<String> selectedClasses;
-    
-    private String currCourseBox=null;
-    
-  //out hashmap <teaching unit id,map of teachers in this teaching unit>;
-    //inner hashmaps <teacher id,arraylist of teacher name and max hours>
-    private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo; 
-    
-	private boolean checkClassExists(String className){ // checks if class is exists in right table
+	@FXML
+	private Button btnMoveLeft;
+	ObservableList<String> selectedClasses;
+
+	private String currCourseBox=null;
+
+	//out hashmap <teaching unit id,map of teachers in this teaching unit>;
+	//inner hashmaps <teacher id,arraylist of teacher name and max hours>
+	private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo; 
+
+	private boolean checkClassExists(String className){ // checks if class is exists in right side of table
 		for(ClassInCourse temp : classesInCourse){
 			if(temp.getClassInCourse().equals(className))
 				return true;
 		}
 		return false;
 	}
-	  @FXML
-	  
-	  
-	  
-	    void addClassesToCourseHandler(ActionEvent event) {
-		  if(cmbCourse.getValue() == null)
-			  return;
-		  selectedClasses = lvClasses.getSelectionModel().getSelectedItems(); // get selected elements from the left
-		 
-		  for(String temp : selectedClasses){ 
-			  if(checkClassExists(temp)) continue; // returns true if class exists
-			  classesInCourse.add(new ClassInCourse(temp));
-		  }
-		  
-		  tblClassTeacher.setItems(classesInCourse); // set table from starter
-	    }
+	@FXML
 
-	    @FXML
-	    void removeClassesFromCourseHandler(ActionEvent event) {
-	    	ClassInCourse selectedClass = tblClassTeacher.getSelectionModel().getSelectedItem();
-	    	if(selectedClass == null)
-	    		return;
-	    	ObservableList<ClassInCourse> tempClassesInCourse = FXCollections.observableArrayList();
-	    	for(ClassInCourse temp : classesInCourse){
-	    		if(selectedClass.equals(temp)) continue;
-	    		tempClassesInCourse.add(temp);
-	    	}
-	    	classesInCourse = tempClassesInCourse;
-			  tblClassTeacher.setItems(classesInCourse); // set table from starter
-	    }
 
-	
+
+	void addClassesToCourseHandler(ActionEvent event) {
+		if(cmbCourse.getValue() == null)
+			return;
+		selectedClasses = lvClasses.getSelectionModel().getSelectedItems(); // get selected elements from the left
+
+		for(String temp : selectedClasses){ 
+			if(checkClassExists(temp)) continue; // returns true if class exists
+			classesInCourse.add(new ClassInCourse(temp));
+		}
+
+		tblClassTeacher.setItems(classesInCourse); // set table from starter
+	}
+
+	@FXML
+	void removeClassesFromCourseHandler(ActionEvent event) {
+		ClassInCourse selectedClass = tblClassTeacher.getSelectionModel().getSelectedItem();
+		if(selectedClass == null)
+			return;
+		ObservableList<ClassInCourse> tempClassesInCourse = FXCollections.observableArrayList();
+		for(ClassInCourse temp : classesInCourse){
+			if(selectedClass.equals(temp)) continue;
+			tempClassesInCourse.add(temp);
+		}
+		classesInCourse = tempClassesInCourse;
+		tblClassTeacher.setItems(classesInCourse); // set table from starter
+	}
+	@FXML
+	void inputChangedHandler(ActionEvent event) {
+		event.getSource();
+	}
 	@FXML
 	void listViewEditChoise(ActionEvent event) {
 
@@ -143,16 +136,16 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	void classClickHandler(ActionEvent event) {//enable multiple choice
-		
+
 	}
 
 	@FXML
 	void chooseCourseHandler(ActionEvent event) {
 		currCourseBox = cmbCourse.getValue();
 		// clean class in course table
-    	classesInCourse =  FXCollections.observableArrayList();
-    	tblClassTeacher.setItems(classesInCourse); // set table from starter
-    	
+		classesInCourse =  FXCollections.observableArrayList();
+		tblClassTeacher.setItems(classesInCourse); // set table from starter
+
 	}
 
 	@FXML
@@ -260,24 +253,32 @@ public class SecretaryController implements Initializable{
 		for(String course: courses)
 			cmbCourse.getItems().add(course);
 		msg.clear();
-		
+
 		msg.put("getCurrentClasses",arr);
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
+		msg.clear();
 		ArrayList<String> comboClasses = (ArrayList<String>) UserClient.ans;
 		for(String comboClass: comboClasses)
 			lvClasses.getItems().add(comboClass);
 		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		classes.setCellValueFactory(new PropertyValueFactory<>("classInCourse"));
-		
+		//teachers.setCellValueFactory(new PropertyValueFactory<>("teacher"));
+
 		//get teachers
-		msg.put("getTeachers",null);
+		msg.put("getTeachers",new ArrayList<String>());
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
-		msg.clear();
 		teachersInfo=(HashMap<String,HashMap<String,ArrayList<String>>>) UserClient.ans;
-		
-		teachers.setCellFactory(ComboBoxTableCell.forTableColumn("avi sofer ben zona","Malki","Ilya"));
+		for(HashMap<String,ArrayList<String>> values:teachersInfo.values()){
+				for(ArrayList<String> lists: values.values()){
+						if(!teachersnames.contains(lists.get(0)+" "+lists.get(1))) teachersnames.add(lists.get(0)+" "+lists.get(1));
+				}
+		}
+
+		Collections.sort(teachersnames);
+		teachers.setCellFactory(ComboBoxTableCell.forTableColumn(teachersnames));
+
 		tblClassTeacher.setItems(classesInCourse);
 
 	}
@@ -290,18 +291,14 @@ public class SecretaryController implements Initializable{
 
 		}
 
-		public String ClassInCourse() {
-			return classInCourse.get();
-		}
-
-		public void ClassInCourse(String class1) {
-			classInCourse.set(class1);
+		public void ClassInCourse(String classInCourse) {
+			this.classInCourse.set(classInCourse);
 		}
 
 		public String getClassInCourse() {
 			return classInCourse.get();
 		}
-		
+
 		public boolean equals(ClassInCourse a){
 			if(this.getClassInCourse().equals(a.getClassInCourse())){
 				return true;

@@ -261,6 +261,7 @@ public class EchoServer extends AbstractServer {
 
 						pstmt.executeUpdate();
 						//client.sendToClient(ans);//sends the answer to client.
+						client.sendToClient(null);
 						break;
 
 					case "logout":
@@ -271,6 +272,7 @@ public class EchoServer extends AbstractServer {
 						stmt.executeUpdate(query);
 						ans.clear();
 						stmt.close();
+						client.sendToClient(null);
 						break;
 
 					case "define class":
@@ -281,7 +283,7 @@ public class EchoServer extends AbstractServer {
 						pstmt.setInt(1, ((SClass)message.get(key)).getId());
 						pstmt.setString(2, ((SClass)message.get(key)).getName());
 						pstmt.executeUpdate();
-
+						client.sendToClient(null);
 						break;
 
 					case "get info for blockParentAccess":

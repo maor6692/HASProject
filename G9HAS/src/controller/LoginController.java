@@ -1,4 +1,5 @@
 package controller;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +45,13 @@ public class LoginController extends Application implements Initializable {
 		arr.add(UserClient.userName);
 		msg.put("logout",arr);
 		LoginController.userClient.sendServer(msg);
+		syncWithServer();
+		try {
+			userClient.closeConnection();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * change user status to 'online' in DB and open appropriate window due to user_type
