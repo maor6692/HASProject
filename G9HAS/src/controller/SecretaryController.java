@@ -29,6 +29,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
@@ -39,7 +40,8 @@ import javafx.util.converter.DefaultStringConverter;
 public class SecretaryController implements Initializable{
 	ComboBoxTableCell cb = new ComboBoxTableCell();
 
-	private ObservableList<ClassInCourse> classesInCourse = FXCollections.observableArrayList();
+	private ObservableList<String> students = FXCollections.observableArrayList();
+	private ObservableList<Row> classesInCourse = FXCollections.observableArrayList();
 	private ObservableList<String> teachersnames = FXCollections.observableArrayList();
 
 	int newYear,newSemester;
@@ -52,18 +54,18 @@ public class SecretaryController implements Initializable{
 	private Label lblUser,lblSemester;
 
 	@FXML
+	private TextField tfClassId,tfClassName,tfStudentId;
+
+	@FXML
 	private ComboBox<String> cmbCourse;
 
 	private ComboBox<String> cmbTeacher;
 
 	@FXML
-	private ListView<String> lvClasses;
+	private ListView<String> lvClasses,lvStudents;
 
 	@FXML
-	private TableView<ClassInCourse> tblClassTeacher;
-
-	@FXML
-	private TableView<String> tblExceptions;
+	private TableView<Row> tblClassTeacher,tblExceptions;
 
 	@FXML
 	private Button btnAssign;
@@ -89,8 +91,8 @@ public class SecretaryController implements Initializable{
 	private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo; 
 
 	private boolean checkClassExists(String className){ // checks if class is exists in right side of table
-		for(ClassInCourse temp : classesInCourse){
-			if(temp.getClassInCourse().equals(className))
+		for(Row temp : classesInCourse){
+			if(temp.getRow().equals(className))
 				return true;
 		}
 		return false;
@@ -106,19 +108,18 @@ public class SecretaryController implements Initializable{
 
 		for(String temp : selectedClasses){ 
 			if(checkClassExists(temp)) continue; // returns true if class exists
-			classesInCourse.add(new ClassInCourse(temp));
+			classesInCourse.add(new Row(temp));
 		}
 
 		tblClassTeacher.setItems(classesInCourse); // set table from starter
 	}
-
 	@FXML
 	void removeClassesFromCourseHandler(ActionEvent event) {
-		ClassInCourse selectedClass = tblClassTeacher.getSelectionModel().getSelectedItem();
+		Row selectedClass = tblClassTeacher.getSelectionModel().getSelectedItem();
 		if(selectedClass == null)
 			return;
-		ObservableList<ClassInCourse> tempClassesInCourse = FXCollections.observableArrayList();
-		for(ClassInCourse temp : classesInCourse){
+		ObservableList<Row> tempClassesInCourse = FXCollections.observableArrayList();
+		for(Row temp : classesInCourse){
 			if(selectedClass.equals(temp)) continue;
 			tempClassesInCourse.add(temp);
 		}
@@ -148,12 +149,34 @@ public class SecretaryController implements Initializable{
 		//*****************************************************************************************************************
 		HashMap<String,ArrayList<String>> values = teachersInfo.get("unit");//insert teaching unit of course instead "unit"
 		//******************************************************************************************************************
-		for(ArrayList<String> lists: values.values()){
-			if(!teachersnames.contains(lists.get(0)+" "+lists.get(1))) teachersnames.add(lists.get(0)+" "+lists.get(1));
-		}
+		if(values!=null)
+			for(ArrayList<String> lists: values.values()){
+				if(!teachersnames.contains(lists.get(0)+" "+lists.get(1))) teachersnames.add(lists.get(0)+" "+lists.get(1));
+			}
 		Collections.sort(teachersnames);
 		teachers.setCellFactory(ComboBoxTableCell.forTableColumn(teachersnames));
 
+	}
+	@FXML
+	void createClassHandler(ActionEvent event) {
+
+	}
+
+	@FXML
+	void addStudentToTableHandler(ActionEvent event) {
+		if(students.contains(tfStudentId.getText())) return;
+		students.add(tfStudentId.getText());
+		lvStudents.setItems(students);
+	}
+
+	@FXML
+	void removeStudentFromTableHandler(ActionEvent event) {
+		if(lvStudents.getSelectionModel().getSelectedItem()==null){
+			if(!students.contains(tfStudentId.getText())) return;
+			students.remove(tfStudentId.getText());
+		}
+		else students.remove(lvStudents.getSelectionModel().getSelectedItem());
+		lvStudents.setItems(students);
 	}
 
 	@FXML
@@ -270,7 +293,7 @@ public class SecretaryController implements Initializable{
 		for(String comboClass: comboClasses)
 			lvClasses.getItems().add(comboClass);
 		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		classes.setCellValueFactory(new PropertyValueFactory<>("classInCourse"));
+		classes.setCellValueFactory(new PropertyValueFactory<>("row"));
 		//teachers.setCellValueFactory(new PropertyValueFactory<>("teacher"));
 
 		//get teachers
@@ -281,25 +304,25 @@ public class SecretaryController implements Initializable{
 		tblClassTeacher.setItems(classesInCourse);
 
 	}
-	public static class ClassInCourse {
+	public static class Row {
 
-		private final SimpleStringProperty classInCourse;
+		private final SimpleStringProperty row;
 
-		private ClassInCourse(String classInCourse) {
-			this.classInCourse = new SimpleStringProperty(classInCourse);
+		private Row(String row) {
+			this.row = new SimpleStringProperty(row);
 
 		}
 
-		public void ClassInCourse(String classInCourse) {
-			this.classInCourse.set(classInCourse);
+		public void setRow(String row) {
+			this.row.set(row);
 		}
 
-		public String getClassInCourse() {
-			return classInCourse.get();
+		public String getRow() {
+			return row.get();
 		}
 
-		public boolean equals(ClassInCourse a){
-			if(this.getClassInCourse().equals(a.getClassInCourse())){
+		public boolean equals(Row row){
+			if(this.getRow().equals(row.getRow())){
 				return true;
 			}
 			return false;
