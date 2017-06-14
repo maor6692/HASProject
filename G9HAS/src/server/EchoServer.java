@@ -13,6 +13,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -91,17 +93,45 @@ public class EchoServer extends AbstractServer {
 
 					case "getCurrentCourses":
 						ans = (ArrayList<String>) message.get("getCurrentCourses");
-						query = "SELECT name FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
+						query = "SELECT name,teaching_unit FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						ans.clear();
-						while (rs.next()) { 
-							ans.add(rs.getString(1));
+						
+						HashMap<Integer,ArrayList<String>> currCourses = new HashMap<Integer,ArrayList<String>>();
+						ArrayList<Integer> tempUnits = new ArrayList<>();
+						ArrayList<String> tempNames = new ArrayList<>();
+						
+						while (rs.next()) {  // create 2 arraylist, teachin units and course names
+							tempUnits.add(Integer.parseInt(rs.getString(2)));
+							tempNames.add(rs.getString(1));
 						}
+						
+						//** make arraylist of no duplicated units for keys
+						ArrayList <Integer> teachingUnits = new ArrayList <Integer>();
+						for(int t : tempUnits){ // making arraylist with teaching units - no duplications
+							if(!teachingUnits.contains(t))
+								teachingUnits.add(t);
+						}
+						
+						
+						for(int  unit : teachingUnits){ // for each unit(no duplications)
+							ArrayList<String> Tnames = new ArrayList<>();
+								for(int t=0;t<tempUnits.size();t++){ // search in query result this teaching unit 
+									if(unit == tempUnits.get(t)){
+										Tnames.add(tempNames.get(t)); // add course name
+									}
+								}
+							currCourses.put(unit, Tnames); // add courses unit + list of courses
+						}
+						
+
+
+						
 
 						stmt.close();
 						rs.close();
-						client.sendToClient(ans);//sends currSemester to SecretaryController.
+						client.sendToClient(currCourses);//sends currSemester to SecretaryController.
 						break;
 
 					case "getCurrentClasses":

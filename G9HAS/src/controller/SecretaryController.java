@@ -7,6 +7,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -83,7 +84,7 @@ public class SecretaryController implements Initializable{
 	@FXML
 	private Button btnMoveLeft;
 	ObservableList<String> selectedClasses;
-
+	private HashMap<Integer,ArrayList<String>> courses;
 	private String currCourseBox=null;
 
 	//out hashmap <teaching unit id,map of teachers in this teaching unit>;
@@ -192,6 +193,8 @@ public class SecretaryController implements Initializable{
 	void assignClassesAndTeachersHandler(ActionEvent event) {
 
 	}
+	
+	
 	@FXML
 	void logoutHandler(ActionEvent event) {//goes back to login window
 		Parent nextWindow;
@@ -277,12 +280,15 @@ public class SecretaryController implements Initializable{
 		ArrayList<String> arr = new ArrayList<String>();
 		arr.add(String.valueOf(newYear));
 		arr.add(String.valueOf(newSemester));
+		
 		msg.put("getCurrentCourses",arr);
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
-		ArrayList<String> courses = (ArrayList<String>) UserClient.ans;
-		for(String course: courses)
-			cmbCourse.getItems().add(course);
+		courses  = (HashMap<Integer,ArrayList<String>>) UserClient.ans;
+		Collection<ArrayList<String>> courseCollection = courses.values();
+		for(ArrayList<String> carray: courseCollection)
+			for(String cname: carray)
+				cmbCourse.getItems().add(cname);
 		msg.clear();
 
 		msg.put("getCurrentClasses",arr);
@@ -304,6 +310,8 @@ public class SecretaryController implements Initializable{
 		tblClassTeacher.setItems(classesInCourse);
 
 	}
+
+	
 	public static class Row {
 
 		private final SimpleStringProperty row;
