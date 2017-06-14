@@ -145,6 +145,14 @@ public class SecretaryController implements Initializable{
 		// clean class in course table
 		classesInCourse =  FXCollections.observableArrayList();
 		tblClassTeacher.setItems(classesInCourse); // set table from starter
+		//*****************************************************************************************************************
+		HashMap<String,ArrayList<String>> values = teachersInfo.get("unit");//insert teaching unit of course instead "unit"
+		//******************************************************************************************************************
+		for(ArrayList<String> lists: values.values()){
+			if(!teachersnames.contains(lists.get(0)+" "+lists.get(1))) teachersnames.add(lists.get(0)+" "+lists.get(1));
+		}
+		Collections.sort(teachersnames);
+		teachers.setCellFactory(ComboBoxTableCell.forTableColumn(teachersnames));
 
 	}
 
@@ -270,15 +278,6 @@ public class SecretaryController implements Initializable{
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
 		teachersInfo=(HashMap<String,HashMap<String,ArrayList<String>>>) UserClient.ans;
-		for(HashMap<String,ArrayList<String>> values:teachersInfo.values()){
-				for(ArrayList<String> lists: values.values()){
-						if(!teachersnames.contains(lists.get(0)+" "+lists.get(1))) teachersnames.add(lists.get(0)+" "+lists.get(1));
-				}
-		}
-
-		Collections.sort(teachersnames);
-		teachers.setCellFactory(ComboBoxTableCell.forTableColumn(teachersnames));
-
 		tblClassTeacher.setItems(classesInCourse);
 
 	}
