@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -254,7 +256,24 @@ public class EchoServer extends AbstractServer {
 						}
 						stmt.close();
 						rs.close();
-						client.sendToClient(currSemester);//sends currSemester to SecretaryController.
+						int newSemester;
+						int newYear;
+						if(currSemester.equals("")){//if there is no current semester in DB
+							LocalDate localDate = LocalDate.now();
+							newYear=Integer.parseInt(DateTimeFormatter.ofPattern("yyyy/MM/dd").format(localDate).substring(0, 4));
+							newSemester=1;
+						}else{
+							newYear=Integer.parseInt(currSemester.substring(0, 4));
+							newSemester= (currSemester.charAt(4)=='1'  ? 1 : 2);
+							if(newSemester==2){
+								newSemester=1;
+								newYear++;
+							}else newSemester = 2;
+						}
+						ArrayList<Object> semester = new ArrayList<Object>();
+						semester.add(newYear);
+						semester.add(newSemester > 1 ? 'B' : 'A');
+						client.sendToClient(semester);//sends next Semester details to SecretaryController.
 						break;
 
 					case "Get teaching unit":

@@ -45,14 +45,15 @@ public class SecretaryController implements Initializable{
 	private ObservableList<Row> classesInCourse = FXCollections.observableArrayList();
 	private ObservableList<String> teachersnames = FXCollections.observableArrayList();
 
-	int newYear,newSemester;
-	String currSemester="";
+	int newYear;
+	char newSemester;
+	ArrayList<Object> currSemester;
 
 	@FXML
 	private Pane paneRemoveStudent,paneChangeAppointment,paneCreateSemester,paneDefineClass,paneAddStudent;
 
 	@FXML
-	private Label lblUser,lblSemester;
+	private Label lblUser,lblSemester,lblWarningNoStudents;
 
 	@FXML
 	private TextField tfClassId,tfClassName,tfStudentId;
@@ -160,7 +161,38 @@ public class SecretaryController implements Initializable{
 	}
 	@FXML
 	void createClassHandler(ActionEvent event) {
+		if(lvStudents.getItems()!=null){
+			HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
+			ArrayList<String> params = new ArrayList<String>();
 
+			msg.put("getCurrentSemester",null);
+			LoginController.userClient.sendServer(msg);//ask from server to return the next semester details
+			LoginController.syncWithServer();
+			msg.clear();
+			currSemester=(ArrayList<Object>) UserClient.ans;
+			newYear=(int) currSemester.get(0);
+			newSemester=(char) currSemester.get(1);
+			int sem = (newSemester == 'A' ? 1 : 2);
+
+			params.add(tfClassId.getText());
+			params.add(tfClassName.getText());
+			params.add(String.valueOf(newYear));
+			params.add(String.valueOf(sem));
+			msg.put("createClass",params);
+			LoginController.userClient.sendServer(msg);//ask from server to create the  new class
+			LoginController.syncWithServer();
+			msg.clear();
+			params.clear();
+
+			params.add(tfClassId.getText());
+			params.addAll(lvStudents.getItems());
+			msg.put("assignStudentsToCourseInClass",params);
+			LoginController.userClient.sendServer(msg);//ask from server to assign students to the new class 
+			LoginController.syncWithServer();
+			msg.clear();
+			params.clear();
+		}
+		else lblWarningNoStudents.setVisible(true);
 	}
 
 	@FXML
@@ -193,8 +225,8 @@ public class SecretaryController implements Initializable{
 	void assignClassesAndTeachersHandler(ActionEvent event) {
 
 	}
-	
-	
+
+
 	@FXML
 	void logoutHandler(ActionEvent event) {//goes back to login window
 		Parent nextWindow;
@@ -255,6 +287,10 @@ public class SecretaryController implements Initializable{
 
 	}
 
+	void initializeDefineCourse(){
+
+	}
+
 	void initializeCreateSemester(){
 		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
 		msg.put("getCurrentSemester",null);
@@ -262,25 +298,13 @@ public class SecretaryController implements Initializable{
 		LoginController.syncWithServer();
 		msg.clear();
 		tblClassTeacher.setPlaceholder(new Label("Select A Course And Add classes"));
-		currSemester=(String) UserClient.ans;
-		if(currSemester.equals("")){
-			LocalDate localDate = LocalDate.now();
-			newYear=Integer.parseInt(DateTimeFormatter.ofPattern("yyyy/MM/dd").format(localDate).substring(0, 4));
-			newSemester=1;
-		}else{
-			newYear=Integer.parseInt(currSemester.substring(0, 4));
-			newSemester=currSemester.charAt(4);
-			if(newSemester==2){
-				newSemester=1;
-				newYear++;
-			}else newSemester = 1;
-		}
-		char sem = newSemester > 1 ? 'B' : 'A';
-		lblSemester.setText("The new semester : "+newYear+"/"+sem);
+		currSemester=(ArrayList<Object>) UserClient.ans;
+		newYear=(int) currSemester.get(0);
+		newSemester=(char) currSemester.get(1);
+		lblSemester.setText("The new semester : "+newYear+"/"+newSemester);
 		ArrayList<String> arr = new ArrayList<String>();
 		arr.add(String.valueOf(newYear));
-		arr.add(String.valueOf(newSemester));
-		
+		arr.add(String.valueOf(newSemester == 'A' ? 1 : 2));
 		msg.put("getCurrentCourses",arr);
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
@@ -311,7 +335,7 @@ public class SecretaryController implements Initializable{
 
 	}
 
-	
+
 	public static class Row {
 
 		private final SimpleStringProperty row;
