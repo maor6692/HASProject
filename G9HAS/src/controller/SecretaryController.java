@@ -53,7 +53,7 @@ public class SecretaryController implements Initializable{
 	private Pane paneRemoveStudent,paneChangeAppointment,paneCreateSemester,paneDefineClass,paneAddStudent;
 
 	@FXML
-	private Label lblUser,lblSemester,lblWarningNoStudents;
+	private Label lblUser,lblSemester,lblWarningNoStudents,lblClassCreated,lblTooLongInput,lblWarningNoStudent,lblWarningEmptyFields,lblWarningStudentAlreadyAssigned,lblWarningClassIsAlreadyExist,lblWarningClassId;
 
 	@FXML
 	private TextField tfClassId,tfClassName,tfStudentId;
@@ -86,6 +86,8 @@ public class SecretaryController implements Initializable{
 	private Button btnMoveLeft;
 	ObservableList<String> selectedClasses;
 	private HashMap<Integer,ArrayList<String>> courses;
+	HashMap<String, ArrayList<String>>	msg ;
+	ArrayList<String> params;
 	private String currCourseBox=null;
 
 	//out hashmap <teaching unit id,map of teachers in this teaching unit>;
@@ -129,6 +131,11 @@ public class SecretaryController implements Initializable{
 		tblClassTeacher.setItems(classesInCourse); // set table from starter
 	}
 	@FXML
+	void onClassIdChangedHandler(ActionEvent event) {
+		lblWarningClassId.setVisible(false);
+	}
+
+	@FXML
 	void inputChangedHandler(ActionEvent event) {
 		event.getSource();
 	}
@@ -159,11 +166,30 @@ public class SecretaryController implements Initializable{
 		teachers.setCellFactory(ComboBoxTableCell.forTableColumn(teachersnames));
 
 	}
+	
+	/**
+	 * create the new class with by user input
+	 */
 	@FXML
 	void createClassHandler(ActionEvent event) {
-		if(lvStudents.getItems()!=null){
-			HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
-			ArrayList<String> params = new ArrayList<String>();
+		hideLabels();
+		if(tfClassId.getText().equals("") || tfClassName.getText().equals("")){
+			lblWarningEmptyFields.setVisible(true);
+			return;
+		}
+		if(tfClassId.getText().length()>11 || tfClassName.getText().length()>11){
+			lblTooLongInput.setVisible(true);
+			return;
+		}
+		msg = new HashMap<String, ArrayList<String>>();
+		params = new ArrayList<String>();
+		if(!(lvStudents.getItems().size()==0)){
+			try{
+				params.add(String.valueOf(Integer.parseInt(tfClassId.getText())));//if input isn't int go to catch
+			}catch(NumberFormatException e){
+				lblWarningClassId.setVisible(true);
+				return;
+			}
 
 			msg.put("getCurrentSemester",null);
 			LoginController.userClient.sendServer(msg);//ask from server to return the next semester details
@@ -173,6 +199,19 @@ public class SecretaryController implements Initializable{
 			newYear=(int) currSemester.get(0);
 			newSemester=(char) currSemester.get(1);
 			int sem = (newSemester == 'A' ? 1 : 2);
+
+			params.add(tfClassName.getText());
+			params.add(String.valueOf(newYear));
+			params.add(String.valueOf(sem));
+			msg.put("checkClassIsNotExist",params);
+			LoginController.userClient.sendServer(msg);//ask from server to check that there is no such class already
+			LoginController.syncWithServer();
+			msg.clear();
+			params.clear();
+			if(UserClient.ans.equals("no")){ 
+				lblWarningClassIsAlreadyExist.setVisible(true);
+				return;
+			}
 
 			params.add(tfClassId.getText());
 			params.add(tfClassName.getText());
@@ -191,25 +230,69 @@ public class SecretaryController implements Initializable{
 			LoginController.syncWithServer();
 			msg.clear();
 			params.clear();
+			lblClassCreated.setVisible(true);
+			lblWarningNoStudents.setVisible(false);
 		}
 		else lblWarningNoStudents.setVisible(true);
 	}
-
+	
+	/**
+	 * add student to lvStudents by tfStudentId input
+	 */
 	@FXML
 	void addStudentToTableHandler(ActionEvent event) {
-		if(students.contains(tfStudentId.getText())) return;
+		hideLabels();
+		if(students.contains(tfStudentId.getText()) || tfStudentId.getText().equals("")) return;
+		if(tfStudentId.getText().length()>45){
+			lblTooLongInput.setVisible(true);
+			return;
+		}
+		msg = new HashMap<String, ArrayList<String>>();
+		params = new ArrayList<String>();
+		params.add(tfStudentId.getText());
+		msg.put("isStudent",params);
+		LoginController.userClient.sendServer(msg);//ask from server to assign students to the new class 
+		LoginController.syncWithServer();
+		msg.clear();
+		params.clear();
+		if(UserClient.ans.equals("no")){ 
+			lblWarningNoStudent.setVisible(true);
+			return;
+		}
+		if(UserClient.ans.equals("alreadyAssigned")){ 
+			lblWarningStudentAlreadyAssigned.setVisible(true);
+			return;
+		}
+		
 		students.add(tfStudentId.getText());
 		lvStudents.setItems(students);
 	}
 
+	/**
+	 * remove selected student from lvStudents
+	 */
 	@FXML
 	void removeStudentFromTableHandler(ActionEvent event) {
+		hideLabels();
 		if(lvStudents.getSelectionModel().getSelectedItem()==null){
 			if(!students.contains(tfStudentId.getText())) return;
 			students.remove(tfStudentId.getText());
 		}
 		else students.remove(lvStudents.getSelectionModel().getSelectedItem());
 		lvStudents.setItems(students);
+	}
+/**
+ * set visible of all warnings labels to false
+ */
+	void hideLabels(){
+		lblClassCreated.setVisible(false);
+		lblWarningStudentAlreadyAssigned.setVisible(false);
+		lblWarningClassIsAlreadyExist.setVisible(false);
+		lblWarningNoStudents.setVisible(false);
+		lblWarningEmptyFields.setVisible(false);
+		lblWarningNoStudent.setVisible(false);
+		lblWarningClassId.setVisible(false);
+		lblTooLongInput.setVisible(false);
 	}
 
 	@FXML

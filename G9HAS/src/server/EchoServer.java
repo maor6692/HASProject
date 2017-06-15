@@ -99,37 +99,37 @@ public class EchoServer extends AbstractServer {
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						ans.clear();
-						
+
 						HashMap<Integer,ArrayList<String>> currCourses = new HashMap<Integer,ArrayList<String>>();
 						ArrayList<Integer> tempUnits = new ArrayList<>();
 						ArrayList<String> tempNames = new ArrayList<>();
-						
+
 						while (rs.next()) {  // create 2 arraylist, teachin units and course names
 							tempUnits.add(Integer.parseInt(rs.getString(2)));
 							tempNames.add(rs.getString(1));
 						}
-						
+
 						//** make arraylist of no duplicated units for keys
 						ArrayList <Integer> teachingUnits = new ArrayList <Integer>();
 						for(int t : tempUnits){ // making arraylist with teaching units - no duplications
 							if(!teachingUnits.contains(t))
 								teachingUnits.add(t);
 						}
-						
-						
+
+
 						for(int  unit : teachingUnits){ // for each unit(no duplications)
 							ArrayList<String> Tnames = new ArrayList<>();
-								for(int t=0;t<tempUnits.size();t++){ // search in query result this teaching unit 
-									if(unit == tempUnits.get(t)){
-										Tnames.add(tempNames.get(t)); // add course name
-									}
+							for(int t=0;t<tempUnits.size();t++){ // search in query result this teaching unit 
+								if(unit == tempUnits.get(t)){
+									Tnames.add(tempNames.get(t)); // add course name
 								}
+							}
 							currCourses.put(unit, Tnames); // add courses unit + list of courses
 						}
-						
 
 
-						
+
+
 
 						stmt.close();
 						rs.close();
@@ -163,7 +163,7 @@ public class EchoServer extends AbstractServer {
 							query = "SELECT t.id,u.first_name,u.last_name,t.hours_limit "
 									+ "From teacher t,users u,teacher_teaching_unit ttu "
 									+ "Where u.user_name=t.id AND ttu.teaching_unit="+rs.getString(1) +" AND ttu.teacher_id=t.id";
-							 stmt2 = conn.createStatement();
+							stmt2 = conn.createStatement();
 							rs2 = stmt2.executeQuery(query);
 							while (rs2.next()) {
 								teacherDetails.add(rs2.getString(2));//first_name
@@ -320,19 +320,74 @@ public class EchoServer extends AbstractServer {
 						stmt = conn.createStatement();
 						stmt.executeUpdate(query);
 						ans.clear();
-						stmt.close();
+						//stmt.close();
 						client.sendToClient(null);
 						break;
 
-					case "define class":
+//					case "define class":
+//
+//						entity=(SClass)message.get(key);
+//						query = "INSERT INTO class (id,name) values (?,?)";
+//						pstmt = conn.prepareStatement(query);
+//						pstmt.setInt(1, ((SClass)message.get(key)).getId());
+//						pstmt.setString(2, ((SClass)message.get(key)).getName());
+//						pstmt.executeUpdate();
+//						client.sendToClient(null);
+//						break;
 
-						entity=(SClass)message.get(key);
-						query = "INSERT INTO class (id,name) values (?,?)";
+					case "createClass":
+
+						ArrayList<String> classDetails = (ArrayList<String>) message.get(key);
+						query = "INSERT INTO class (id,name,year,semester) values (?,?,?,?)";
 						pstmt = conn.prepareStatement(query);
-						pstmt.setInt(1, ((SClass)message.get(key)).getId());
-						pstmt.setString(2, ((SClass)message.get(key)).getName());
+						pstmt.setInt(1, Integer.parseInt(classDetails.get(0)));
+						pstmt.setString(2,classDetails.get(1));
+						pstmt.setInt(3, Integer.parseInt(classDetails.get(2)));
+						pstmt.setInt(4, Integer.parseInt(classDetails.get(3)));
 						pstmt.executeUpdate();
 						client.sendToClient(null);
+						break;
+
+					case "assignStudentsToCourseInClass":
+						ArrayList<String> studentDetails = (ArrayList<String>) message.get(key);
+						query = "UPDATE student SET class_id=? WHERE id=?";
+						pstmt = conn.prepareStatement(query);
+						int classId = Integer.parseInt(studentDetails.get(0));
+						studentDetails.remove(0);
+						for(String studentId : studentDetails){
+							pstmt.setInt(1, classId);
+							pstmt.setString(2,studentId);
+							pstmt.executeUpdate();
+						}
+						client.sendToClient(null);
+						break;
+			
+
+					case "checkClassIsNotExist" :
+						String answer="";
+						ans=(ArrayList<String>) message.get(key);
+						query = "SELECT * FROM class WHERE id = "+Integer.parseInt(ans.get(0));
+						stmt = conn.createStatement();
+						rs=stmt.executeQuery(query);
+						if(rs.next()) answer = "no";
+						//stmt.close();
+						stmt = conn.createStatement();
+						query = "SELECT * FROM class WHERE name = '"+ans.get(1)+"'"+" AND year="+ans.get(2)+" AND semester= "+ans.get(3);
+						rs=stmt.executeQuery(query);
+						if(rs.next()) answer = "no";
+						//stmt.close();
+						client.sendToClient(answer);
+						break;
+						
+					case "isStudent":
+						answer="";
+						ans=(ArrayList<String>) message.get(key);
+						query = "SELECT * FROM student WHERE id = '"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs=stmt.executeQuery(query);
+						if(!rs.next()) answer = "no";
+						else if(rs.getInt(4)!= 0) answer="alreadyAssigned";
+						client.sendToClient(answer);
 						break;
 
 					case "get info for blockParentAccess":
