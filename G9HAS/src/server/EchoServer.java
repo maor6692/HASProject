@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
+import javax.xml.crypto.dsig.spec.HMACParameterSpec;
 
 import common.SClass;
 import ocsf.server.*;
@@ -185,12 +186,17 @@ public class EchoServer extends AbstractServer {
 						break;
 
 					case "upload":
+						
+						HashMap<String,byte[]> hm =  (HashMap<String, byte[]>) message.get("upload");
+						for(String name : hm.keySet()){
 						try {
-							Files.write((Paths.get("sagi.docx")), (byte[])message.get(key), StandardOpenOption.CREATE_NEW);
+							Files.write((Paths.get("Documents\\"+name)), (byte[])hm.get(name));
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
+						}
+						client.sendToClient(null);
 						break;
 					case "Search for teacher courses":
 						String sans = (String) message.get(key);
@@ -269,6 +275,7 @@ public class EchoServer extends AbstractServer {
 						stmt.close();
 						rs.close();
 						client.sendToClient(ans);
+						//ans.clear();
 						break;
 					case "Create task":
 						ans=(ArrayList<String>) message.get(key);
@@ -281,10 +288,10 @@ public class EchoServer extends AbstractServer {
 						pstmt.executeUpdate();
 						ans.clear();
 						pstmt.close();
-						JOptionPane.showMessageDialog(null, "Task uploaded successfuly","Task Upload",JOptionPane.PLAIN_MESSAGE);
+						//JOptionPane.showMessageDialog(null, "Task uploaded successfuly","Task Upload",JOptionPane.PLAIN_MESSAGE);
 						
 						
-						//client.sendToClient(ans);
+						client.sendToClient(null);
 						break;
 					case "Get student class":
 					      ArrayList<String> ans1=new ArrayList<String>();

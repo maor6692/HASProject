@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -116,22 +117,22 @@ public class TeacherController implements Initializable{
     	createTaskPane.setVisible(false);
     	checkTaskPane.setVisible(true);
     }
-    @FXML
-    void uploadHandler(ActionEvent event) {
-    	byte[] by = null;
-    	HashMap<String,byte[]> hm = new HashMap<String,byte[]>();
-    	
-        File file = new File("c:\\tc\\mesi.docx");
-        try {
-			by = Files.readAllBytes(file.toPath());
-			hm.put("upload", by);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        LoginController.userClient.sendServer(hm);
- 
-    }
+//    @FXML
+//    void uploadHandler(ActionEvent event) {
+//    	byte[] by = null;
+//    	HashMap<String,byte[]> hm = new HashMap<String,byte[]>();
+//    	
+//        File file = new File("c:\\tc\\mesi.docx");
+//        try {
+//			by = Files.readAllBytes(file.toPath());
+//			hm.put("upload", by);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//        LoginController.userClient.sendServer(hm);
+// 
+//    }
     
 	@FXML
 	void logoutHandler(ActionEvent event) {
@@ -165,19 +166,34 @@ public class TeacherController implements Initializable{
 	void createTaskHandler(ActionEvent event) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDate localDate = LocalDate.now();
+		course_id= "";
+		class_id="";
     	byte[] by = null;
-    	HashMap<String,byte[]> hm = new HashMap<String,byte[]>();
+    	HashMap<String,HashMap<String,byte[]>> hm = new HashMap<String,HashMap<String,byte[]>>();
+    	HashMap<String,byte[]> hmName = new HashMap<String,byte[]>();
+    	
+    	//HashMap<String,byte[]> hm = new HashMap<String,byte[]>();
     	HashMap<String,ArrayList<String>> hms = new HashMap<String,ArrayList<String>>();
     	ArrayList<String> msg = new ArrayList<String>();
         File file = new File(tfUploadPath.getText());
         try {
 			by = Files.readAllBytes(file.toPath());
-			hm.put("upload", by);
+			hmName.put(selectedFile.getName(), by);
+			hm.put("upload", hmName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        try {
+			Files.write((Paths.get("Documents\\kobi.docx")), by);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         LoginController.userClient.sendServer(hm);
+        LoginController.syncWithServer();
+        hm.clear();
+        hmName.clear();
       //  LoginController.syncWithServer();
        // int i=0;
        // while(cbCourseID.getValue().charAt(i)!= ' ')
@@ -191,14 +207,13 @@ public class TeacherController implements Initializable{
         	class_id += cbClass.getSelectionModel().getSelectedItem();
         	//i++;
         //}
-        msg.clear();
         msg.add(course_id);
         msg.add(class_id);
         hms.put("Search for class_in_course_id",msg);
         
         LoginController.userClient.sendServer(hms);
-        hms.remove("Search for class_in_course_id");
         LoginController.syncWithServer();
+        
 		if(LoginController.userClient.ans != null)
 		{
 		msg.clear();
@@ -208,8 +223,11 @@ public class TeacherController implements Initializable{
 		msg.add(dtf.format(localDate));
 		}
 		System.out.println(msg.toString());
+		hms.clear();
 		hms.put("Create task",msg);
         LoginController.userClient.sendServer(hms);
+        LoginController.syncWithServer();
+        hms.clear();
         //LoginController.syncWithServer();
 		
 	}
