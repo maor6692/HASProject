@@ -228,6 +228,7 @@ public class SecretaryController implements Initializable{
 		else lblWarningNoStudents.setVisible(true);
 	}
 	
+	
 	/**
 	 * add student to lvStudents by tfStudentId input
 	 */

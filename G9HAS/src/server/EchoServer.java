@@ -419,7 +419,6 @@ public class EchoServer extends AbstractServer {
 		}
 	}
 
-
 	/**
 	 * This method overrides the one in the superclass. Called when the server
 	 * starts listening for connections.
