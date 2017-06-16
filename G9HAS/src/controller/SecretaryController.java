@@ -29,8 +29,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
@@ -44,6 +46,7 @@ public class SecretaryController implements Initializable{
 	private ObservableList<String> students = FXCollections.observableArrayList();
 	private ObservableList<Row> classesInCourse = FXCollections.observableArrayList();
 	private ObservableList<String> teachersnames = FXCollections.observableArrayList();
+	private ObservableList<TeacherComboBox> teachersBoxValues = FXCollections.observableArrayList();
 
 	int newYear;
 	char newSemester;
@@ -53,13 +56,13 @@ public class SecretaryController implements Initializable{
 	private Pane paneRemoveStudent,paneChangeAppointment,paneCreateSemester,paneDefineClass,paneAddStudent;
 
 	@FXML
-	private Label lblUser,lblSemester,lblWarningNoStudents,lblClassCreated,lblTooLongInput,lblWarningNoStudent,lblWarningEmptyFields,lblWarningStudentAlreadyAssigned,lblWarningClassIsAlreadyExist;
+	private Label lblStudentsPre,lblWarning,lblUser,lblSemester,lblWarningNoStudents,lblClassCreated,lblTooLongInput,lblWarningNoStudent,lblWarningEmptyFields,lblWarningStudentAlreadyAssigned,lblWarningClassIsAlreadyExist;
 
 	@FXML
 	private TextField tfClassName,tfStudentId;
 
 	@FXML
-	private ComboBox<String> cmbCourse;
+	private ComboBox<CourseComboBox> cmbCourse;
 
 	private ComboBox<String> cmbTeacher;
 
@@ -74,7 +77,7 @@ public class SecretaryController implements Initializable{
 
 
 	@FXML
-	private TableColumn<ComboBoxTableCell,String> teachers;
+	private TableColumn<ComboBoxTableCell,TeacherComboBox> teachers;
 
 	@FXML
 	private TableColumn<String,String> classes;
@@ -85,11 +88,12 @@ public class SecretaryController implements Initializable{
 	@FXML
 	private Button btnMoveLeft;
 	ObservableList<String> selectedClasses;
-	private HashMap<Integer,ArrayList<String>> courses;
+	private HashMap<Integer,HashMap<Integer,String>> courses;
 	HashMap<String, ArrayList<String>>	msg ;
 	ArrayList<String> params;
-	private String currCourseBox=null;
+	private CourseComboBox currCourseBox=null;
 
+	
 	//out hashmap <teaching unit id,map of teachers in this teaching unit>;
 	//inner hashmaps <teacher id,arraylist of teacher name and max hours>
 	private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo; 
@@ -106,16 +110,19 @@ public class SecretaryController implements Initializable{
 
 
 	void addClassesToCourseHandler(ActionEvent event) {
+		//TODO : teachers appoinment will not change after adding more courses
 		if(cmbCourse.getValue() == null)
 			return;
 		selectedClasses = lvClasses.getSelectionModel().getSelectedItems(); // get selected elements from the left
 
 		for(String temp : selectedClasses){ 
-			if(checkClassExists(temp)) continue; // returns true if class exists
-			classesInCourse.add(new Row(temp));
+			if(checkClassExists(temp)) continue; // check if class exists
+			tblClassTeacher.getItems().add(new Row(temp)); //classesInCourse.add(new Row(temp));
 		}
-
-		tblClassTeacher.setItems(classesInCourse); // set table from starter
+		//Row
+		
+		
+		//tblClassTeacher.setItems(classesInCourse); // set table from starter
 	}
 	@FXML
 	void removeClassesFromCourseHandler(ActionEvent event) {
@@ -150,18 +157,44 @@ public class SecretaryController implements Initializable{
 		currCourseBox = cmbCourse.getValue();
 		// clean class in course table
 		classesInCourse =  FXCollections.observableArrayList();
+		teachersBoxValues = FXCollections.observableArrayList();
 		tblClassTeacher.setItems(classesInCourse); // set table from starter
 		//*****************************************************************************************************************
-		HashMap<String,ArrayList<String>> values = teachersInfo.get("unit");//insert teaching unit of course instead "unit"
+		HashMap<String,ArrayList<String>> teachersOfTeachingUnit = teachersInfo.get(String.valueOf(currCourseBox.getTeachingUnit()));//insert teaching unit of course instead "unit"
+		//TODO : handle no teachers
 		//******************************************************************************************************************
-		if(values!=null)
-			for(ArrayList<String> lists: values.values()){
-				if(!teachersnames.contains(lists.get(0)+" "+lists.get(1))) teachersnames.add(lists.get(0)+" "+lists.get(1));
-			}
-		Collections.sort(teachersnames);
-		teachers.setCellFactory(ComboBoxTableCell.forTableColumn(teachersnames));
+		Collection<String> teachersOfTeachingUnitKeySet = teachersOfTeachingUnit.keySet();
+		for(String tid : teachersOfTeachingUnitKeySet){ // foreach teacher id in this teaching unit
+			ArrayList<String> teacherAtt = teachersOfTeachingUnit.get(tid); // get teacher's info
+			TeacherComboBox teacherObj = new TeacherComboBox(currCourseBox.getTeachingUnit(),tid,teacherAtt.get(0)+" "+teacherAtt.get(1),Integer.parseInt(teacherAtt.get(2)));
+			if(teachersBoxValues.isEmpty())
+				teachersBoxValues.add(teacherObj);
+			else{
+				if(!teacherInComboBox(teacherObj))
+					teachersBoxValues.add(teacherObj);
+					
+					}
+			
+			
+					
+		}
+		//**
+
+
+		
+
+		teachers.setCellFactory(ComboBoxTableCell.forTableColumn(teachersBoxValues));
+
 
 	}
+
+public boolean teacherInComboBox(TeacherComboBox teacherObj){
+	for(TeacherComboBox temp : teachersBoxValues){
+		if(temp.getTeacherId().equals(teacherObj.getTeacherId()))
+			return true;
+	}
+	return false;
+}
 	
 	/**
 	 * create the new class with by user input
@@ -373,6 +406,9 @@ public class SecretaryController implements Initializable{
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
 		msg.clear();
+		lblWarning.setVisible(false);
+		lblStudentsPre.setVisible(false);
+		tblExceptions.setVisible(false);
 		tblClassTeacher.setPlaceholder(new Label("Select A Course And Add classes"));
 		currSemester=(ArrayList<Object>) UserClient.ans;
 		newYear=(int) currSemester.get(0);
@@ -381,14 +417,25 @@ public class SecretaryController implements Initializable{
 		ArrayList<String> arr = new ArrayList<String>();
 		arr.add(String.valueOf(newYear));
 		arr.add(String.valueOf(newSemester == 'A' ? 1 : 2));
+		//Get Courses
 		msg.put("getCurrentCourses",arr);
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
-		courses  = (HashMap<Integer,ArrayList<String>>) UserClient.ans;
-		Collection<ArrayList<String>> courseCollection = courses.values();
-		for(ArrayList<String> carray: courseCollection)
-			for(String cname: carray)
-				cmbCourse.getItems().add(cname);
+		courses  = (HashMap<Integer,HashMap<Integer,String>>) UserClient.ans;
+		Collection<Integer> teachingUnits = courses.keySet();
+		//Collection<HashMap<Integer,String>> allCoursesMapsCollection = courses.values();
+		//Collection<String>  courseCollection = courseCollectionMap.values();
+		for(int singleTeachUnit : teachingUnits){ // foreach teaching unit
+			HashMap<Integer,String> coursesOfTeachingUnit = courses.get(singleTeachUnit); // get all course of single teaching unit
+			Collection<Integer> coursesIdOfSingleTeachUnit = coursesOfTeachingUnit.keySet();
+			for(int singleCourseId : coursesIdOfSingleTeachUnit){ // foreach course in teaching unit
+				CourseComboBox cmbRow;
+				String courseName = coursesOfTeachingUnit.get(singleCourseId);
+				cmbRow = new CourseComboBox(singleTeachUnit,singleCourseId,courseName);
+				cmbCourse.getItems().add(cmbRow);
+			}
+		}
+		
 		msg.clear();
 
 		msg.put("getCurrentClasses",arr);
@@ -410,8 +457,64 @@ public class SecretaryController implements Initializable{
 		tblClassTeacher.setItems(classesInCourse);
 
 	}
+	public class CourseComboBox {
+		private int teachingUnit;
+		private int courseId;
+		private String courseName;
+		public CourseComboBox(int tu,int cid,String cname){
+			teachingUnit = tu;
+			courseId = cid;
+			courseName = cname;
+		}
+		public int getTeachingUnit() {
+			// TODO Auto-generated method stub
+			return teachingUnit;
+		}
+		public int getCourseId() {
+			// TODO Auto-generated method stub
+			return courseId;
+		}
+		public String getCourseName() {
+			// TODO Auto-generated method stub
+			return courseName;
+		}
+		public String toString(){
+			return ""+courseName;
+		}
+	}
 
-
+	public class TeacherComboBox {
+		private int teachingUnit;
+		private String teacherId;
+		private String teacherName;
+		private int maxHours;
+		public TeacherComboBox(int tu,String tid,String tname,int h){
+			teachingUnit = tu;
+			teacherId = tid;
+			teacherName = tname;
+			maxHours = h;
+		}
+		public int getTeachingUnit() {
+			
+			return teachingUnit;
+		}
+		public int getMaxHours() {
+			
+			return maxHours;
+		}
+		public String getTeacherId() {
+			// TODO Auto-generated method stub
+			return teacherId;
+		}
+		public String getTeacherName() {
+			// TODO Auto-generated method stub
+			return teacherName;
+		}
+		public String toString(){
+			return ""+teacherName;
+		}
+	}
+	
 	public static class Row {
 
 		private final SimpleStringProperty row;
