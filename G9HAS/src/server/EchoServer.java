@@ -324,28 +324,20 @@ public class EchoServer extends AbstractServer {
 						client.sendToClient(null);
 						break;
 
-//					case "define class":
-//
-//						entity=(SClass)message.get(key);
-//						query = "INSERT INTO class (id,name) values (?,?)";
-//						pstmt = conn.prepareStatement(query);
-//						pstmt.setInt(1, ((SClass)message.get(key)).getId());
-//						pstmt.setString(2, ((SClass)message.get(key)).getName());
-//						pstmt.executeUpdate();
-//						client.sendToClient(null);
-//						break;
-
 					case "createClass":
 
 						ArrayList<String> classDetails = (ArrayList<String>) message.get(key);
-						query = "INSERT INTO class (id,name,year,semester) values (?,?,?,?)";
+						query = "INSERT INTO class (name,year,semester) values (?,?,?)";
 						pstmt = conn.prepareStatement(query);
-						pstmt.setInt(1, Integer.parseInt(classDetails.get(0)));
-						pstmt.setString(2,classDetails.get(1));
+						pstmt.setString(1,classDetails.get(0));
+						pstmt.setInt(2, Integer.parseInt(classDetails.get(1)));
 						pstmt.setInt(3, Integer.parseInt(classDetails.get(2)));
-						pstmt.setInt(4, Integer.parseInt(classDetails.get(3)));
 						pstmt.executeUpdate();
-						client.sendToClient(null);
+						query = "SELECT id FROM class WHERE name='"+classDetails.get(0)+"' AND year="+classDetails.get(1)+" AND semester="+classDetails.get(2);
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						if (rs.next())  
+						client.sendToClient(rs.getString(1));
 						break;
 
 					case "assignStudentsToCourseInClass":
@@ -365,14 +357,9 @@ public class EchoServer extends AbstractServer {
 
 					case "checkClassIsNotExist" :
 						String answer="";
-						ans=(ArrayList<String>) message.get(key);
-						query = "SELECT * FROM class WHERE id = "+Integer.parseInt(ans.get(0));
+	ans=(ArrayList<String>) message.get(key);
 						stmt = conn.createStatement();
-						rs=stmt.executeQuery(query);
-						if(rs.next()) answer = "no";
-						//stmt.close();
-						stmt = conn.createStatement();
-						query = "SELECT * FROM class WHERE name = '"+ans.get(1)+"'"+" AND year="+ans.get(2)+" AND semester= "+ans.get(3);
+						query = "SELECT * FROM class WHERE name = '"+ans.get(0)+"'"+" AND year="+ans.get(1)+" AND semester= "+ans.get(2);
 						rs=stmt.executeQuery(query);
 						if(rs.next()) answer = "no";
 						//stmt.close();
@@ -386,7 +373,7 @@ public class EchoServer extends AbstractServer {
 						stmt = conn.createStatement();
 						rs=stmt.executeQuery(query);
 						if(!rs.next()) answer = "no";
-						else if(rs.getInt(4)!= 0) answer="alreadyAssigned";
+						else if(rs.getInt(4) > 0) answer="alreadyAssigned";
 						client.sendToClient(answer);
 						break;
 

@@ -53,10 +53,10 @@ public class SecretaryController implements Initializable{
 	private Pane paneRemoveStudent,paneChangeAppointment,paneCreateSemester,paneDefineClass,paneAddStudent;
 
 	@FXML
-	private Label lblUser,lblSemester,lblWarningNoStudents,lblClassCreated,lblTooLongInput,lblWarningNoStudent,lblWarningEmptyFields,lblWarningStudentAlreadyAssigned,lblWarningClassIsAlreadyExist,lblWarningClassId;
+	private Label lblUser,lblSemester,lblWarningNoStudents,lblClassCreated,lblTooLongInput,lblWarningNoStudent,lblWarningEmptyFields,lblWarningStudentAlreadyAssigned,lblWarningClassIsAlreadyExist;
 
 	@FXML
-	private TextField tfClassId,tfClassName,tfStudentId;
+	private TextField tfClassName,tfStudentId;
 
 	@FXML
 	private ComboBox<String> cmbCourse;
@@ -130,10 +130,6 @@ public class SecretaryController implements Initializable{
 		classesInCourse = tempClassesInCourse;
 		tblClassTeacher.setItems(classesInCourse); // set table from starter
 	}
-	@FXML
-	void onClassIdChangedHandler(ActionEvent event) {
-		lblWarningClassId.setVisible(false);
-	}
 
 	@FXML
 	void inputChangedHandler(ActionEvent event) {
@@ -173,24 +169,17 @@ public class SecretaryController implements Initializable{
 	@FXML
 	void createClassHandler(ActionEvent event) {
 		hideLabels();
-		if(tfClassId.getText().equals("") || tfClassName.getText().equals("")){
+		if(tfClassName.getText().equals("")){
 			lblWarningEmptyFields.setVisible(true);
 			return;
 		}
-		if(tfClassId.getText().length()>11 || tfClassName.getText().length()>11){
+		if( tfClassName.getText().length()>11){
 			lblTooLongInput.setVisible(true);
 			return;
 		}
 		msg = new HashMap<String, ArrayList<String>>();
 		params = new ArrayList<String>();
-		if(!(lvStudents.getItems().size()==0)){
-			try{
-				params.add(String.valueOf(Integer.parseInt(tfClassId.getText())));//if input isn't int go to catch
-			}catch(NumberFormatException e){
-				lblWarningClassId.setVisible(true);
-				return;
-			}
-
+		if(!(lvStudents.getItems().size()==0)){			
 			msg.put("getCurrentSemester",null);
 			LoginController.userClient.sendServer(msg);//ask from server to return the next semester details
 			LoginController.syncWithServer();
@@ -213,7 +202,6 @@ public class SecretaryController implements Initializable{
 				return;
 			}
 
-			params.add(tfClassId.getText());
 			params.add(tfClassName.getText());
 			params.add(String.valueOf(newYear));
 			params.add(String.valueOf(sem));
@@ -223,7 +211,7 @@ public class SecretaryController implements Initializable{
 			msg.clear();
 			params.clear();
 
-			params.add(tfClassId.getText());
+			params.add((String) UserClient.ans);
 			params.addAll(lvStudents.getItems());
 			msg.put("assignStudentsToCourseInClass",params);
 			LoginController.userClient.sendServer(msg);//ask from server to assign students to the new class 
@@ -232,6 +220,10 @@ public class SecretaryController implements Initializable{
 			params.clear();
 			lblClassCreated.setVisible(true);
 			lblWarningNoStudents.setVisible(false);
+			students.clear();
+			tfClassName.setText("");
+			tfStudentId.setText("");
+			lvStudents.setItems(students);
 		}
 		else lblWarningNoStudents.setVisible(true);
 	}
@@ -242,7 +234,7 @@ public class SecretaryController implements Initializable{
 	@FXML
 	void addStudentToTableHandler(ActionEvent event) {
 		hideLabels();
-		if(students.contains(tfStudentId.getText()) || tfStudentId.getText().equals("")) return;
+		if(tfStudentId.getText().equals("")) return;
 		if(tfStudentId.getText().length()>45){
 			lblTooLongInput.setVisible(true);
 			return;
@@ -263,6 +255,7 @@ public class SecretaryController implements Initializable{
 			lblWarningStudentAlreadyAssigned.setVisible(true);
 			return;
 		}
+		if(students.contains(tfStudentId.getText())) return;
 		
 		students.add(tfStudentId.getText());
 		lvStudents.setItems(students);
@@ -291,7 +284,6 @@ public class SecretaryController implements Initializable{
 		lblWarningNoStudents.setVisible(false);
 		lblWarningEmptyFields.setVisible(false);
 		lblWarningNoStudent.setVisible(false);
-		lblWarningClassId.setVisible(false);
 		lblTooLongInput.setVisible(false);
 	}
 
