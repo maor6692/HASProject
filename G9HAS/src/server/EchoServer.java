@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionEvent;
 import common.SClass;
 import ocsf.server.*;
 
+
 public class EchoServer extends AbstractServer {
 	// Class variables *************************************************
 
@@ -244,6 +245,100 @@ public class EchoServer extends AbstractServer {
 						}
 						client.sendToClient(snewans);
 						break;
+					case "Get student class":
+					      ArrayList<String> ans1=new ArrayList<String>();
+					      ans= (ArrayList<String>)message.get(key);
+					      query = "SELECT class_id FROM student WHERE id='"+ans.get(0)+"'";
+					      
+					      stmt = conn.createStatement();
+					      rs = stmt.executeQuery(query);
+					      ans.clear();
+					      while (rs.next()) { 
+					       ans1.add(String.valueOf(rs.getInt(1)));
+					      }
+					      stmt.close();
+					      rs.close();
+					      
+					      client.sendToClient(ans1);
+					      break;
+				     case "get course in class":
+				         ArrayList<String> courses=new ArrayList<String>();
+				         ans= (ArrayList<String>)message.get(key);
+				         query= "SELECT course_in_class_id  FROM student_in_course_in_class WHERE student_id='"+ans.get(0)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				          courses.add(rs.getString(1));// course in class id
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(courses);
+				         break;
+				     case "get course id":
+				         ans = (ArrayList<String>) message.get("get course id");
+				         ArrayList<String> coursesid = new ArrayList<String>();
+				         for(i=0;i<ans.size();i++)
+				         {
+				          query = "SELECT course_id FROM class_in_course WHERE id='"+ans.get(i)+"'";
+				          stmt = conn.createStatement();
+				          rs = stmt.executeQuery(query);
+				          while (rs.next()) { 
+				           coursesid.add(String.valueOf(rs.getInt(1)));
+				          }
+				          stmt.close();
+				          rs.close();
+				         }
+				         ans.clear();
+				         client.sendToClient(coursesid);
+				         break;
+				     case "get student average for current semester":
+				         ans = (ArrayList<String>) message.get(key);
+				         ArrayList<String> arr = new ArrayList<String>();
+				         ArrayList<String> arr2 = new ArrayList<String>();
+				        // arr2.add(ans.get(0));//year
+				        // arr2.add(ans.get(1));//semester
+				         
+				         for(i=3;i<ans.size();i++)
+				         {
+				          query = "SELECT course_id,id FROM class_in_course WHERE id='"+ans.get(i)+"' AND course_id"
+				          		+ " IN (SELECT course.id FROM course where year="+Integer.parseInt(ans.get(0))+" AND semester='"+ans.get(1)+"')";
+				          stmt = conn.createStatement();
+				          rs = stmt.executeQuery(query);
+				          while (rs.next()) { 
+				           arr.add(String.valueOf(rs.getInt(2)));
+				          }
+				          stmt.close();
+				          rs.close();
+				         }
+				         for(i=0;i<arr.size();i++)
+				         {
+				          query = "SELECT grade FROM student_in_course_in_class WHERE course_in_class_id='"+arr.get(i)+"' AND student_id='"+ans.get(2)+"' ";
+				          stmt = conn.createStatement();
+				          rs = stmt.executeQuery(query);
+				          while (rs.next()) { 
+				           arr2.add(String.valueOf(rs.getFloat(1)));
+				          }
+				          stmt.close();
+				          rs.close();
+				         }
+				         ans.clear();
+				         client.sendToClient(arr2);
+				         break;
+				     case "get grades for student in course":
+				    	 ans = (ArrayList<String>) message.get(key);
+				    	 ArrayList<String> grades = new ArrayList<String>();
+				    	 query = "SELECT task_grade FROM task_of_student_in_course WHERE course_id="+Integer.valueOf(ans.get(1))+" AND student_id='"+ans.get(0)+"'";
+				    	 stmt = conn.createStatement();
+				    	 rs = stmt.executeQuery(query); 
+				    	 while (rs.next()) { 
+				    	  grades.add(String.valueOf(rs.getFloat(1))); 
+				    	 }
+				    	 stmt.close();
+				    	 rs.close();
+				    	 
+				    	 client.sendToClient(grades);
+				    	 break;
 
 					case "getCurrentSemester":
 

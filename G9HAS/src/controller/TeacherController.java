@@ -13,12 +13,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,40 +35,87 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 
 public class TeacherController implements Initializable{
-	private ArrayList<String> cid_arr;
-	private int class_id;
-	private int course_id;
-	@FXML
-	private Hyperlink linkLogout;
-    @FXML
-    private TextField tfUploadPath;
-	@FXML
-	private Label lblUser;
-    @FXML
-    private Button btnUpload;
-    @FXML
-    private Button btnCreateTask;
-    @FXML
-    private ComboBox<String> cbCourseID;
-    @FXML
-    private TextField tfSubmissionDate;
+	private ArrayList<String> course_id_arr;
+	private ArrayList<String> class_id_arr;
+	private File selectedFile;
+	private String class_id = "";
+	private int class_in_course_id;
+	private String course_id = "";
+
+
 
     @FXML
-    private Label lblSubmissionDate;
+    private Pane defineCoursePane;
+
+    @FXML
+    private Pane createTaskPane;
+
+    @FXML
+    private Hyperlink linkLogout;
+
+    @FXML
+    private Label lblCreateTask;
+
+    @FXML
+    private Button btnCreateTask;
+
+    @FXML
+    private TextField tfUploadPath;
+
+    @FXML
+    private ComboBox<String> cbCourseID;
+
+    @FXML
+    private Button btnUpload;
+
     @FXML
     private Label lblClass;
 
     @FXML
+    private Label lblTask;
+
+    @FXML
+    private Label lblCourseID;
+
+    @FXML
+    private Hyperlink hlCreateTask;
+
+    @FXML
+    private Hyperlink hlCheckTask;
+
+    @FXML
+    private TextField tfSubmissionDate;
+
+    @FXML
+    private Label lblUser;
+
+    @FXML
+    private Label lblSubmissionDate;
+
+    @FXML
     private ComboBox<String> cbClass;
 
+    @FXML
+    private Pane checkTaskPane;
+
+
+    @FXML
+    void hlCheckTaskOnClick(ActionEvent event) {
+    	
+    	createTaskPane.setVisible(false);
+    	checkTaskPane.setVisible(true);
+    }
     @FXML
     void uploadHandler(ActionEvent event) {
     	byte[] by = null;
@@ -87,29 +137,80 @@ public class TeacherController implements Initializable{
 	void logoutHandler(ActionEvent event) {
 		Parent nextWindow;
 		try {
-			HashMap<String, ArrayList<String>> msg = new HashMap<String, ArrayList<String>>();
-			ArrayList<String> arr = new ArrayList<String>();
-			arr.add(UserClient.userName);
-			msg.put("logout",arr);
-			LoginController.userClient.sendServer(msg);
+			LoginController.logout();
 			nextWindow = FXMLLoader.load(getClass().getResource("../gui/loginWindow.fxml"));
 			Scene nextScene = new Scene(nextWindow);
 			Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 			stage.setScene(nextScene);
 			stage.show();
-
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent t) {
+					LoginController.logout();
+					Platform.exit();
+					System.exit(0);
+				}
+			});
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+    @FXML
+    void hlcreateTaskOnClick(ActionEvent event) {
+    	createTaskPane.setVisible(true);
+    	checkTaskPane.setVisible(false);
+    }
 	@FXML
 	void createTaskHandler(ActionEvent event) {
-		//int course_id, class_id;
-		//DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		//LocalDate localDate = LocalDate.now();
-		//dtf.format(localDate);
-		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		LocalDate localDate = LocalDate.now();
+    	byte[] by = null;
+    	HashMap<String,byte[]> hm = new HashMap<String,byte[]>();
+    	HashMap<String,ArrayList<String>> hms = new HashMap<String,ArrayList<String>>();
+    	ArrayList<String> msg = new ArrayList<String>();
+        File file = new File(tfUploadPath.getText());
+        try {
+			by = Files.readAllBytes(file.toPath());
+			hm.put("upload", by);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        LoginController.userClient.sendServer(hm);
+      //  LoginController.syncWithServer();
+       // int i=0;
+       // while(cbCourseID.getValue().charAt(i)!= ' ')
+        //{
+        	course_id += cbCourseID.getSelectionModel().getSelectedItem();
+        	//i++;
+        //}
+      //  i=0;
+       // while(cbClass.getValue().charAt(i)!= ' ')
+        //{
+        	class_id += cbClass.getSelectionModel().getSelectedItem();
+        	//i++;
+        //}
+        msg.clear();
+        msg.add(course_id);
+        msg.add(class_id);
+        hms.put("Search for class_in_course_id",msg);
+        
+        LoginController.userClient.sendServer(hms);
+        hms.remove("Search for class_in_course_id");
+        LoginController.syncWithServer();
+		if(LoginController.userClient.ans != null)
+		{
+		msg.clear();
+		msg.add(String.valueOf((((ArrayList<String>)LoginController.userClient.ans)).get(0)));
+		msg.add(selectedFile.getName());
+		msg.add(tfSubmissionDate.getText());
+		msg.add(dtf.format(localDate));
+		}
+		System.out.println(msg.toString());
+		hms.put("Create task",msg);
+        LoginController.userClient.sendServer(hms);
+        //LoginController.syncWithServer();
 		
 	}
 
@@ -124,9 +225,10 @@ public class TeacherController implements Initializable{
     	         new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
     	         new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
     	         new ExtensionFilter("All Files", "*.*"));
-    	 File selectedFile = fileChooser.showOpenDialog(uploadStage);
+    	 selectedFile = fileChooser.showOpenDialog(uploadStage);
     	 if (selectedFile != null) {
-    		 tfUploadPath.setText(selectedFile.getAbsolutePath());
+    		tfUploadPath.setText(selectedFile.getAbsolutePath());
+    		 
     	 }
          
     }
@@ -158,10 +260,13 @@ public class TeacherController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
 		lblUser.setText(UserClient.fullName);
+		btnUpload.setVisible(true);
+    	createTaskPane.setVisible(true);
+    	checkTaskPane.setVisible(false);
 		cbClass.setVisible(false);
 		lblClass.setVisible(false);
 		String userName;
-		cid_arr = new ArrayList<String>();
+		course_id_arr = new ArrayList<String>();
         HashMap<String,String> hm = new HashMap<String,String>();
         HashMap<String,ArrayList<String>> cid_hm = new HashMap<String,ArrayList<String>>();
         hm.put("Search for teacher courses", UserClient.userName);
@@ -169,7 +274,7 @@ public class TeacherController implements Initializable{
         LoginController.syncWithServer();
         for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
         {
-        	cid_arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
+        	course_id_arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
         }
         cid_hm.put("Search for course name", (ArrayList<String>)LoginController.userClient.ans);
         LoginController.userClient.sendServer(cid_hm);
@@ -178,64 +283,9 @@ public class TeacherController implements Initializable{
 		{
 			for(int i=0; i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 			{
-				if(!(cbCourseID.getItems().contains(cid_arr.get(0) + " - " +((ArrayList<String>)LoginController.userClient.ans).get(i).toString())))
-				cbCourseID.getItems().add(i,cid_arr.get(0) + " - " +((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
+				if(!(cbCourseID.getItems().contains(course_id_arr.get(0) + " - " +((ArrayList<String>)LoginController.userClient.ans).get(i).toString())))
+				cbCourseID.getItems().add(i,course_id_arr.get(0) + " - " +((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
 			}
 		}
-	}//
-//		Stage primaryStage1 = new Stage();
-//		primaryStage1.setTitle("File Chooser Sample");
-//		final FileChooser fileChooser = new FileChooser(); 
-//		configureFileChooser(fileChooser);
-//	    File file = fileChooser.showOpenDialog(primaryStage1);
-//	    String filePath = file.getAbsolutePath();
-//
-//
-//
-//String url = "jdbc:mysql://localhost/hasproject";
-//    String user = "root";
-//    String password = "123456";
-//    try {
-//    	DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
-//        Connection conn = DriverManager.getConnection(url, user, password);
-//        String sql = "INSERT INTO assignment (file) values (?)";
-//        PreparedStatement statement = conn.prepareStatement(sql);
-//
-//        InputStream inputStream = new FileInputStream(new File(filePath));
-//
-//        statement.setBinaryStream(1, inputStream,(int)file.length());
-//
-//        int row = statement.executeUpdate();
-//        if (row > 0) {
-//        	Stage dialogStage = new Stage();
-//            dialogStage.initModality(Modality.WINDOW_MODAL);
-//
-//            VBox vbox = new VBox(new Text("An assignment was inserted with file"));
-//            vbox.setAlignment(Pos.CENTER);
-//            vbox.setPadding(new Insets(15));
-//
-//            dialogStage.setScene(new Scene(vbox));
-//            dialogStage.show();
-//        }
-//        conn.close();
-//    } catch (SQLException ex) {
-//        ex.printStackTrace();
-//    } catch (IOException ex) {
-//        ex.printStackTrace();
-//    }
-//
-//
-//
-//	 }
-//	private static void configureFileChooser(
-//	        final FileChooser fileChooser) {      
-//	            fileChooser.setTitle("Choose File");
-//	            fileChooser.setInitialDirectory(
-//	                new File(System.getProperty("user.home"))
-//	            );                 
-//	            fileChooser.getExtensionFilters().addAll(
-//	                new FileChooser.ExtensionFilter("DOC", "*.docx"),
-//	                new FileChooser.ExtensionFilter("PDF", "*.pdf")
-//	            );
-//	}
+	}
 }
