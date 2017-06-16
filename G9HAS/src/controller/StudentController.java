@@ -47,7 +47,18 @@ import javafx.stage.WindowEvent;
 
 public class StudentController implements Initializable {
 
+    @FXML
+    private Hyperlink hlSubmitTask;
+    
 
+    @FXML
+    private ComboBox<String> cbChooseCourseST;
+    
+    @FXML
+    private Label lblSubmitTask;
+    @FXML
+    private Label lblChooseCourse1;
+    
 	@FXML
 	private Hyperlink linkLogout;
 
@@ -59,6 +70,8 @@ public class StudentController implements Initializable {
 	@FXML
 	private TextArea taTasks;
 
+    @FXML
+    private Pane SubmitTaskPane;
 	@FXML
 	private ComboBox<String> cbTask;
 
@@ -91,7 +104,54 @@ public class StudentController implements Initializable {
 
 	@FXML
 	private Label lblShowClass;
+    @FXML
+    private Pane personalInfoPane;
 
+    @FXML
+    void hlSubmitTaskOnClick(ActionEvent event) {
+    	personalInfoPane.setVisible(false);
+    	SubmitTaskPane.setVisible(true);
+		ArrayList<String> arr=new ArrayList<String>();
+		HashMap<String,ArrayList<String>> hm= new HashMap<String,ArrayList<String>>();
+		arr.add(UserClient.userName);
+		hm.put("get course in class", arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		//System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString());
+		arr.clear();
+		if(LoginController.userClient.ans != null){
+			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
+				arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
+		}
+		//work//
+		hm.remove("get course in class");
+		hm.put("get course id",arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		arr.clear();
+		if(LoginController.userClient.ans != null){
+			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
+				arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
+		}
+		//System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString());
+		hm.remove("get course id");
+		hm.put("Search for course name",arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		//System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString()+"!!!!!");
+		if(LoginController.userClient.ans != null){
+			for(int i=0; i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
+			{
+				cbChooseCourseST.getItems().add(i,arr.get(i)+" - "+((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
+			}
+		}
+		
+		arr.clear();
+    }
+    @FXML
+    void ChooseCourseSTHandler(ActionEvent event) {
+       
+    }
 	@FXML
 	void logoutHandler(ActionEvent event) {
 		Parent nextWindow;
@@ -149,10 +209,18 @@ public class StudentController implements Initializable {
 		}
 		lblCourseAvg.setText("Course Average: "+ gradeAvg/((ArrayList<String>)LoginController.userClient.ans).size());
 	}
+
+    @FXML
+    void PersonalInfoHandler(ActionEvent event) {
+    	personalInfoPane.setVisible(true);
+    	SubmitTaskPane.setVisible(false);
+    }
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		ArrayList<String> arr=new ArrayList<String>();
 		HashMap<String,ArrayList<String>> hm= new HashMap<String,ArrayList<String>>();
+    	personalInfoPane.setVisible(true);
+    	SubmitTaskPane.setVisible(false);
 		lblUser.setText(UserClient.fullName);
 		lblShowUsername.setText(UserClient.userName);
 		arr.add(UserClient.userName);
