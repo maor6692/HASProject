@@ -221,10 +221,7 @@ public class TeacherController implements Initializable{
     	 FileChooser fileChooser = new FileChooser();
     	 fileChooser.setTitle("Open Resource File");
     	 fileChooser.getExtensionFilters().addAll(
-    	         new ExtensionFilter("Text Files", "*.txt"),
-    	         new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
-    	         new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
-    	         new ExtensionFilter("All Files", "*.*"));
+    	         new ExtensionFilter("Document Files", "*.txt", "*.doc","*.docx","*.pdf","*.xls"));
     	 selectedFile = fileChooser.showOpenDialog(uploadStage);
     	 if (selectedFile != null) {
     		tfUploadPath.setText(selectedFile.getAbsolutePath());
@@ -236,6 +233,7 @@ public class TeacherController implements Initializable{
     void cbCourseHandler(ActionEvent event) {
     	ArrayList<String> params = new ArrayList<String>();
     	String temp="";
+    	cbClass.getItems().clear();
     	temp += cbCourseID.getValue().substring(0, 3);
     	
     	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
@@ -250,6 +248,7 @@ public class TeacherController implements Initializable{
 		{
 			for(int i=0; i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 			{
+				if(!(cbClass.getItems().contains(((ArrayList<String>)LoginController.userClient.ans).get(i))))
 				cbClass.getItems().add(i,((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
 			}
 		}
@@ -283,8 +282,8 @@ public class TeacherController implements Initializable{
 		{
 			for(int i=0; i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 			{
-				if(!(cbCourseID.getItems().contains(course_id_arr.get(0) + " - " +((ArrayList<String>)LoginController.userClient.ans).get(i).toString())))
-				cbCourseID.getItems().add(i,course_id_arr.get(0) + " - " +((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
+				if(!(cbCourseID.getItems().contains(course_id_arr.get(i) + " - " +((ArrayList<String>)LoginController.userClient.ans).get(i).toString())))
+				cbCourseID.getItems().add(i,course_id_arr.get(i) + " - " +((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
 			}
 		}
 	}

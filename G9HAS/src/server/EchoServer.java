@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -244,6 +245,46 @@ public class EchoServer extends AbstractServer {
 							rs.close();
 						}
 						client.sendToClient(snewans);
+						break;
+					case "Search for class_in_course_id":
+						ans=(ArrayList<String>) message.get(key);
+						System.out.println(ans.toString());
+						int clsid=0;
+						int cid=0;
+						if (ans.get(0).length()>2 && ans.get(1).length()>0&& ans.get(0)!=null && ans.get(1)!=null){
+							
+						cid=Integer.parseInt(ans.get(0).substring(0, 3));
+						clsid=Integer.parseInt(ans.get(1).substring(0, 1));}
+						query = "Select id FROM class_in_course WHERE course_id="+cid+" AND class_id="+clsid;
+						System.out.println(clsid);
+						System.out.println(cid);
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) { 
+							ans.add(rs.getString(1));
+							
+						}
+						System.out.println(ans.toString()+"!!!----!!!");
+						stmt.close();
+						rs.close();
+						client.sendToClient(ans);
+						break;
+					case "Create task":
+						ans=(ArrayList<String>) message.get(key);
+						query = "INSERT INTO task_in_class_in_course (class_in_course_id,task_file,submission_date,release_date) VALUES (?,?,?,?)";
+						pstmt = conn.prepareStatement(query);
+						pstmt.setInt(1, Integer.parseInt(ans.get(0)));
+						pstmt.setString(2, ans.get(1));
+						pstmt.setDate(3, Date.valueOf(ans.get(2)));
+						pstmt.setDate(4, Date.valueOf("2017-05-23"));
+						pstmt.executeUpdate();
+						ans.clear();
+						pstmt.close();
+						JOptionPane.showMessageDialog(null, "Task uploaded successfuly","Task Upload",JOptionPane.PLAIN_MESSAGE);
+						
+						
+						//client.sendToClient(ans);
 						break;
 					case "Get student class":
 					      ArrayList<String> ans1=new ArrayList<String>();
