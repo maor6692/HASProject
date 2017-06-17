@@ -144,24 +144,24 @@ public class SecretaryController implements Initializable{
 		classesInCourse = tempClassesInCourse;
 		tblClassTeacher.setItems(classesInCourse); // set table from starter
 	}
-	@FXML
-	void onClassIdChangedHandler(ActionEvent event) {
-		lblWarningClassId.setVisible(false);
-	}
-
-	@FXML
-	void inputChangedHandler(ActionEvent event) {
-		event.getSource();
-	}
-	@FXML
-	void listViewEditChoise(ActionEvent event) {
-
-	}
-
-	@FXML
-	void classClickHandler(ActionEvent event) {//enable multiple choice
-
-	}
+//	@FXML
+//	void onClassIdChangedHandler(ActionEvent event) {
+//		lblWarningClassId.setVisible(false);
+//	}
+//
+//	@FXML
+//	void inputChangedHandler(ActionEvent event) {
+//		event.getSource();
+//	}
+//	@FXML
+//	void listViewEditChoise(ActionEvent event) {
+//
+//	}
+//
+//	@FXML
+//	void classClickHandler(ActionEvent event) {//enable multiple choice
+//
+//	}
 
 	@FXML
 	void chooseCourseHandler(ActionEvent event) {
@@ -434,7 +434,7 @@ public boolean teacherInComboBox(TeacherComboBox teacherObj){
 		LoginController.syncWithServer();
 		msg.clear();
 		lblWarning.setVisible(false);
-		lblStudentsPre.setVisible(false);
+	//	lblStudentsPre.setVisible(false);
 		tblExceptions.setVisible(false);
 		tblClassTeacher.setPlaceholder(new Label("Select A Course And Add classes"));
 		currSemester=(ArrayList<Object>) UserClient.ans;
