@@ -29,9 +29,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -40,11 +42,13 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.converter.DefaultStringConverter;
 
+
+
 public class SecretaryController implements Initializable{
 	ComboBoxTableCell cb = new ComboBoxTableCell();
 
 	private ObservableList<String> students = FXCollections.observableArrayList();
-	private ObservableList<Row> classesInCourse = FXCollections.observableArrayList();
+	private ObservableList<ClassInCourseRow> classesInCourse = FXCollections.observableArrayList();
 	private ObservableList<String> teachersnames = FXCollections.observableArrayList();
 	private ObservableList<TeacherComboBox> teachersBoxValues = FXCollections.observableArrayList();
 
@@ -56,10 +60,10 @@ public class SecretaryController implements Initializable{
 	private Pane paneRemoveStudent,paneChangeAppointment,paneCreateSemester,paneDefineClass,paneAddStudent;
 
 	@FXML
-	private Label lblStudentsPre,lblWarning,lblUser,lblSemester,lblWarningNoStudents,lblClassCreated,lblTooLongInput,lblWarningNoStudent,lblWarningEmptyFields,lblWarningStudentAlreadyAssigned,lblWarningClassIsAlreadyExist;
+	private Label lblStudentsPre,lblWarning,lblUser,lblSemester,lblWarningNoStudents,lblClassCreated,lblTooLongInput,lblWarningNoStudent,lblWarningEmptyFields,lblWarningStudentAlreadyAssigned,lblWarningClassIsAlreadyExist,lblWarningClassId;
 
 	@FXML
-	private TextField tfClassName,tfStudentId;
+	private TextField tfClassId,tfClassName,tfStudentId;
 
 	@FXML
 	private ComboBox<CourseComboBox> cmbCourse;
@@ -70,17 +74,19 @@ public class SecretaryController implements Initializable{
 	private ListView<String> lvClasses,lvStudents;
 
 	@FXML
-	private TableView<Row> tblClassTeacher,tblExceptions;
+	private TableView<Row> tblExceptions;
 
 	@FXML
 	private Button btnAssign;
 
+	@FXML
+	private TableView<ClassInCourseRow> tblClassTeacher;
 
 	@FXML
-	private TableColumn<ComboBoxTableCell,TeacherComboBox> teachers;
+	private TableColumn<ClassInCourseRow,TeacherComboBox> teachers;
 
 	@FXML
-	private TableColumn<String,String> classes;
+	private TableColumn<ClassInCourseRow,String> classes;
 
 	@FXML
 	private Button btnMoveRight;
@@ -99,8 +105,8 @@ public class SecretaryController implements Initializable{
 	private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo; 
 
 	private boolean checkClassExists(String className){ // checks if class is exists in right side of table
-		for(Row temp : classesInCourse){
-			if(temp.getRow().equals(className))
+		for(ClassInCourseRow temp : classesInCourse){
+			if(temp.getClassName().equals(className))
 				return true;
 		}
 		return false;
@@ -114,10 +120,11 @@ public class SecretaryController implements Initializable{
 		if(cmbCourse.getValue() == null)
 			return;
 		selectedClasses = lvClasses.getSelectionModel().getSelectedItems(); // get selected elements from the left
-
+		
+		
 		for(String temp : selectedClasses){ 
 			if(checkClassExists(temp)) continue; // check if class exists
-			tblClassTeacher.getItems().add(new Row(temp)); //classesInCourse.add(new Row(temp));
+			tblClassTeacher.getItems().add(new ClassInCourseRow(temp)); //classesInCourse.add(new Row(temp));
 		}
 		//Row
 		
@@ -126,16 +133,20 @@ public class SecretaryController implements Initializable{
 	}
 	@FXML
 	void removeClassesFromCourseHandler(ActionEvent event) {
-		Row selectedClass = tblClassTeacher.getSelectionModel().getSelectedItem();
+		ClassInCourseRow selectedClass = tblClassTeacher.getSelectionModel().getSelectedItem();
 		if(selectedClass == null)
 			return;
-		ObservableList<Row> tempClassesInCourse = FXCollections.observableArrayList();
-		for(Row temp : classesInCourse){
+		ObservableList<ClassInCourseRow> tempClassesInCourse = FXCollections.observableArrayList();
+		for(ClassInCourseRow temp : classesInCourse){
 			if(selectedClass.equals(temp)) continue;
 			tempClassesInCourse.add(temp);
 		}
 		classesInCourse = tempClassesInCourse;
 		tblClassTeacher.setItems(classesInCourse); // set table from starter
+	}
+	@FXML
+	void onClassIdChangedHandler(ActionEvent event) {
+		lblWarningClassId.setVisible(false);
 	}
 
 	@FXML
@@ -158,7 +169,8 @@ public class SecretaryController implements Initializable{
 		// clean class in course table
 		classesInCourse =  FXCollections.observableArrayList();
 		teachersBoxValues = FXCollections.observableArrayList();
-		tblClassTeacher.setItems(classesInCourse); // set table from starter
+		//tblClassTeacher.setItems(classesInCourse); // set table from starter
+		
 		//*****************************************************************************************************************
 		HashMap<String,ArrayList<String>> teachersOfTeachingUnit = teachersInfo.get(String.valueOf(currCourseBox.getTeachingUnit()));//insert teaching unit of course instead "unit"
 		//TODO : handle no teachers
@@ -180,9 +192,21 @@ public class SecretaryController implements Initializable{
 		}
 		//**
 
-
-		
-
+		classes.setCellValueFactory(new PropertyValueFactory<>("className"));
+		teachers.setCellValueFactory(new PropertyValueFactory<>("teacher"));
+		//
+	       teachers.setOnEditCommit((CellEditEvent<ClassInCourseRow, TeacherComboBox> event2) -> {
+	            TablePosition<ClassInCourseRow, TeacherComboBox> pos = event2.getTablePosition();
+	 
+	            TeacherComboBox newTeacherComboBox = event2.getNewValue();
+	 
+	            int row = pos.getRow();
+	            ClassInCourseRow newRow = event2.getTableView().getItems().get(row);
+	 
+	            newRow.setTeacher(newTeacherComboBox.getTeacherName());
+	        });
+		//
+		tblClassTeacher.setItems(classesInCourse);
 		teachers.setCellFactory(ComboBoxTableCell.forTableColumn(teachersBoxValues));
 
 
@@ -202,17 +226,24 @@ public boolean teacherInComboBox(TeacherComboBox teacherObj){
 	@FXML
 	void createClassHandler(ActionEvent event) {
 		hideLabels();
-		if(tfClassName.getText().equals("")){
+		if(tfClassId.getText().equals("") || tfClassName.getText().equals("")){
 			lblWarningEmptyFields.setVisible(true);
 			return;
 		}
-		if( tfClassName.getText().length()>11){
+		if(tfClassId.getText().length()>11 || tfClassName.getText().length()>11){
 			lblTooLongInput.setVisible(true);
 			return;
 		}
 		msg = new HashMap<String, ArrayList<String>>();
 		params = new ArrayList<String>();
-		if(!(lvStudents.getItems().size()==0)){			
+		if(!(lvStudents.getItems().size()==0)){
+			try{
+				params.add(String.valueOf(Integer.parseInt(tfClassId.getText())));//if input isn't int go to catch
+			}catch(NumberFormatException e){
+				lblWarningClassId.setVisible(true);
+				return;
+			}
+
 			msg.put("getCurrentSemester",null);
 			LoginController.userClient.sendServer(msg);//ask from server to return the next semester details
 			LoginController.syncWithServer();
@@ -235,6 +266,7 @@ public boolean teacherInComboBox(TeacherComboBox teacherObj){
 				return;
 			}
 
+			params.add(tfClassId.getText());
 			params.add(tfClassName.getText());
 			params.add(String.valueOf(newYear));
 			params.add(String.valueOf(sem));
@@ -244,7 +276,7 @@ public boolean teacherInComboBox(TeacherComboBox teacherObj){
 			msg.clear();
 			params.clear();
 
-			params.add((String) UserClient.ans);
+			params.add(tfClassId.getText());
 			params.addAll(lvStudents.getItems());
 			msg.put("assignStudentsToCourseInClass",params);
 			LoginController.userClient.sendServer(msg);//ask from server to assign students to the new class 
@@ -253,14 +285,9 @@ public boolean teacherInComboBox(TeacherComboBox teacherObj){
 			params.clear();
 			lblClassCreated.setVisible(true);
 			lblWarningNoStudents.setVisible(false);
-			students.clear();
-			tfClassName.setText("");
-			tfStudentId.setText("");
-			lvStudents.setItems(students);
 		}
 		else lblWarningNoStudents.setVisible(true);
 	}
-	
 	
 	/**
 	 * add student to lvStudents by tfStudentId input
@@ -268,7 +295,7 @@ public boolean teacherInComboBox(TeacherComboBox teacherObj){
 	@FXML
 	void addStudentToTableHandler(ActionEvent event) {
 		hideLabels();
-		if(tfStudentId.getText().equals("")) return;
+		if(students.contains(tfStudentId.getText()) || tfStudentId.getText().equals("")) return;
 		if(tfStudentId.getText().length()>45){
 			lblTooLongInput.setVisible(true);
 			return;
@@ -289,7 +316,6 @@ public boolean teacherInComboBox(TeacherComboBox teacherObj){
 			lblWarningStudentAlreadyAssigned.setVisible(true);
 			return;
 		}
-		if(students.contains(tfStudentId.getText())) return;
 		
 		students.add(tfStudentId.getText());
 		lvStudents.setItems(students);
@@ -318,6 +344,7 @@ public boolean teacherInComboBox(TeacherComboBox teacherObj){
 		lblWarningNoStudents.setVisible(false);
 		lblWarningEmptyFields.setVisible(false);
 		lblWarningNoStudent.setVisible(false);
+		lblWarningClassId.setVisible(false);
 		lblTooLongInput.setVisible(false);
 	}
 
@@ -446,15 +473,13 @@ public boolean teacherInComboBox(TeacherComboBox teacherObj){
 		for(String comboClass: comboClasses)
 			lvClasses.getItems().add(comboClass);
 		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		classes.setCellValueFactory(new PropertyValueFactory<>("row"));
-		//teachers.setCellValueFactory(new PropertyValueFactory<>("teacher"));
 
 		//get teachers
 		msg.put("getTeachers",new ArrayList<String>());
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
 		teachersInfo=(HashMap<String,HashMap<String,ArrayList<String>>>) UserClient.ans;
-		tblClassTeacher.setItems(classesInCourse);
+		
 
 	}
 	public class CourseComboBox {
@@ -534,6 +559,41 @@ public boolean teacherInComboBox(TeacherComboBox teacherObj){
 
 		public boolean equals(Row row){
 			if(this.getRow().equals(row.getRow())){
+				return true;
+			}
+			return false;
+		}
+	}
+	public static class ClassInCourseRow {
+
+		private final SimpleStringProperty className;
+		private final SimpleStringProperty teacher;
+
+		private ClassInCourseRow(String className,String teacher) {
+			this.className = new SimpleStringProperty(className);
+			this.teacher = new SimpleStringProperty(teacher);
+		}
+		private ClassInCourseRow(String className) {
+			this.className = new SimpleStringProperty(className);
+			this.teacher = new SimpleStringProperty("");
+		}
+
+		public void setClassName(String row) {
+			this.className.set(row);
+		}
+
+		public void setTeacher(String t) {
+			this.teacher.set(t);
+		}		
+		
+		public String getClassName() {
+			return className.get();
+		}
+		public String getTeacher() {
+			return teacher.get();
+		}
+		public boolean equals(ClassInCourseRow r){
+			if(this.getClassName().equals(r.getClassName())){
 				return true;
 			}
 			return false;
