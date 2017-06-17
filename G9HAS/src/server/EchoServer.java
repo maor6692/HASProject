@@ -549,7 +549,6 @@ public class EchoServer extends AbstractServer {
 						client.sendToClient(null);
 						break;
 			
-
 					case "checkClassIsNotExist" :
 						String answer="";
 	ans=(ArrayList<String>) message.get(key);
