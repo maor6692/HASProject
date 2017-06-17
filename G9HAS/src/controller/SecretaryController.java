@@ -71,7 +71,13 @@ public class SecretaryController implements Initializable{
 	private ComboBox<String> cmbTeacher;
 
 	@FXML
-	private ListView<String> lvClasses,lvStudents;
+	private ListView<String> lvStudents;
+	
+	@FXML
+	private ListView<String> lvClasses;
+	
+	//New Way of getting classes@FXML
+	//private ListView<ClassesInListView> lvClasses;
 
 	@FXML
 	private TableView<Row> tblExceptions;
@@ -325,7 +331,7 @@ void hideLabels(){
 	
 	@FXML
 	void assignClassesAndTeachersHandler(ActionEvent event) {
-
+		
 	}
 
 	@FXML
@@ -399,7 +405,7 @@ void hideLabels(){
 		LoginController.syncWithServer();
 		msg.clear();
 		lblWarning.setVisible(false);
-	//	lblStudentsPre.setVisible(false);
+		lblStudentsPre.setVisible(false);
 		tblExceptions.setVisible(false);
 		tblClassTeacher.setPlaceholder(new Label("Select A Course And Add classes"));
 		currSemester=(ArrayList<Object>) UserClient.ans;
@@ -413,6 +419,7 @@ void hideLabels(){
 		msg.put("getCurrentCourses",arr);
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
+		//TeachingUnit-->[Map<courseId,courseName>]
 		courses  = (HashMap<Integer,HashMap<Integer,String>>) UserClient.ans;
 		Collection<Integer> teachingUnits = courses.keySet();
 		//Collection<HashMap<Integer,String>> allCoursesMapsCollection = courses.values();
@@ -434,11 +441,22 @@ void hideLabels(){
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
 		msg.clear();
+		// current way of getting course:(needs to be changed for getting course id)
 		ArrayList<String> comboClasses = (ArrayList<String>) UserClient.ans;
 		for(String comboClass: comboClasses)
 			lvClasses.getItems().add(comboClass);
 		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
+		//--
+		/*//new way of getting course:
+		HashMap<Integer,String> comboClasses = (HashMap<Integer,String>) UserClient.ans;
+		Collection<Integer> classesKeySet = comboClasses.keySet();
+		for(int classId:classesKeySet){
+			String className = comboClasses.get(classId);
+			ClassesInListView newClass = new ClassesInListView(classId,className);
+			lvClasses.getItems().add(newClass);
+		}
+		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		//--*/
 		//get teachers
 		msg.put("getTeachers",new ArrayList<String>());
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
@@ -562,6 +580,29 @@ void hideLabels(){
 				return true;
 			}
 			return false;
+		}
+	}
+	class ClassesInListView {
+		private String className;
+		private int classId;
+		public ClassesInListView(int id,String name){
+			className = name;
+			classId  = id;
+		}
+		public String getClassName(){
+			return className;
+		}
+		public int getClassId(){
+			return classId;
+		}
+		public String toString(){
+			return className;
+		}
+		public void setClassName(String name){
+			className = name;
+		}
+		public void setClassId(int id){
+			classId = id;
 		}
 	}
 
