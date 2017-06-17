@@ -55,9 +55,9 @@ public class StudentController implements Initializable {
     private ArrayList<String> taskID = new ArrayList<String>();
     private String cid = "";
     private String filename="";
+    private File selectedFile;
     @FXML
     private Hyperlink hlSubmitTask;
-    
     
 
     @FXML
@@ -79,7 +79,8 @@ public class StudentController implements Initializable {
 	private Label lblUser;
 	@FXML
 	private TextArea taTasks;
-
+    @FXML
+    private Label lblUpload;
     @FXML
     private Pane SubmitTaskPane;
 	@FXML
@@ -167,14 +168,52 @@ public class StudentController implements Initializable {
     }
     @FXML
     void fileUploadHandler(ActionEvent event) {
-
+		Stage uploadStage = new Stage();
+		uploadStage.setTitle("Submission upload");
+    	 FileChooser fileChooser = new FileChooser();
+    	 fileChooser.setTitle("Open Resource File");
+    	 fileChooser.getExtensionFilters().addAll(
+    	         new ExtensionFilter("Document Files", "*.txt", "*.doc","*.docx","*.pdf","*.xls"));
+    	 selectedFile = fileChooser.showOpenDialog(uploadStage);
+    	 if (selectedFile != null) {
+    		tfUploadPath.setText(selectedFile.getAbsolutePath());	 
+    	 }
     }
+    
     @FXML
     void uploadTaskHandler(ActionEvent event) {
+    	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		LocalDate localDate = LocalDate.now();
 
+    	byte[] by = null;
+    	HashMap<String,HashMap<String,byte[]>> hm = new HashMap<String,HashMap<String,byte[]>>();
+    	HashMap<String,byte[]> hmName = new HashMap<String,byte[]>();
+    	
+    	//HashMap<String,byte[]> hm = new HashMap<String,byte[]>();
+    	HashMap<String,ArrayList<String>> hms = new HashMap<String,ArrayList<String>>();
+    	ArrayList<String> msg = new ArrayList<String>();
+        File file = new File(tfUploadPath.getText());
+        try {
+			by = Files.readAllBytes(file.toPath());
+			hmName.put(selectedFile.getName(), by);
+			hm.put("Submission upload", hmName);
+			 
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        LoginController.userClient.sendServer(hm);
+        LoginController.syncWithServer();
+        hm.clear();
+        hmName.clear();
     }
     @FXML
     void ChooseCourseSTHandler(ActionEvent event) {
+    	lblUpload.setVisible(true);
+    	btnUploadTask.setVisible(true);
+    	btnFile.setVisible(true);
+    	tfUploadPath.setVisible(true);
     	ArrayList<String> arr = new ArrayList<String>();
     	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
     	cid = "";
@@ -312,6 +351,10 @@ public class StudentController implements Initializable {
     }
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		lblUpload.setVisible(false);
+		btnUploadTask.setVisible(false);
+		btnFile.setVisible(false);
+		tfUploadPath.setVisible(false);
 		ArrayList<String> arr=new ArrayList<String>();
 		HashMap<String,ArrayList<String>> hm= new HashMap<String,ArrayList<String>>();
     	personalInfoPane.setVisible(true);

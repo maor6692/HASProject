@@ -200,6 +200,18 @@ public class EchoServer extends AbstractServer {
 						}
 						client.sendToClient(null);
 						break;
+					case "Submission upload":					
+						HashMap<String,byte[]> submission =  (HashMap<String, byte[]>) message.get("Submission upload");
+						for(String name : submission.keySet()){
+						try {
+							Files.write((Paths.get("Students solutions\\"+name)), (byte[])submission.get(name));
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						}
+						client.sendToClient(null);
+						break;
 					case "Search for teacher courses":
 						String sans = (String) message.get(key);
 						ans = new ArrayList<String>();
