@@ -98,18 +98,20 @@ public class EchoServer extends AbstractServer {
 
 					case "getCurrentCourses":
 						ans = (ArrayList<String>) message.get("getCurrentCourses");
-						query = "SELECT name,teaching_unit FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
+						query = "SELECT name,teaching_unit,id FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						ans.clear();
-
-						HashMap<Integer,ArrayList<String>> currCourses = new HashMap<Integer,ArrayList<String>>();
+						
+						HashMap<Integer,HashMap<Integer,String>> currCourses = new HashMap<>(); // teachingUnit-->Map<courseid,coursename>
 						ArrayList<Integer> tempUnits = new ArrayList<>();
 						ArrayList<String> tempNames = new ArrayList<>();
-
+						ArrayList<Integer> tempCourseId = new ArrayList<>();
+						
 						while (rs.next()) {  // create 2 arraylist, teachin units and course names
 							tempUnits.add(Integer.parseInt(rs.getString(2)));
 							tempNames.add(rs.getString(1));
+							tempCourseId.add(Integer.parseInt(rs.getString(3)));
 						}
 
 						//** make arraylist of no duplicated units for keys
@@ -120,14 +122,14 @@ public class EchoServer extends AbstractServer {
 						}
 
 
-						for(int  unit : teachingUnits){ // for each unit(no duplications)
-							ArrayList<String> Tnames = new ArrayList<>();
+						for(int  unit : teachingUnits){ // for each unit(no duplications) *(1)
+							HashMap<Integer,String> coursesInTeachingUnit = new HashMap<>();
 							for(int t=0;t<tempUnits.size();t++){ // search in query result this teaching unit 
-								if(unit == tempUnits.get(t)){
-									Tnames.add(tempNames.get(t)); // add course name
+								if(unit == tempUnits.get(t)){ // if this unit *(1) == searched unit
+									coursesInTeachingUnit.put(tempCourseId.get(t),tempNames.get(t)); // add course name
 								}
 							}
-							currCourses.put(unit, Tnames); // add courses unit + list of courses
+							currCourses.put(unit, coursesInTeachingUnit); // add courses unit + list of courses
 						}
 
 
