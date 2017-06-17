@@ -98,20 +98,18 @@ public class EchoServer extends AbstractServer {
 
 					case "getCurrentCourses":
 						ans = (ArrayList<String>) message.get("getCurrentCourses");
-						query = "SELECT name,teaching_unit,id FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
+						query = "SELECT name,teaching_unit FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						ans.clear();
-						
-						HashMap<Integer,HashMap<Integer,String>> currCourses = new HashMap<>(); // teachingUnit-->Map<courseid,coursename>
+
+						HashMap<Integer,ArrayList<String>> currCourses = new HashMap<Integer,ArrayList<String>>();
 						ArrayList<Integer> tempUnits = new ArrayList<>();
 						ArrayList<String> tempNames = new ArrayList<>();
-						ArrayList<Integer> tempCourseId = new ArrayList<>();
-						
+
 						while (rs.next()) {  // create 2 arraylist, teachin units and course names
 							tempUnits.add(Integer.parseInt(rs.getString(2)));
 							tempNames.add(rs.getString(1));
-							tempCourseId.add(Integer.parseInt(rs.getString(3)));
 						}
 
 						//** make arraylist of no duplicated units for keys
@@ -122,15 +120,16 @@ public class EchoServer extends AbstractServer {
 						}
 
 
-						for(int  unit : teachingUnits){ // for each unit(no duplications) *(1)
-							HashMap<Integer,String> coursesInTeachingUnit = new HashMap<>();
+						for(int  unit : teachingUnits){ // for each unit(no duplications)
+							ArrayList<String> Tnames = new ArrayList<>();
 							for(int t=0;t<tempUnits.size();t++){ // search in query result this teaching unit 
-								if(unit == tempUnits.get(t)){ // if this unit *(1) == searched unit
-									coursesInTeachingUnit.put(tempCourseId.get(t),tempNames.get(t)); // add course name
+								if(unit == tempUnits.get(t)){
+									Tnames.add(tempNames.get(t)); // add course name
 								}
 							}
-							currCourses.put(unit, coursesInTeachingUnit); // add courses unit + list of courses
+							currCourses.put(unit, Tnames); // add courses unit + list of courses
 						}
+
 
 
 
@@ -388,7 +387,57 @@ public class EchoServer extends AbstractServer {
 				    	 
 				    	 client.sendToClient(grades);
 				    	 break;
-
+				     case "get class in course id for course id":
+				         ans= (ArrayList<String>)message.get(key);
+				         query= "SELECT id  FROM class_in_course WHERE course_id="+Integer.parseInt(ans.get(0));
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				          ans.add(rs.getString(1));
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(ans);
+				         break;
+				     case "get tasks id":
+				         ans= (ArrayList<String>)message.get(key);
+				         query= "SELECT id FROM task_in_class_in_course WHERE class_in_course_id='"+ans.get(0)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				          ans.add(rs.getString(1));
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(ans);
+				         break;
+				     case "get file name for task id":
+				         ans= (ArrayList<String>)message.get(key);
+				         query= "SELECT task_file FROM task_in_class_in_course WHERE id='"+ans.get(0)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				          ans.add(rs.getString(1));
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(ans);
+				         break;
+				     case "get file from filename":
+				         ans= (ArrayList<String>)message.get(key);
+				     	byte[] by = null;
+				     	File file = new File("Documents\\"+ans.get(0));
+				         try {
+				 			by = Files.readAllBytes(file.toPath());
+				 		} catch (IOException e) {
+				 			// TODO Auto-generated catch block
+				 			e.printStackTrace();
+				 		}
+				         client.sendToClient(by);
+				         break;
 					case "getCurrentSemester":
 
 						query = "SELECT year,sem FROM semester WHERE iscurrent=1";

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
@@ -36,7 +37,7 @@
    <center>
       <Pane fx:id="defineCoursePane" prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane fx:id="personalInfoPane" layoutY="-59.0">
+            <Pane fx:id="personalInfoPane" layoutY="-59.0" visible="false">
                <children>
                   <ImageView fitHeight="508.0" fitWidth="611.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -110,7 +111,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="SubmitTaskPane" prefHeight="498.0" prefWidth="596.0" visible="false">
+            <Pane fx:id="SubmitTaskPane" prefHeight="498.0" prefWidth="596.0">
                <children>
                   <ImageView fitHeight="508.0" fitWidth="611.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -127,10 +128,30 @@
                         <Font name="System Bold" size="28.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="cbChooseCourseST" layoutX="166.0" layoutY="115.0" onAction="#ChooseCourseSTHandler" prefWidth="150.0" />
-                  <Label fx:id="lblChooseCourse1" layoutX="55.0" layoutY="117.0" text="Choose Course:">
+                  <ComboBox fx:id="cbChooseCourseST" layoutX="166.0" layoutY="105.0" onAction="#ChooseCourseSTHandler" prefWidth="150.0" />
+                  <Label fx:id="lblChooseCourse1" layoutX="55.0" layoutY="107.0" text="Choose Course:">
                      <font>
                         <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblChooseTask" layoutX="55.0" layoutY="140.0" text="Task:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="cbChooseTask" layoutX="166.0" layoutY="138.0" onAction="#chooseTaskHandler" prefWidth="150.0" />
+                  <Button fx:id="btnDownload" layoutX="340.0" layoutY="138.0" mnemonicParsing="false" onAction="#downloadHandler" text="Download Task" />
+                  <TextField fx:id="tfUploadPath" layoutX="55.0" layoutY="206.0" />
+                  <Button fx:id="btnFile" layoutX="204.0" layoutY="206.0" mnemonicParsing="false" onAction="#fileUploadHandler" prefHeight="25.0" prefWidth="94.0" text="Choose File..." />
+                  <Button fx:id="btnUploadTask" layoutX="100.0" layoutY="249.0" mnemonicParsing="false" onAction="#uploadTaskHandler" prefHeight="25.0" prefWidth="84.0" text="Upload Task" />
+                  <Label fx:id="lblDownloadComplete" layoutX="383.0" layoutY="185.0" text="Download Completed" textFill="#078d07" visible="false">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="58.0" layoutY="170.0" prefHeight="30.0" prefWidth="193.0" text="Upload your solution" textFill="#1e13dd">
+                     <font>
+                        <Font size="20.0" />
                      </font>
                   </Label>
                </children>

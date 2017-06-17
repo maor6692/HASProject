@@ -1,8 +1,11 @@
 package controller;
 
 import java.awt.List;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,9 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-
 import javax.swing.JOptionPane;
-
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -39,14 +40,21 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.stage.FileChooser.ExtensionFilter;
+
 
 public class StudentController implements Initializable {
-
+    private ArrayList<String> taskID = new ArrayList<String>();
+    private String cid = "";
+    private String filename="";
     @FXML
     private Hyperlink hlSubmitTask;
     
@@ -64,7 +72,8 @@ public class StudentController implements Initializable {
 
 	@FXML
 	private Label lblCPersonalInfo;
-
+    @FXML
+    private Label lblDownloadComplete;
 	@FXML
 	private Label lblUser;
 	@FXML
@@ -77,10 +86,22 @@ public class StudentController implements Initializable {
 
 	@FXML
 	private Label lblShowUsername;
+    @FXML
+    private Label lblChooseTask;
+    @FXML
+    private Button btnUploadTask;
+    @FXML
+    private TextField tfUploadPath;
+    @FXML
+    private Button btnDownload;
+
+    @FXML
+    private Button btnFile;
 
 	@FXML
 	private ComboBox<String> cbCourseInClass;
-
+    @FXML
+    private ComboBox<String> cbChooseTask;
 	@FXML
 	private Hyperlink hlPersonalInfo;
 
@@ -106,7 +127,83 @@ public class StudentController implements Initializable {
 	private Label lblShowClass;
     @FXML
     private Pane personalInfoPane;
+    @FXML
+    void chooseTaskHandler(ActionEvent event) {
+    	ArrayList<String> arr = new ArrayList<String>();
+    	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
+    	filename="";
+		arr.add(taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue())));
+		hm.put("get file name for task id", arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		filename += ((ArrayList<String>)LoginController.userClient.ans).get(0);
+    }
+    @FXML
+    void downloadHandler(ActionEvent event) {
+    	ArrayList<String> arr = new ArrayList<String>();
+    	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
+    	String path = "";
+		Stage downloadStage = new Stage();
+		downloadStage.setTitle("Task Download");
+		DirectoryChooser dc = new DirectoryChooser();
+		dc.setTitle("Choose folder");
+		 File folderpath = dc.showDialog(downloadStage);
+		 if(folderpath != null)
+			 path = folderpath.getAbsolutePath();
+    	byte[] by;
+    	arr.add(filename);
+    	hm.put("get file from filename", arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		by = ((byte[])LoginController.userClient.ans);
+		try {
+			Files.write((Paths.get(path+"\\"+filename)), by);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		lblDownloadComplete.setVisible(true);
+    }
+    @FXML
+    void fileUploadHandler(ActionEvent event) {
 
+    }
+    @FXML
+    void uploadTaskHandler(ActionEvent event) {
+
+    }
+    @FXML
+    void ChooseCourseSTHandler(ActionEvent event) {
+    	ArrayList<String> arr = new ArrayList<String>();
+    	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
+    	cid = "";
+    	cid += cbChooseCourseST.getValue().substring(0, 3);
+    	
+    	arr.add(cid);
+    	hm.put("get class in course id for course id", arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		
+//		if(LoginController.userClient.ans != null){
+//			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
+//				arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
+//		}
+		hm.remove("get class in course id for course id");
+		hm.put("get tasks id",((ArrayList<String>)LoginController.userClient.ans));
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
+		{
+		taskID.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
+		if(!(cbChooseTask.getItems().contains("Task no. "+(i+1))))
+		cbChooseTask.getItems().add(i, "Task no. "+(i+1));
+		}
+		hm.remove("get tasks id");
+		arr.clear();
+
+		
+    	
+    }
     @FXML
     void hlSubmitTaskOnClick(ActionEvent event) {
     	personalInfoPane.setVisible(false);
@@ -148,10 +245,7 @@ public class StudentController implements Initializable {
 		
 		arr.clear();
     }
-    @FXML
-    void ChooseCourseSTHandler(ActionEvent event) {
-       
-    }
+
 	@FXML
 	void logoutHandler(ActionEvent event) {
 		Parent nextWindow;

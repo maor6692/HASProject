@@ -184,12 +184,6 @@ public class TeacherController implements Initializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        try {
-			Files.write((Paths.get("Documents\\kobi.docx")), by);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
         LoginController.userClient.sendServer(hm);
         LoginController.syncWithServer();
         hm.clear();
@@ -232,6 +226,7 @@ public class TeacherController implements Initializable{
 		
 	}
 
+	
     @FXML
     void fileChooserHandler(ActionEvent event) {
 		Stage uploadStage = new Stage();
