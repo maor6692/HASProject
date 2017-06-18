@@ -98,9 +98,10 @@ public class EchoServer extends AbstractServer {
 
 					case "getCurrentCourses":
 						ans = (ArrayList<String>) message.get("getCurrentCourses");
-						query = "SELECT name,teaching_unit,id FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
+						query = "SELECT name,teaching_unit,id,weekly_hours FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
+						HashMap<Integer,Integer> coursesWeeklyHours = new HashMap<>();
 						ans.clear();
 						
 						HashMap<Integer,HashMap<Integer,String>> currCourses = new HashMap<>(); // teachingUnit-->Map<courseid,coursename>
@@ -112,6 +113,7 @@ public class EchoServer extends AbstractServer {
 							tempUnits.add(Integer.parseInt(rs.getString(2)));
 							tempNames.add(rs.getString(1));
 							tempCourseId.add(Integer.parseInt(rs.getString(3)));
+							coursesWeeklyHours.put(rs.getInt(3),rs.getInt(4));
 						}
 
 						//** make arraylist of no duplicated units for keys
@@ -134,11 +136,12 @@ public class EchoServer extends AbstractServer {
 
 
 
-
-
+						ArrayList<Object> sendans = new ArrayList<>();
+						sendans.add(currCourses);
+						sendans.add(coursesWeeklyHours);
 						stmt.close();
 						rs.close();
-						client.sendToClient(currCourses);//sends currSemester to SecretaryController.
+						client.sendToClient(sendans);//sends currSemester to SecretaryController.
 						break;
 
 					case "getCurrentClasses":
@@ -623,6 +626,20 @@ public class EchoServer extends AbstractServer {
 							ans.add(rs.getString(1));
 						}
 						client.sendToClient(ans);
+						break;
+					case "getTeachersWorkingHours":
+						ans= (ArrayList<String>)message.get(key); // ans [courseId]
+						HashMap<String,Integer> teacherwh = new HashMap<String,Integer>();
+						for(int k=0;k<ans.size();k++){
+							query = "SELECT working_hours FROM teacher WHERE id = '"+ans.get(k)+"'";
+							stmt = conn.createStatement();
+							rs = stmt.executeQuery(query);
+							while (rs.next()) {
+								teacherwh.put(ans.get(k),rs.getInt(1));
+							}
+						}
+
+						client.sendToClient(teacherwh);
 						break;
 					}
 				}
