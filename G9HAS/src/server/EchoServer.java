@@ -143,16 +143,17 @@ public class EchoServer extends AbstractServer {
 
 					case "getCurrentClasses":
 						ans = (ArrayList<String>) message.get("getCurrentClasses");
-						query = "SELECT name FROM class WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
+						query = "SELECT name,id FROM class WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						ans.clear();
+						HashMap<Integer,String> cls = new HashMap<>();
 						while (rs.next()) { 
-							ans.add(rs.getString(1));
+							cls.put(Integer.parseInt(rs.getString(2)), rs.getString(1));
 						}
 						stmt.close();
 						rs.close();
-						client.sendToClient(ans);//sends currSemester to SecretaryController.
+						client.sendToClient(cls);//sends currSemester to SecretaryController.
 						break;
 
 					case "getTeachers":
