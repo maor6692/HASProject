@@ -73,11 +73,9 @@ public class SecretaryController implements Initializable{
 	@FXML
 	private ListView<String> lvStudents;
 	
-	@FXML
-	private ListView<String> lvClasses;
 	
-	//New Way of getting classes@FXML
-	//private ListView<ClassesInListView> lvClasses;
+	@FXML
+	private ListView<ClassesInListView> lvClasses;
 
 	@FXML
 	private TableView<Row> tblExceptions;
@@ -99,20 +97,22 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	private Button btnMoveLeft;
-	ObservableList<String> selectedClasses;
+	ObservableList<ClassesInListView> selectedClasses;
 	private HashMap<Integer,HashMap<Integer,String>> courses;
 	HashMap<String, ArrayList<String>>	msg ;
 	ArrayList<String> params;
 	private CourseComboBox currCourseBox=null;
-
+	HashMap<Integer,String> comboClasses;
 	
 	//out hashmap <teaching unit id,map of teachers in this teaching unit>;
 	//inner hashmaps <teacher id,arraylist of teacher name and max hours>
-	private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo; 
+	private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo;
 
-	private boolean checkClassExists(String className){ // checks if class is exists in right side of table
+	private HashMap<Integer, Integer> coursesWeeklyHours; 
+
+	private boolean checkClassExists(ClassesInListView className){ // checks if class is exists in right side of table
 		for(ClassInCourseRow temp : classesInCourse){
-			if(temp.getClassName().equals(className))
+			if(temp.getClassName().equals(className.getClassName()))
 				return true;
 		}
 		return false;
@@ -122,15 +122,15 @@ public class SecretaryController implements Initializable{
 
 
 	void addClassesToCourseHandler(ActionEvent event) {
-		//TODO : teachers appoinment will not change after adding more courses
+		lblWarning.setVisible(false);
 		if(cmbCourse.getValue() == null)
 			return;
 		selectedClasses = lvClasses.getSelectionModel().getSelectedItems(); // get selected elements from the left
 		
 		
-		for(String temp : selectedClasses){ 
+		for(ClassesInListView temp : selectedClasses){ 
 			if(checkClassExists(temp)) continue; // check if class exists
-			tblClassTeacher.getItems().add(new ClassInCourseRow(temp)); //classesInCourse.add(new Row(temp));
+			tblClassTeacher.getItems().add(new ClassInCourseRow(temp.getClassName())); //classesInCourse.add(new Row(temp));
 		}
 		//Row
 		
@@ -139,6 +139,7 @@ public class SecretaryController implements Initializable{
 	}
 	@FXML
 	void removeClassesFromCourseHandler(ActionEvent event) {
+		lblWarning.setVisible(false);
 		ClassInCourseRow selectedClass = tblClassTeacher.getSelectionModel().getSelectedItem();
 		if(selectedClass == null)
 			return;
@@ -154,16 +155,15 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	void chooseCourseHandler(ActionEvent event) {
+		lblWarning.setVisible(false);
 		currCourseBox = cmbCourse.getValue();
 		// clean class in course table
 		classesInCourse =  FXCollections.observableArrayList();
 		teachersBoxValues = FXCollections.observableArrayList();
-		//tblClassTeacher.setItems(classesInCourse); // set table from starter
-		
-		//*****************************************************************************************************************
+
 		HashMap<String,ArrayList<String>> teachersOfTeachingUnit = teachersInfo.get(String.valueOf(currCourseBox.getTeachingUnit()));//
-		//TODO : handle no teachers
-		//******************************************************************************************************************
+		
+		
 		Collection<String> teachersOfTeachingUnitKeySet = teachersOfTeachingUnit.keySet();
 		for(String tid : teachersOfTeachingUnitKeySet){ // foreach teacher id in this teaching unit
 			ArrayList<String> teacherAtt = teachersOfTeachingUnit.get(tid); // get teacher's info
@@ -188,7 +188,7 @@ public class SecretaryController implements Initializable{
 	            int row = pos.getRow();
 	            ClassInCourseRow newRow = event2.getTableView().getItems().get(row);
 	 
-	            newRow.setTeacher(newTeacherComboBox.getTeacherName());
+	            newRow.setTeacher(newTeacherComboBox.getTeacherName(),newTeacherComboBox);
 	        });
 		
 		tblClassTeacher.setItems(classesInCourse);
@@ -331,6 +331,69 @@ void hideLabels(){
 	
 	@FXML
 	void assignClassesAndTeachersHandler(ActionEvent event) {
+		lblWarning.setVisible(false);
+		//validating choosing classes and teacher to any class:
+
+		if(currCourseBox == null){
+			lblWarning.setText("Choose course");
+			lblWarning.setVisible(true);
+			return;
+		} else 	if(tblClassTeacher.getItems().isEmpty()){
+			lblWarning.setText("Choose classes from left table");
+			lblWarning.setVisible(true);
+			return;
+		}
+		for(ClassInCourseRow t : tblClassTeacher.getItems()){
+			if(t.getTeacherComboBox() == null){
+				lblWarning.setText("Choose teacher for every class");
+				lblWarning.setVisible(true);
+				return;
+			}
+		}
+		//get pre courses
+		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> preCourses = new ArrayList<>();
+		preCourses.add(String.valueOf(currCourseBox.getCourseId()));
+		msg.put("getPreCourses",preCourses);
+		LoginController.userClient.sendServer(msg); 
+		LoginController.syncWithServer();
+		msg.clear();
+		preCourses = (ArrayList<String>) UserClient.ans;
+		//--
+		//get current working hours of teachers
+		ArrayList<String> teachersId = new ArrayList<>();
+		for(ClassInCourseRow t : tblClassTeacher.getItems()){
+			teachersId.add(t.getTeacherComboBox().getTeacherId());
+		}
+		msg.put("getTeachersWorkingHours",teachersId);
+		LoginController.userClient.sendServer(msg); 
+		LoginController.syncWithServer();
+		msg.clear();
+		HashMap<String,Integer> teachersWorkingHours = (HashMap<String,Integer>) UserClient.ans;
+		//--
+		//check if teachers working hours + course weekly hours > max hours ----> then return an error
+		int weeklyhours = coursesWeeklyHours.get(currCourseBox.getCourseId());
+		for(ClassInCourseRow t : tblClassTeacher.getItems()){
+			if(t.getTeacherComboBox().getMaxHours()< weeklyhours+teachersWorkingHours.get(t.getTeacherComboBox().getTeacherId())){
+				lblWarning.setText("teacher: "+t.getTeacher()+"exceeding max hours");
+				lblWarning.setVisible(true);
+				return;
+			}
+		}
+		//--
+		
+		
+		//we need choosen course
+		System.out.println("current Course"+currCourseBox.getCourseId()+" "+currCourseBox.getCourseName());
+		for(ClassInCourseRow t : tblClassTeacher.getItems()){
+				System.out.println(t.getClassName()+" "+t.getTeacher());
+				System.out.println(""+t.getTeacherComboBox().getTeacherName());
+				System.out.println(" "+t.getTeacherComboBox().getTeacherId()+" "+t.getTeacherComboBox().getMaxHours());
+				
+				
+				
+		}
+		
 		
 	}
 
@@ -420,7 +483,9 @@ void hideLabels(){
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
 		//TeachingUnit-->[Map<courseId,courseName>]
-		courses  = (HashMap<Integer,HashMap<Integer,String>>) UserClient.ans;
+		ArrayList<Object> tempAns = (ArrayList<Object>)UserClient.ans;
+		courses  = (HashMap<Integer,HashMap<Integer,String>>) tempAns.get(0);
+		coursesWeeklyHours = (HashMap<Integer,Integer>) tempAns.get(1);
 		Collection<Integer> teachingUnits = courses.keySet();
 		//Collection<HashMap<Integer,String>> allCoursesMapsCollection = courses.values();
 		//Collection<String>  courseCollection = courseCollectionMap.values();
@@ -441,14 +506,14 @@ void hideLabels(){
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
 		msg.clear();
-		// current way of getting course:(needs to be changed for getting course id)
+		/*// current(old) way of getting course:(needs to be changed for getting course id)
 		ArrayList<String> comboClasses = (ArrayList<String>) UserClient.ans;
 		for(String comboClass: comboClasses)
 			lvClasses.getItems().add(comboClass);
 		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		//--
-		/*//new way of getting course:
-		HashMap<Integer,String> comboClasses = (HashMap<Integer,String>) UserClient.ans;
+		//--*/
+		//current new way of getting course:
+		comboClasses = (HashMap<Integer,String>) UserClient.ans;
 		Collection<Integer> classesKeySet = comboClasses.keySet();
 		for(int classId:classesKeySet){
 			String className = comboClasses.get(classId);
@@ -456,7 +521,7 @@ void hideLabels(){
 			lvClasses.getItems().add(newClass);
 		}
 		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		//--*/
+		//--
 		//get teachers
 		msg.put("getTeachers",new ArrayList<String>());
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
@@ -551,6 +616,7 @@ void hideLabels(){
 
 		private final SimpleStringProperty className;
 		private final SimpleStringProperty teacher;
+		private TeacherComboBox teacherComboBox=null;
 
 		private ClassInCourseRow(String className,String teacher) {
 			this.className = new SimpleStringProperty(className);
@@ -565,10 +631,13 @@ void hideLabels(){
 			this.className.set(row);
 		}
 
-		public void setTeacher(String t) {
+		public void setTeacher(String t,TeacherComboBox tcb) {
 			this.teacher.set(t);
+			this.teacherComboBox = tcb;
 		}		
-		
+		public TeacherComboBox getTeacherComboBox(){
+			return teacherComboBox;
+		}
 		public String getClassName() {
 			return className.get();
 		}
