@@ -613,6 +613,17 @@ public class EchoServer extends AbstractServer {
 							System.out.println("query for itay");
 						}
 						break;
+					case "getPreCourses":
+						ans= (ArrayList<String>)message.get(key); // ans [courseId]
+						query = "SELECT pre_course_id FROM pre_courses WHERE course_id = '"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) {
+							ans.add(rs.getString(1));
+						}
+						client.sendToClient(ans);
+						break;
 					}
 				}
 			}
