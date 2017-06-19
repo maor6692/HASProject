@@ -46,6 +46,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 
+
 public class TeacherController implements Initializable{
 	private ArrayList<String> course_id_arr;
 	private ArrayList<String> class_id_arr;
