@@ -616,16 +616,26 @@ public class EchoServer extends AbstractServer {
 							System.out.println("query for itay");
 						}
 						break;
-					case "getPreCourses":
+					case "getPreCourses": // get preCourses and which classes studied this course
 						ans= (ArrayList<String>)message.get(key); // ans [courseId]
 						query = "SELECT pre_course_id FROM pre_courses WHERE course_id = '"+ans.get(0)+"'";
+						HashMap <String,ArrayList<Integer>> preCourses = new HashMap <String,ArrayList<Integer>>();
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						ans.clear();
 						while (rs.next()) {
 							ans.add(rs.getString(1));
 						}
-						client.sendToClient(ans);
+						for(String courseId : ans){ // for each pre course id
+							ArrayList<Integer> courseInClassId = new ArrayList<>();
+							query = "SELECT id FROM class_in_course WHERE course_id = '"+courseId+"'";
+							stmt = conn.createStatement();
+							rs = stmt.executeQuery(query);
+								while (rs.next()) 
+									courseInClassId.add(rs.getInt(1));
+							preCourses.put(courseId, courseInClassId);
+						}
+						client.sendToClient(preCourses);
 						break;
 					case "getTeachersWorkingHours":
 						ans= (ArrayList<String>)message.get(key); // ans [courseId]
