@@ -53,6 +53,7 @@ public class LoginController extends Application implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
 	/**
 	 * change user status to 'online' in DB and open appropriate window due to user_type
 	 */

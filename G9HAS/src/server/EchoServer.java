@@ -145,6 +145,7 @@ public class EchoServer extends AbstractServer {
 						break;
 
 					case "getCurrentClasses":
+					
 						ans = (ArrayList<String>) message.get("getCurrentClasses");
 						query = "SELECT name,id FROM class WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
 						stmt = conn.createStatement();

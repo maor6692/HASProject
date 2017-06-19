@@ -222,6 +222,7 @@ public class SchoolManagerController implements Initializable{
 			arr.add(String.valueOf(--newYear));
 			arr.add("2");//if next semester is 'A' current is 'B' and current year is new year - 1
 		}
+		
 		msg.clear();
 		msg.put("getCurrentClasses",arr);
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
