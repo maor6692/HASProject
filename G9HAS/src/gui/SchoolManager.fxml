@@ -80,14 +80,14 @@
             </Label>
             <ComboBox fx:id="cbClasses" layoutX="112.0" layoutY="198.0" onAction="#onClassChoosedHandler" prefHeight="35.0" prefWidth="172.0" promptText="classes" />
             <ComboBox fx:id="cbStudents" layoutX="113.0" layoutY="291.0" prefHeight="35.0" prefWidth="172.0" promptText="students" />
-            <Button fx:id="btnBlock" layoutX="116.0" layoutY="359.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="163.0" text="block access to this student" />
+            <Button fx:id="btnBlock" layoutX="116.0" layoutY="359.0" mnemonicParsing="false" onAction="#blockAccessHandler" prefHeight="34.0" prefWidth="163.0" text="block access to this student" />
             <ListView fx:id="lvStudents" layoutX="399.0" layoutY="185.0" prefHeight="198.0" prefWidth="276.0" />
-            <Label layoutX="410.0" layoutY="153.0" text="not accessible students" underline="true">
+            <Label layoutX="410.0" layoutY="153.0" text="&quot;hidden&quot; students" underline="true">
                <font>
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button fx:id="btnReturnAccess" layoutX="455.0" layoutY="390.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="163.0" text="return access to student" />
+            <Button fx:id="btnReturnAccess" layoutX="455.0" layoutY="390.0" mnemonicParsing="false" onAction="#returnAccessHandler" prefHeight="34.0" prefWidth="163.0" text="return access to student" />
          </children>
       </Pane>
    </center>

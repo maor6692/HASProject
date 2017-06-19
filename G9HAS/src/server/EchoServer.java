@@ -592,7 +592,7 @@ public class EchoServer extends AbstractServer {
 						ResultSet rs_users = null;
 						HashMap<String, ArrayList<String>> students = new HashMap<String, ArrayList<String>>();
 						ans=(ArrayList<String>) message.get(key);
-						query = "SELECT id FROM student WHERE class_id ="+ans.get(0);
+						query = "SELECT id,pblocked FROM student WHERE class_id ="+ans.get(0);
 						stmt = conn.createStatement();
 						stmt2=conn.createStatement();
 						rs=stmt.executeQuery(query);
@@ -602,12 +602,30 @@ public class EchoServer extends AbstractServer {
 							while(rs_users.next()){ 
 								ans.add(rs_users.getString(1));
 								ans.add(rs_users.getString(2));
+								ans.add(rs.getString(2));
 								students.put(rs.getString(1), new ArrayList<String>(ans));
 							}
 							ans.clear();
 						}
-						//rs_users.close();
 						client.sendToClient(students);
+						break;
+						
+					case "blockAccess":
+						query = "UPDATE student SET pblocked=? WHERE id=?";
+						pstmt = conn.prepareStatement(query);
+							pstmt.setInt(1, 1);
+							pstmt.setString(2,((ArrayList<String>) message.get(key)).get(0));
+							pstmt.executeUpdate();
+						client.sendToClient(null);
+						break;
+						
+					case "returnAccess":
+						query = "UPDATE student SET pblocked=? WHERE id=?";
+						pstmt = conn.prepareStatement(query);
+							pstmt.setInt(1, 0);
+							pstmt.setString(2,((ArrayList<String>) message.get(key)).get(0));
+							pstmt.executeUpdate();
+						client.sendToClient(null);
 						break;
 
 					case "getPreCourses": // get preCourses and which classes studied this course
