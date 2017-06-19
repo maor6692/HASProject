@@ -633,7 +633,7 @@ public class EchoServer extends AbstractServer {
 					case "getPreCourses": // get preCourses and which classes studied this course
 						ans= (ArrayList<String>)message.get(key); // ans [courseId]
 						query = "SELECT pre_course_id FROM pre_courses WHERE course_id = '"+ans.get(0)+"'";
-						HashMap <String,ArrayList<Integer>> preCourses = new HashMap <String,ArrayList<Integer>>();
+						HashMap <String,ArrayList<String>> preCourses = new HashMap <String,ArrayList<String>>();
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						ans.clear();
@@ -641,12 +641,12 @@ public class EchoServer extends AbstractServer {
 							ans.add(rs.getString(1));
 						}
 						for(String courseId : ans){ // for each pre course id
-							ArrayList<Integer> courseInClassId = new ArrayList<>();
+							ArrayList<String> courseInClassId = new ArrayList<>();
 							query = "SELECT id FROM class_in_course WHERE course_id = '"+courseId+"'";
 							stmt = conn.createStatement();
 							rs = stmt.executeQuery(query);
 								while (rs.next()) 
-									courseInClassId.add(rs.getInt(1));
+									courseInClassId.add(rs.getString(1));
 							preCourses.put(courseId, courseInClassId);
 						}
 						client.sendToClient(preCourses);
@@ -664,6 +664,80 @@ public class EchoServer extends AbstractServer {
 						}
 
 						client.sendToClient(teacherwh);
+						break;
+					case "addClass_in_courseRow":
+						ans= (ArrayList<String>)message.get(key); // 
+						query = "INSERT INTO class_in_course (course_id,class_id,teacher_id) VALUES ('"+ans.get(0)+"','"+ans.get(1)+"','"+ans.get(2)+"')";
+						stmt = conn.createStatement();
+						int k=-1;
+						stmt.executeUpdate(query);
+						query = "SELECT MAX(id) FROM class_in_course";
+						rs = stmt.executeQuery(query);
+						while(rs.next())
+							k = rs.getInt(1);
+						client.sendToClient(k);
+						break;
+						
+						
+					case "updateTeacherWorkingHours":
+						ans= (ArrayList<String>)message.get(key); // 
+						query  = "SELECT working_hours FROM teacher WHERE id='"+ans.get(0)+"'";
+						int wh=0;
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						while(rs.next())
+							wh = rs.getInt(1);
+						wh+=Integer.parseInt(ans.get(1));
+						query  = "UPDATE teacher SET working_hours='"+wh+"' WHERE id='"+ans.get(0)+"'";
+						stmt.executeUpdate(query);
+						client.sendToClient(null);
+						break;
+					case "getStudentsOfClass":
+						ans= (ArrayList<String>)message.get(key); //
+						HashMap<String,String> studentsOfClass = new HashMap<>();
+						query  = "SELECT s.id,u.first_name,u.last_name FROM student s,users u WHERE s.class_id='"+ans.get(0)+"' AND s.id=u.user_name";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while(rs.next())
+							studentsOfClass.put(rs.getString(1), rs.getString(2)+" "+rs.getString(3));
+
+						client.sendToClient(studentsOfClass);
+						break;
+					case "checkPreCourseFromArray":
+						boolean passed = false;
+						ans= (ArrayList<String>)message.get(key); // 
+						String sid = ans.remove(0);
+			
+						for(String courseInClassId : ans){	
+							query  = "SELECT grade FROM student_in_course_in_class WHERE course_in_class_id='"+courseInClassId+"' AND student_id='"+sid+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						int grade=-1;
+						while(rs.next()){
+								grade = rs.getInt(1);
+							}
+						if(grade == -1) //student was not in this specific class
+							continue; // keep looking
+						else{ // student was in this specific class
+							if(grade >= 55){ // student has this preRequisite
+								passed = true;
+							}
+						}
+						}
+
+						client.sendToClient(passed);
+						ans.clear();
+						break;
+					case "AssignStudentsToClassInCourse":
+						ans= (ArrayList<String>)message.get(key); // 
+						String cicid = ans.remove(0);
+						for(String studentid : ans){
+							query  = "INSERT INTO student_in_course_in_class (course_in_class_id,student_id) VALUES ('"+cicid+"','"+studentid+"')";
+							stmt = conn.createStatement();
+							stmt.executeUpdate(query);
+						}
+						client.sendToClient(null);
 						break;
 					}
 				}
