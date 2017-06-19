@@ -60,10 +60,10 @@ public class SchoolManagerController implements Initializable{
 	HashMap<String, ArrayList<String>> studentsInClass;//saves all students of chosen class in combo box
 	HashMap<String, ArrayList<String>> blockedStudentsHM;
 
-/**
- * change visible user window to appropriate window
- * @param pane
- */
+	/**
+	 * change visible user window to appropriate window
+	 * @param pane
+	 */
 	@FXML
 	void setBlockParentAccessPaneHandler(ActionEvent event) {
 		setPane(blockParentPane);
@@ -216,11 +216,11 @@ public class SchoolManagerController implements Initializable{
 		char newSemester=(char) currSemester.get(1);
 		ArrayList<String> arr = new ArrayList<String>();
 		if(newSemester == 'B'){//if next semester is 'B' current is 'A' and current year is the same
-		arr.add("1");
-		arr.add(String.valueOf(newYear));
-		}else{
-			arr.add("2");//if next semester is 'A' current is 'B' and current year is new year - 1 
+			arr.add(String.valueOf(newYear));
+			arr.add("1");
+		}else{ 
 			arr.add(String.valueOf(--newYear));
+			arr.add("2");//if next semester is 'A' current is 'B' and current year is new year - 1
 		}
 		msg.clear();
 		msg.put("getCurrentClasses",arr);
@@ -246,12 +246,12 @@ public class SchoolManagerController implements Initializable{
 			LoginController.syncWithServer();
 			if(blockedStudentsHM!=null) blockedStudentsHM.clear();
 			blockedStudentsHM = (HashMap<String, ArrayList<String>>)UserClient.ans;
-		
+
 			for(String id: blockedStudentsHM.keySet())
 				if(blockedStudentsHM.get(id).get(2)!= null) 
 					if(blockedStudentsHM.get(id).get(2).equals("1"))
-					blockedStudents.add(id+" - "+blockedStudentsHM.get(id).get(0)+" "+blockedStudentsHM.get(id).get(1));
-			
+						blockedStudents.add(id+" - "+blockedStudentsHM.get(id).get(0)+" "+blockedStudentsHM.get(id).get(1));
+
 		}
 		lvStudents.setItems(blockedStudents);
 
