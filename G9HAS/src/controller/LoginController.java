@@ -88,6 +88,7 @@ public class LoginController extends Application implements Initializable {
 //			}
 			
 			try {
+				if(user_type.equals("Manager"))user_type="SchoolManager";
 				nextWindow = FXMLLoader.load(getClass().getResource("../gui/"+user_type+".fxml"));//Prepare appropriate window due to user_type
 				Scene nextScene = new Scene(nextWindow);
 				Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
