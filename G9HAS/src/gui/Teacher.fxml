@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="781.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TeacherController">
+   <left>
+      <Pane prefHeight="498.0" prefWidth="171.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="38.0" fitWidth="33.0" layoutX="14.0" layoutY="28.0">
+               <image>
+                  <Image url="@../../resources/new-user-image-default.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="lblUser" layoutX="50.0" layoutY="28.0" text="UserName" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Hyperlink fx:id="linkLogout" focusTraversable="false" layoutX="47.0" layoutY="48.0" onAction="#logoutHandler" text="Logout" textFill="#7c7c7c">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink fx:id="hlCreateTask" layoutX="14.0" layoutY="103.0" onAction="#hlcreateTaskOnClick" prefHeight="23.0" prefWidth="169.0" text="Create task" textFill="#529ceb" />
+            <Hyperlink fx:id="hlCheckTask" layoutX="14.0" layoutY="138.0" onAction="#hlCheckTaskOnClick" text="Check Task" textFill="#529ceb" />
+         </children>
+      </Pane>
+   </left>
+   <center>
+      <Pane fx:id="defineCoursePane" prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane fx:id="createTaskPane" layoutY="-59.0" visible="false">
+               <children>
+                  <ImageView fitHeight="508.0" fitWidth="611.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/background.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="200.0" fitWidth="200.0">
+                     <image>
+                        <Image url="@../../resources/logo.png" />
+                     </image>
+                  </ImageView>
+                  <ComboBox fx:id="cbClass" layoutX="134.0" layoutY="199.0" prefHeight="31.0" prefWidth="132.0" promptText="Choose Class" />
+                  <Button fx:id="btnUpload" layoutX="287.0" layoutY="243.0" mnemonicParsing="false" onAction="#fileChooserHandler" prefHeight="25.0" prefWidth="112.0" text="Choose File..." />
+                  <Button fx:id="btnCreateTask" layoutX="247.0" layoutY="404.0" mnemonicParsing="false" onAction="#createTaskHandler" text="Create Task!" />
+                  <Label fx:id="lblClass" layoutX="77.0" layoutY="201.0" text="Class:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblSubmissionDate" layoutX="12.0" layoutY="295.0" text="Submission Date:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               <Label fx:id="lblCreateTask" layoutX="184.0" layoutY="105.0" prefHeight="41.0" prefWidth="219.0" text="Create task" textAlignment="CENTER" textFill="#c7a958">
+                              <font>
+                              <Font name="System Bold" size="28.0" />
+                           </font>
+                        </Label>
+                  <Label fx:id="lblTask" layoutX="80.0" layoutY="242.0" text="Task:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblCourseID" layoutX="65.0" layoutY="158.0" text="Course:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="tfSubmissionDate" layoutX="166.0" layoutY="296.0" />
+                  <ComboBox fx:id="cbCourseID" layoutX="134.0" layoutY="156.0" onAction="#cbCourseHandler" prefHeight="31.0" prefWidth="132.0" promptText="Choose Course" />
+                  <TextField fx:id="tfUploadPath" layoutX="133.0" layoutY="243.0" prefHeight="25.0" prefWidth="154.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="checkTaskPane" prefHeight="498.0" prefWidth="617.0">
+               <children>
+                  <ImageView fitHeight="508.0" fitWidth="611.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/background.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="200.0" fitWidth="200.0" layoutY="-43.0">
+                     <image>
+                        <Image url="@../../resources/logo.png" />
+                     </image>
+                  </ImageView>
+                  <ComboBox fx:id="cbTeacherCourse" layoutX="175.0" layoutY="95.0" onAction="#TeacherCourseHandler" prefWidth="150.0" />
+                  <Label fx:id="lblClassID" layoutX="56.0" layoutY="101.0" text="Select Course:" />
+                  <Label fx:id="lblSelectClass" layoutX="71.0" layoutY="144.0" text="Select Class:" />
+                  <ComboBox fx:id="cbClassID" layoutX="175.0" layoutY="138.0" onAction="#ClassIDHandler" prefWidth="150.0" />
+                  <Label fx:id="lblSelectStudent" layoutX="52.0" layoutY="237.0" text="Select Student:" />
+                  <ComboBox fx:id="cbStudent" layoutX="175.0" layoutY="230.0" prefWidth="150.0" />
+                  <Button fx:id="btnDownload" layoutX="197.0" layoutY="273.0" mnemonicParsing="false" onAction="#DownloadHandler" text="Download" />
+                  <Label fx:id="lblTaskGrade" layoutX="73.0" layoutY="324.0" text="Task Grade:" />
+                  <TextField fx:id="tfGrade" layoutX="175.0" layoutY="318.0" onAction="#InsertGrade" prefHeight="39.0" prefWidth="63.0" />
+                  <TextField fx:id="tfCheckUploadPath" layoutX="85.0" layoutY="368.0" />
+                  <Button fx:id="btnChooseFile" layoutX="334.0" layoutY="368.0" mnemonicParsing="false" onAction="#CheckfileChooserHandler" text="Choose file" />
+                  <ComboBox fx:id="cbChooseTask" layoutX="175.0" layoutY="183.0" prefWidth="150.0" />
+                  <Label layoutX="79.0" layoutY="189.0" text="Select Task:" />
+                  <Button fx:id="btnCheckUpload" layoutX="250.0" layoutY="428.0" mnemonicParsing="false" onAction="#CheckUploadHandler" text="Upload" />
+               </children>
+            </Pane>
+         </children>
+      </Pane>
+   </center>
+</BorderPane>
