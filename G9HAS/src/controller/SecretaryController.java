@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+
+import javax.swing.JOptionPane;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -78,11 +81,18 @@ public class SecretaryController implements Initializable{
 	private ListView<ClassesInListView> lvClasses;
 
 	@FXML
-	private TableView<Row> tblExceptions;
+	private TableView<StudentsExp> tblExceptions;
 
 	@FXML
 	private Button btnAssign;
-
+    @FXML
+    private TableColumn<StudentsExp, String> colSidExp;
+    @FXML
+    private TableColumn<StudentsExp, String> colSnExp;
+    @FXML
+    private TableColumn<StudentsExp, String> colCnExp;
+    @FXML
+    private TableColumn<StudentsExp, String> colCidExp;
 	@FXML
 	private TableView<ClassInCourseRow> tblClassTeacher;
 
@@ -104,6 +114,7 @@ public class SecretaryController implements Initializable{
 	private CourseComboBox currCourseBox=null;
 	HashMap<Integer,String> comboClasses;
 	
+	private ObservableList<StudentsExp> ExceptionStudents = FXCollections.observableArrayList();
 	//out hashmap <teaching unit id,map of teachers in this teaching unit>;
 	//inner hashmaps <teacher id,arraylist of teacher name and max hours>
 	private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo;
@@ -123,6 +134,8 @@ public class SecretaryController implements Initializable{
 
 	void addClassesToCourseHandler(ActionEvent event) {
 		lblWarning.setVisible(false);
+		tblExceptions.setVisible(false);
+		lblStudentsPre.setVisible(false);
 		if(cmbCourse.getValue() == null)
 			return;
 		selectedClasses = lvClasses.getSelectionModel().getSelectedItems(); // get selected elements from the left
@@ -140,6 +153,8 @@ public class SecretaryController implements Initializable{
 	@FXML
 	void removeClassesFromCourseHandler(ActionEvent event) {
 		lblWarning.setVisible(false);
+		tblExceptions.setVisible(false);
+		lblStudentsPre.setVisible(false);
 		ClassInCourseRow selectedClass = tblClassTeacher.getSelectionModel().getSelectedItem();
 		if(selectedClass == null)
 			return;
@@ -156,6 +171,8 @@ public class SecretaryController implements Initializable{
 	@FXML
 	void chooseCourseHandler(ActionEvent event) {
 		lblWarning.setVisible(false);
+		tblExceptions.setVisible(false);
+		lblStudentsPre.setVisible(false);
 		currCourseBox = cmbCourse.getValue();
 		// clean class in course table
 		classesInCourse =  FXCollections.observableArrayList();
@@ -331,6 +348,7 @@ void hideLabels(){
 	
 	@FXML
 	void assignClassesAndTeachersHandler(ActionEvent event) {
+		ExceptionStudents.clear();
 		lblWarning.setVisible(false);
 		//validating choosing classes and teacher to any class:
 
@@ -358,7 +376,7 @@ void hideLabels(){
 		LoginController.userClient.sendServer(msg); 
 		LoginController.syncWithServer();
 		msg.clear();
-		HashMap <String,ArrayList<Integer>> preCourses = (HashMap <String,ArrayList<Integer>>) UserClient.ans; // for each pre course we have an array list of course_in_class that studied this course
+		HashMap <String,ArrayList<String>> preCourses = (HashMap <String,ArrayList<String>>) UserClient.ans; // for each pre course we have an array list of course_in_class that studied this course
 		//--
 		//get current working hours of teachers
 		ArrayList<String> teachersId = new ArrayList<>();
@@ -390,7 +408,7 @@ void hideLabels(){
 		for(ClassInCourseRow t : tblClassTeacher.getItems()){ // for each row
 			String teacherId = t.getTeacherComboBox().getTeacherId();
 			if(t.getTeacherComboBox().getMaxHours() <  weeklyhours*teachersCounter.get(teacherId)+teachersWorkingHours.get(teacherId)){
-				lblWarning.setText("teacher: "+t.getTeacher()+"exceeding max hours");
+				lblWarning.setText("teacher: "+t.getTeacher()+" exceeding max hours");
 				lblWarning.setVisible(true);
 				return;
 			}
@@ -406,32 +424,79 @@ void hideLabels(){
 		//--
 		//1. foreach right table row do:
 		for(ClassInCourseRow t : tblClassTeacher.getItems()){
+			// add class_in_course row and get id
 			ArrayList<String> class_in_courseRow = new ArrayList<>();
 			class_in_courseRow.add(String.valueOf(currCourseBox.getCourseId()));
 			class_in_courseRow.add(classConvertToId.get(t.getClassName()));
 			class_in_courseRow.add(t.getTeacherComboBox().getTeacherId());
 			//add a row
+			msg.clear();
 			msg.put("addClass_in_courseRow",class_in_courseRow);
 			LoginController.userClient.sendServer(msg);
 			LoginController.syncWithServer();
 			msg.clear();
+			int currCourse_in_classId = (int)UserClient.ans;
+			//--
+			// update teacher working hours
+			ArrayList<String> teacherUpdate = new ArrayList<>();
+			teacherUpdate.add(t.getTeacherComboBox().getTeacherId());
+			teacherUpdate.add(String.valueOf(weeklyhours));
+			msg.put("updateTeacherWorkingHours",teacherUpdate);
+			LoginController.userClient.sendServer(msg);
+			LoginController.syncWithServer();
+			msg.clear();
+			//--
+			//get all student in this class
+			msg.clear();
+			ArrayList<String> studentsIdtemp = new ArrayList<>();
+			studentsIdtemp.add(String.valueOf(classConvertToId.get(t.getClassName())));
+			msg.put("getStudentsOfClass",studentsIdtemp);
+			LoginController.userClient.sendServer(msg);
+			LoginController.syncWithServer();
+			msg.clear();
+			HashMap<String,String> studentsId = (HashMap<String,String>) UserClient.ans;
+			ArrayList<String> studentsToAssign = new ArrayList<>();
+			studentsToAssign.add(String.valueOf(currCourse_in_classId)); // first elemnt will be class_in_course_id
+			for(String sid : studentsId.keySet()){ // foreach student in this class
+				boolean preReq=true;
+				for(String cid : preCourses.keySet()){ // foreach preCourse for this course
+					//check if he has this course:
+					ArrayList<String> pack = new ArrayList<>(preCourses.get(cid));
+					pack.add(0,sid);
+					msg.put("checkPreCourseFromArray",pack);
+					LoginController.userClient.sendServer(msg);
+					LoginController.syncWithServer();
+					msg.clear();
+					preReq = (boolean) UserClient.ans;
+					//--
+					if(!preReq){
+						ExceptionStudents.add(new StudentsExp(sid,studentsId.get(sid),classConvertToId.get(t.getClassName()),t.getClassName()));
+						break;
+					}
+				}
+				if(!preReq) continue; // if student has no pre classes than skip and move to next iteration
+				studentsToAssign.add(sid);
+			}
+			msg.put("AssignStudentsToClassInCourse",studentsToAssign);
+			LoginController.userClient.sendServer(msg);
+			LoginController.syncWithServer();
+			msg.clear();
 		}
+		String s = "Successfully Assigned classes,teachers and students to course";
+		if(!ExceptionStudents.isEmpty()){
+			tblExceptions.setItems(ExceptionStudents);
+			tblExceptions.setVisible(true);
+			lblStudentsPre.setVisible(true);
+			s+=" with students exception list who doesnt fill pre courses";
+		}
+		JOptionPane.showMessageDialog(null, s);
+		
 		//
 		//
 		//
 
 		
 		
-		//we need choosen course
-		System.out.println("current Course"+currCourseBox.getCourseId()+" "+currCourseBox.getCourseName());
-		for(ClassInCourseRow t : tblClassTeacher.getItems()){
-				System.out.println(t.getClassName()+" "+t.getTeacher());
-				System.out.println(""+t.getTeacherComboBox().getTeacherName());
-				System.out.println(" "+t.getTeacherComboBox().getTeacherId()+" "+t.getTeacherComboBox().getMaxHours());
-				
-				
-				
-		}
 		
 		
 	}
@@ -567,7 +632,11 @@ void hideLabels(){
 		LoginController.syncWithServer();
 		teachersInfo=(HashMap<String,HashMap<String,ArrayList<String>>>) UserClient.ans;
 		
-
+		colSidExp.setCellValueFactory(new PropertyValueFactory<>("id"));
+		colSnExp.setCellValueFactory(new PropertyValueFactory<>("name"));
+		colCidExp.setCellValueFactory(new PropertyValueFactory<>("classId"));
+		colCnExp.setCellValueFactory(new PropertyValueFactory<>("className"));
+		
 	}
 	public class CourseComboBox {
 		private int teachingUnit;
@@ -711,6 +780,32 @@ void hideLabels(){
 		}
 		public void setClassId(int id){
 			classId = id;
+		}
+	}
+	
+	public class StudentsExp {
+		private String name;
+		private String id;
+		private String classId;
+		private String className;
+		
+		public StudentsExp(String i,String n,String clsId,String cls){
+			name=n;
+			id=i;
+			classId=clsId;
+			className=cls;
+		}
+		public String getName(){
+			return name;
+		}
+		public String getClassId(){
+			return classId;
+		}
+		public String getClassName(){
+			return className;
+		}
+		public String getId(){
+			return id;
 		}
 	}
 
