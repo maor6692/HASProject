@@ -586,36 +586,30 @@ public class EchoServer extends AbstractServer {
 						else if(rs.getInt(4) > 0) answer="alreadyAssigned";
 						client.sendToClient(answer);
 						break;
+						
 
-					case "get info for blockParentAccess":
-						HashMap<Integer, ArrayList<String>> classes = new HashMap<Integer, ArrayList<String>>();
-						HashMap<Integer, ArrayList<String>> students = new HashMap<Integer, ArrayList<String>>();
-						query = "SELECT * FROM class";
-
+					case "getStudentsInClass":
+						ResultSet rs_users = null;
+						HashMap<String, ArrayList<String>> students = new HashMap<String, ArrayList<String>>();
+						ans=(ArrayList<String>) message.get(key);
+						query = "SELECT id FROM student WHERE class_id ="+ans.get(0);
 						stmt = conn.createStatement();
-						rs = stmt.executeQuery(query);
-						while (rs.next()) {
-							ans = new ArrayList<>();
-							ans.add(rs.getString(2)); // add name to array list
-							ans.add(rs.getString(3)); // add year to array list
-							ans.add(rs.getString(4)); // add semester to array list
-							classes.put(Integer.parseInt(rs.getString(1)), ans); // add key and array list
+						stmt2=conn.createStatement();
+						rs=stmt.executeQuery(query);
+						ans.clear();
+						while(rs.next()){ 
+							rs_users=stmt2.executeQuery("select first_name,last_name from users where user_name="+"'"+rs.getString(1)+"'");
+							while(rs_users.next()){ 
+								ans.add(rs_users.getString(1));
+								ans.add(rs_users.getString(2));
+								students.put(rs.getString(1), new ArrayList<String>(ans));
+							}
+							ans.clear();
 						}
-						query = "SELECT id,pblocked,class_id FROM student";
-						rs = stmt.executeQuery(query);
-						while (rs.next()) {
-							ans = new ArrayList<>();
-							ans.add(rs.getString(2)); // add pblocked to array list
-							ans.add(rs.getString(3)); // add class_id to array list
-							students.put(Integer.parseInt(rs.getString(1)), ans); // add key and array list
-							stmt.close();
-							HashMap<String,Object> replay = new HashMap<String,Object>();
-							replay.put("class", classes);
-							replay.put("student", students);
-							client.sendToClient(replay);
-							System.out.println("query for itay");
-						}
+						//rs_users.close();
+						client.sendToClient(students);
 						break;
+
 					case "getPreCourses": // get preCourses and which classes studied this course
 						ans= (ArrayList<String>)message.get(key); // ans [courseId]
 						query = "SELECT pre_course_id FROM pre_courses WHERE course_id = '"+ans.get(0)+"'";

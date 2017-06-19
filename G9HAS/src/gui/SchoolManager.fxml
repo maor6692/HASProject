@@ -28,18 +28,18 @@
                   <Font size="11.0" />
                </font>
             </Hyperlink>
-            <Hyperlink fx:id="linkLogout1" layoutX="11.0" layoutY="130.0" onAction="#logoutHandler" style="-fx-border-color: transparent;" text="block parent accsess" textFill="WHITE" />
-            <Hyperlink fx:id="linkLogout2" layoutX="12.0" layoutY="189.0" onAction="#logoutHandler" style="-fx-border-color: transparent;" text="get statistic report" textFill="WHITE">
+            <Hyperlink layoutX="11.0" layoutY="130.0" onAction="#setBlockParentAccessPaneHandler" style="-fx-border-color: transparent;" text="block parent accsess" textFill="WHITE" />
+            <Hyperlink layoutX="12.0" layoutY="189.0" onAction="#setGetStatisticReportPaneHandler" style="-fx-border-color: transparent;" text="get statistic report" textFill="WHITE">
                <font>
                   <Font size="11.0" />
                </font>
             </Hyperlink>
-            <Hyperlink fx:id="linkLogout3" layoutX="12.0" layoutY="252.0" onAction="#logoutHandler" style="-fx-border-color: transparent;" text="view all information" textFill="WHITE">
+            <Hyperlink layoutX="12.0" layoutY="252.0" onAction="#setViewAllInformationPaneHandler" style="-fx-border-color: transparent;" text="view all information" textFill="WHITE">
                <font>
                   <Font size="11.0" />
                </font>
             </Hyperlink>
-            <Hyperlink fx:id="linkLogout4" layoutX="13.0" layoutY="318.0" onAction="#logoutHandler" style="-fx-border-color: transparent;" text="answer requests" textFill="WHITE">
+            <Hyperlink layoutX="13.0" layoutY="318.0" onAction="#setAnswerRequestPaneHandler" style="-fx-border-color: transparent;" text="answer requests" textFill="WHITE">
                <font>
                   <Font size="11.0" />
                </font>
@@ -49,7 +49,7 @@
       </Pane>
    </left>
    <center>
-      <Pane prefHeight="498.0" prefWidth="687.0" BorderPane.alignment="CENTER">
+      <Pane fx:id="blockParentPane" prefHeight="498.0" prefWidth="687.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="822.0" fitWidth="756.0" layoutX="-1.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -78,16 +78,16 @@
                   <Font size="25.0" />
                </font>
             </Label>
-            <ComboBox layoutX="112.0" layoutY="198.0" prefHeight="35.0" prefWidth="172.0" promptText="classes" />
-            <ComboBox layoutX="113.0" layoutY="291.0" prefHeight="35.0" prefWidth="172.0" promptText="students" />
-            <Button layoutX="116.0" layoutY="359.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="163.0" text="block access to this student" />
-            <ListView layoutX="399.0" layoutY="185.0" prefHeight="198.0" prefWidth="276.0" />
+            <ComboBox fx:id="cbClasses" layoutX="112.0" layoutY="198.0" onAction="#onClassChoosedHandler" prefHeight="35.0" prefWidth="172.0" promptText="classes" />
+            <ComboBox fx:id="cbStudents" layoutX="113.0" layoutY="291.0" prefHeight="35.0" prefWidth="172.0" promptText="students" />
+            <Button fx:id="btnBlock" layoutX="116.0" layoutY="359.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="163.0" text="block access to this student" />
+            <ListView fx:id="lvStudents" layoutX="399.0" layoutY="185.0" prefHeight="198.0" prefWidth="276.0" />
             <Label layoutX="410.0" layoutY="153.0" text="not accessible students" underline="true">
                <font>
                   <Font size="25.0" />
                </font>
             </Label>
-            <Button layoutX="455.0" layoutY="390.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="163.0" text="return access to student" />
+            <Button fx:id="btnReturnAccess" layoutX="455.0" layoutY="390.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="163.0" text="return access to student" />
          </children>
       </Pane>
    </center>
