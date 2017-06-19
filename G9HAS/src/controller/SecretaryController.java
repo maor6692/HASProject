@@ -350,15 +350,15 @@ void hideLabels(){
 				return;
 			}
 		}
-		//get pre courses
+		//get pre courses with class_in_course_id's of class who studied him
 		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
-		ArrayList<String> preCourses = new ArrayList<>();
-		preCourses.add(String.valueOf(currCourseBox.getCourseId()));
-		msg.put("getPreCourses",preCourses);
+		ArrayList<String> tempPreCourses = new ArrayList<>();
+		tempPreCourses.add(String.valueOf(currCourseBox.getCourseId()));
+		msg.put("getPreCourses",tempPreCourses);
 		LoginController.userClient.sendServer(msg); 
 		LoginController.syncWithServer();
 		msg.clear();
-		preCourses = (ArrayList<String>) UserClient.ans;
+		HashMap <String,ArrayList<Integer>> preCourses = (HashMap <String,ArrayList<Integer>>) UserClient.ans; // for each pre course we have an array list of course_in_class that studied this course
 		//--
 		//get current working hours of teachers
 		ArrayList<String> teachersId = new ArrayList<>();
@@ -371,16 +371,55 @@ void hideLabels(){
 		msg.clear();
 		HashMap<String,Integer> teachersWorkingHours = (HashMap<String,Integer>) UserClient.ans;
 		//--
-		//check if teachers working hours + course weekly hours > max hours ----> then return an error
 		int weeklyhours = coursesWeeklyHours.get(currCourseBox.getCourseId());
-		for(ClassInCourseRow t : tblClassTeacher.getItems()){
-			if(t.getTeacherComboBox().getMaxHours()< weeklyhours+teachersWorkingHours.get(t.getTeacherComboBox().getTeacherId())){
+		
+		//check if teachers working hours + course weekly hours > max hours ----> then return an error
+		//comment: cause we can assign the same teacher to different classes we need to sum classes * teaching hours of this course
+		HashMap<String,Integer> teachersCounter = new HashMap<>();
+		for(ClassInCourseRow t : tblClassTeacher.getItems()){ // for each row in this table, count times each teacher assigned
+			if(teachersCounter.get(t.getTeacherComboBox().getTeacherId()) == null)
+				teachersCounter.put(t.getTeacherComboBox().getTeacherId(),1);
+			else{
+				int cnt = teachersCounter.get(t.getTeacherComboBox().getTeacherId())+1;
+				teachersCounter.replace(t.getTeacherComboBox().getTeacherId(),cnt);
+			}
+		}
+		//start checking limit hours
+
+		
+		for(ClassInCourseRow t : tblClassTeacher.getItems()){ // for each row
+			String teacherId = t.getTeacherComboBox().getTeacherId();
+			if(t.getTeacherComboBox().getMaxHours() <  weeklyhours*teachersCounter.get(teacherId)+teachersWorkingHours.get(teacherId)){
 				lblWarning.setText("teacher: "+t.getTeacher()+"exceeding max hours");
 				lblWarning.setVisible(true);
 				return;
 			}
 		}
 		//--
+		//preCourses = [courseid,[course_in_class_id,course_in_class_id],...]
+		//next will be on few stages
+		//first preActions: make conversion table, class name --> class id
+		HashMap <String,String> classConvertToId = new HashMap<>();
+		for(ClassesInListView c: lvClasses.getItems()){
+			classConvertToId.put(c.getClassName(), String.valueOf(c.getClassId()));
+		}
+		//--
+		//1. foreach right table row do:
+		for(ClassInCourseRow t : tblClassTeacher.getItems()){
+			ArrayList<String> class_in_courseRow = new ArrayList<>();
+			class_in_courseRow.add(String.valueOf(currCourseBox.getCourseId()));
+			class_in_courseRow.add(classConvertToId.get(t.getClassName()));
+			class_in_courseRow.add(t.getTeacherComboBox().getTeacherId());
+			//add a row
+			msg.put("addClass_in_courseRow",class_in_courseRow);
+			LoginController.userClient.sendServer(msg);
+			LoginController.syncWithServer();
+			msg.clear();
+		}
+		//
+		//
+		//
+
 		
 		
 		//we need choosen course
