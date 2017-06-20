@@ -103,12 +103,12 @@ public class EchoServer extends AbstractServer {
 						rs = stmt.executeQuery(query);
 						HashMap<Integer,Integer> coursesWeeklyHours = new HashMap<>();
 						ans.clear();
-						
+
 						HashMap<Integer,HashMap<Integer,String>> currCourses = new HashMap<>(); // teachingUnit-->Map<courseid,coursename>
 						ArrayList<Integer> tempUnits = new ArrayList<>();
 						ArrayList<String> tempNames = new ArrayList<>();
 						ArrayList<Integer> tempCourseId = new ArrayList<>();
-						
+
 						while (rs.next()) {  // create 2 arraylist, teachin units and course names
 							tempUnits.add(Integer.parseInt(rs.getString(2)));
 							tempNames.add(rs.getString(1));
@@ -145,7 +145,7 @@ public class EchoServer extends AbstractServer {
 						break;
 
 					case "getCurrentClasses":
-					
+
 						ans = (ArrayList<String>) message.get("getCurrentClasses");
 						query = "SELECT name,id FROM class WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
 						stmt = conn.createStatement();
@@ -193,27 +193,27 @@ public class EchoServer extends AbstractServer {
 						break;
 
 					case "upload":
-						
+
 						HashMap<String,byte[]> hm =  (HashMap<String, byte[]>) message.get("upload");
 						for(String name : hm.keySet()){
-						try {
-							Files.write((Paths.get("Documents\\"+name)), (byte[])hm.get(name));
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+							try {
+								Files.write((Paths.get("Documents\\"+name)), (byte[])hm.get(name));
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 						}
 						client.sendToClient(null);
 						break;
 					case "Submission upload":					
 						HashMap<String,byte[]> submission =  (HashMap<String, byte[]>) message.get("Submission upload");
 						for(String name : submission.keySet()){
-						try {
-							Files.write((Paths.get("Students solutions\\"+name)), (byte[])submission.get(name));
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+							try {
+								Files.write((Paths.get("Students solutions\\"+name)), (byte[])submission.get(name));
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 						}
 						client.sendToClient(null);
 						break;
@@ -277,9 +277,9 @@ public class EchoServer extends AbstractServer {
 						int clsid=0;
 						int cid=0;
 						if (ans.get(0).length()>2 && ans.get(1).length()>0&& ans.get(0)!=null && ans.get(1)!=null){
-							
-						cid=Integer.parseInt(ans.get(0).substring(0, 3));
-						clsid=Integer.parseInt(ans.get(1).substring(0, 1));}
+
+							cid=Integer.parseInt(ans.get(0).substring(0, 3));
+							clsid=Integer.parseInt(ans.get(1).substring(0, 1));}
 						query = "Select id FROM class_in_course WHERE course_id="+cid+" AND class_id="+clsid;
 						System.out.println(clsid);
 						System.out.println(cid);
@@ -288,7 +288,7 @@ public class EchoServer extends AbstractServer {
 						ans.clear();
 						while (rs.next()) { 
 							ans.add(rs.getString(1));
-							
+
 						}
 						System.out.println(ans.toString()+"!!!----!!!");
 						stmt.close();
@@ -308,155 +308,155 @@ public class EchoServer extends AbstractServer {
 						ans.clear();
 						pstmt.close();
 						//JOptionPane.showMessageDialog(null, "Task uploaded successfuly","Task Upload",JOptionPane.PLAIN_MESSAGE);
-						
-						
+
+
 						client.sendToClient(null);
 						break;
 					case "Get student class":
-					      ArrayList<String> ans1=new ArrayList<String>();
-					      ans= (ArrayList<String>)message.get(key);
-					      query = "SELECT class_id FROM student WHERE id='"+ans.get(0)+"'";
-					      
-					      stmt = conn.createStatement();
-					      rs = stmt.executeQuery(query);
-					      ans.clear();
-					      while (rs.next()) { 
-					       ans1.add(String.valueOf(rs.getInt(1)));
-					      }
-					      stmt.close();
-					      rs.close();
-					      
-					      client.sendToClient(ans1);
-					      break;
-				     case "get course in class":
-				         ArrayList<String> courses=new ArrayList<String>();
-				         ans= (ArrayList<String>)message.get(key);
-				         query= "SELECT course_in_class_id  FROM student_in_course_in_class WHERE student_id='"+ans.get(0)+"'";
-				         stmt = conn.createStatement();
-				         rs = stmt.executeQuery(query);
-				         ans.clear();
-				         while (rs.next()) { 
-				          courses.add(rs.getString(1));// course in class id
-				         }
-				         stmt.close();
-				         rs.close();
-				         client.sendToClient(courses);
-				         break;
-				     case "get course id":
-				         ans = (ArrayList<String>) message.get("get course id");
-				         ArrayList<String> coursesid = new ArrayList<String>();
-				         for(i=0;i<ans.size();i++)
-				         {
-				          query = "SELECT course_id FROM class_in_course WHERE id='"+ans.get(i)+"'";
-				          stmt = conn.createStatement();
-				          rs = stmt.executeQuery(query);
-				          while (rs.next()) { 
-				           coursesid.add(String.valueOf(rs.getInt(1)));
-				          }
-				          stmt.close();
-				          rs.close();
-				         }
-				         ans.clear();
-				         client.sendToClient(coursesid);
-				         break;
-				     case "get student average for current semester":
-				         ans = (ArrayList<String>) message.get(key);
-				         ArrayList<String> arr = new ArrayList<String>();
-				         ArrayList<String> arr2 = new ArrayList<String>();
-				        // arr2.add(ans.get(0));//year
-				        // arr2.add(ans.get(1));//semester
-				         
-				         for(i=3;i<ans.size();i++)
-				         {
-				          query = "SELECT course_id,id FROM class_in_course WHERE id='"+ans.get(i)+"' AND course_id"
-				          		+ " IN (SELECT course.id FROM course where year="+Integer.parseInt(ans.get(0))+" AND semester='"+ans.get(1)+"')";
-				          stmt = conn.createStatement();
-				          rs = stmt.executeQuery(query);
-				          while (rs.next()) { 
-				           arr.add(String.valueOf(rs.getInt(2)));
-				          }
-				          stmt.close();
-				          rs.close();
-				         }
-				         for(i=0;i<arr.size();i++)
-				         {
-				          query = "SELECT grade FROM student_in_course_in_class WHERE course_in_class_id='"+arr.get(i)+"' AND student_id='"+ans.get(2)+"' ";
-				          stmt = conn.createStatement();
-				          rs = stmt.executeQuery(query);
-				          while (rs.next()) { 
-				           arr2.add(String.valueOf(rs.getFloat(1)));
-				          }
-				          stmt.close();
-				          rs.close();
-				         }
-				         ans.clear();
-				         client.sendToClient(arr2);
-				         break;
-				     case "get grades for student in course":
-				    	 ans = (ArrayList<String>) message.get(key);
-				    	 ArrayList<String> grades = new ArrayList<String>();
-				    	 query = "SELECT task_grade FROM task_of_student_in_course WHERE course_id="+Integer.valueOf(ans.get(1))+" AND student_id='"+ans.get(0)+"'";
-				    	 stmt = conn.createStatement();
-				    	 rs = stmt.executeQuery(query); 
-				    	 while (rs.next()) { 
-				    	  grades.add(String.valueOf(rs.getFloat(1))); 
-				    	 }
-				    	 stmt.close();
-				    	 rs.close();
-				    	 
-				    	 client.sendToClient(grades);
-				    	 break;
-				     case "get class in course id for course id":
-				         ans= (ArrayList<String>)message.get(key);
-				         query= "SELECT id  FROM class_in_course WHERE course_id="+Integer.parseInt(ans.get(0));
-				         stmt = conn.createStatement();
-				         rs = stmt.executeQuery(query);
-				         ans.clear();
-				         while (rs.next()) { 
-				          ans.add(rs.getString(1));
-				         }
-				         stmt.close();
-				         rs.close();
-				         client.sendToClient(ans);
-				         break;
-				     case "get tasks id":
-				         ans= (ArrayList<String>)message.get(key);
-				         query= "SELECT id FROM task_in_class_in_course WHERE class_in_course_id='"+ans.get(0)+"'";
-				         stmt = conn.createStatement();
-				         rs = stmt.executeQuery(query);
-				         ans.clear();
-				         while (rs.next()) { 
-				          ans.add(rs.getString(1));
-				         }
-				         stmt.close();
-				         rs.close();
-				         client.sendToClient(ans);
-				         break;
-				     case "get file name for task id":
-				         ans= (ArrayList<String>)message.get(key);
-				         query= "SELECT task_file FROM task_in_class_in_course WHERE id='"+ans.get(0)+"'";
-				         stmt = conn.createStatement();
-				         rs = stmt.executeQuery(query);
-				         ans.clear();
-				         while (rs.next()) { 
-				          ans.add(rs.getString(1));
-				         }
-				         stmt.close();
-				         rs.close();
-				         client.sendToClient(ans);
-				         break;
-				     case "get file from filename":
-				         ans= (ArrayList<String>)message.get(key);
-				     	byte[] by = null;
-				     	File file = new File("Documents\\"+ans.get(0));
-				         try {
-				 			by = Files.readAllBytes(file.toPath());
-				 		} catch (IOException e) {
-				 			// TODO Auto-generated catch block
-				 			e.printStackTrace();
-				 		}
-				         client.sendToClient(by);
-				         break;
+						ArrayList<String> ans1=new ArrayList<String>();
+						ans= (ArrayList<String>)message.get(key);
+						query = "SELECT class_id FROM student WHERE id='"+ans.get(0)+"'";
+
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) { 
+							ans1.add(String.valueOf(rs.getInt(1)));
+						}
+						stmt.close();
+						rs.close();
+
+						client.sendToClient(ans1);
+						break;
+					case "get course in class":
+						ArrayList<String> courses=new ArrayList<String>();
+						ans= (ArrayList<String>)message.get(key);
+						query= "SELECT course_in_class_id  FROM student_in_course_in_class WHERE student_id='"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) { 
+							courses.add(rs.getString(1));// course in class id
+						}
+						stmt.close();
+						rs.close();
+						client.sendToClient(courses);
+						break;
+					case "get course id":
+						ans = (ArrayList<String>) message.get("get course id");
+						ArrayList<String> coursesid = new ArrayList<String>();
+						for(i=0;i<ans.size();i++)
+						{
+							query = "SELECT course_id FROM class_in_course WHERE id='"+ans.get(i)+"'";
+							stmt = conn.createStatement();
+							rs = stmt.executeQuery(query);
+							while (rs.next()) { 
+								coursesid.add(String.valueOf(rs.getInt(1)));
+							}
+							stmt.close();
+							rs.close();
+						}
+						ans.clear();
+						client.sendToClient(coursesid);
+						break;
+					case "get student average for current semester":
+						ans = (ArrayList<String>) message.get(key);
+						ArrayList<String> arr = new ArrayList<String>();
+						ArrayList<String> arr2 = new ArrayList<String>();
+						// arr2.add(ans.get(0));//year
+						// arr2.add(ans.get(1));//semester
+
+						for(i=3;i<ans.size();i++)
+						{
+							query = "SELECT course_id,id FROM class_in_course WHERE id='"+ans.get(i)+"' AND course_id"
+									+ " IN (SELECT course.id FROM course where year="+Integer.parseInt(ans.get(0))+" AND semester='"+ans.get(1)+"')";
+							stmt = conn.createStatement();
+							rs = stmt.executeQuery(query);
+							while (rs.next()) { 
+								arr.add(String.valueOf(rs.getInt(2)));
+							}
+							stmt.close();
+							rs.close();
+						}
+						for(i=0;i<arr.size();i++)
+						{
+							query = "SELECT grade FROM student_in_course_in_class WHERE course_in_class_id='"+arr.get(i)+"' AND student_id='"+ans.get(2)+"' ";
+							stmt = conn.createStatement();
+							rs = stmt.executeQuery(query);
+							while (rs.next()) { 
+								arr2.add(String.valueOf(rs.getFloat(1)));
+							}
+							stmt.close();
+							rs.close();
+						}
+						ans.clear();
+						client.sendToClient(arr2);
+						break;
+					case "get grades for student in course":
+						ans = (ArrayList<String>) message.get(key);
+						ArrayList<String> grades = new ArrayList<String>();
+						query = "SELECT task_grade FROM task_of_student_in_course WHERE course_id="+Integer.valueOf(ans.get(1))+" AND student_id='"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query); 
+						while (rs.next()) { 
+							grades.add(String.valueOf(rs.getFloat(1))); 
+						}
+						stmt.close();
+						rs.close();
+
+						client.sendToClient(grades);
+						break;
+					case "get class in course id for course id":
+						ans= (ArrayList<String>)message.get(key);
+						query= "SELECT id  FROM class_in_course WHERE course_id="+Integer.parseInt(ans.get(0));
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) { 
+							ans.add(rs.getString(1));
+						}
+						stmt.close();
+						rs.close();
+						client.sendToClient(ans);
+						break;
+					case "get tasks id":
+						ans= (ArrayList<String>)message.get(key);
+						query= "SELECT id FROM task_in_class_in_course WHERE class_in_course_id='"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) { 
+							ans.add(rs.getString(1));
+						}
+						stmt.close();
+						rs.close();
+						client.sendToClient(ans);
+						break;
+					case "get file name for task id":
+						ans= (ArrayList<String>)message.get(key);
+						query= "SELECT task_file FROM task_in_class_in_course WHERE id='"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) { 
+							ans.add(rs.getString(1));
+						}
+						stmt.close();
+						rs.close();
+						client.sendToClient(ans);
+						break;
+					case "get file from filename":
+						ans= (ArrayList<String>)message.get(key);
+						byte[] by = null;
+						File file = new File("Documents\\"+ans.get(0));
+						try {
+							by = Files.readAllBytes(file.toPath());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						client.sendToClient(by);
+						break;
 					case "getCurrentSemester":
 
 						query = "SELECT year,sem FROM semester WHERE iscurrent=1";
@@ -550,7 +550,7 @@ public class EchoServer extends AbstractServer {
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						if (rs.next())  
-						client.sendToClient(rs.getString(1));
+							client.sendToClient(rs.getString(1));
 						break;
 
 					case "assignStudentsToCourseInClass":
@@ -566,10 +566,10 @@ public class EchoServer extends AbstractServer {
 						}
 						client.sendToClient(null);
 						break;
-			
+
 					case "checkClassIsNotExist" :
 						String answer="";
-	ans=(ArrayList<String>) message.get(key);
+						ans=(ArrayList<String>) message.get(key);
 						stmt = conn.createStatement();
 						query = "SELECT * FROM class WHERE name = '"+ans.get(0)+"'"+" AND year="+ans.get(1)+" AND semester= "+ans.get(2);
 						rs=stmt.executeQuery(query);
@@ -577,7 +577,7 @@ public class EchoServer extends AbstractServer {
 						//stmt.close();
 						client.sendToClient(answer);
 						break;
-						
+
 					case "isStudent":
 						answer="";
 						ans=(ArrayList<String>) message.get(key);
@@ -588,7 +588,7 @@ public class EchoServer extends AbstractServer {
 						else if(rs.getInt(4) > 0) answer="alreadyAssigned";
 						client.sendToClient(answer);
 						break;
-						
+
 
 					case "getStudentsInClass":
 						ResultSet rs_users = null;
@@ -611,22 +611,22 @@ public class EchoServer extends AbstractServer {
 						}
 						client.sendToClient(students);
 						break;
-						
+
 					case "blockAccess":
 						query = "UPDATE student SET pblocked=? WHERE id=?";
 						pstmt = conn.prepareStatement(query);
-							pstmt.setInt(1, 1);
-							pstmt.setString(2,((ArrayList<String>) message.get(key)).get(0));
-							pstmt.executeUpdate();
+						pstmt.setInt(1, 1);
+						pstmt.setString(2,((ArrayList<String>) message.get(key)).get(0));
+						pstmt.executeUpdate();
 						client.sendToClient(null);
 						break;
-						
+
 					case "returnAccess":
 						query = "UPDATE student SET pblocked=? WHERE id=?";
 						pstmt = conn.prepareStatement(query);
-							pstmt.setInt(1, 0);
-							pstmt.setString(2,((ArrayList<String>) message.get(key)).get(0));
-							pstmt.executeUpdate();
+						pstmt.setInt(1, 0);
+						pstmt.setString(2,((ArrayList<String>) message.get(key)).get(0));
+						pstmt.executeUpdate();
 						client.sendToClient(null);
 						break;
 
@@ -645,12 +645,13 @@ public class EchoServer extends AbstractServer {
 							query = "SELECT id FROM class_in_course WHERE course_id = '"+courseId+"'";
 							stmt = conn.createStatement();
 							rs = stmt.executeQuery(query);
-								while (rs.next()) 
-									courseInClassId.add(rs.getInt(1));
+							while (rs.next()) 
+								courseInClassId.add(rs.getInt(1));
 							preCourses.put(courseId, courseInClassId);
 						}
 						client.sendToClient(preCourses);
 						break;
+
 					case "getTeachersWorkingHours":
 						ans= (ArrayList<String>)message.get(key); // ans [courseId]
 						HashMap<String,Integer> teacherwh = new HashMap<String,Integer>();
@@ -664,6 +665,23 @@ public class EchoServer extends AbstractServer {
 						}
 
 						client.sendToClient(teacherwh);
+						break;
+
+					case "getManagerRequets":
+						if (ans!=null) ans.clear();
+						else ans = new ArrayList<String>();
+						query = "SELECT id,secretary_id,details,date FROM manager_request WHERE status = 'Pending'";
+						HashMap <String,ArrayList<String>> requests = new HashMap <String,ArrayList<String>>();
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						while (rs.next()) {
+							ans.add(rs.getString(2));
+							ans.add(rs.getString(3));
+							ans.add(rs.getString(4));
+							requests.put(rs.getString(1), new ArrayList<String>(ans));
+							ans.clear();
+						}
+						client.sendToClient(requests);
 						break;
 					}
 				}

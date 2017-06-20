@@ -24,6 +24,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -33,15 +34,16 @@ public class SchoolManagerController implements Initializable{
 	@FXML
 	private Hyperlink linkLogout;
 
+	@FXML							     //   1-remove student from course, 2-add student to course, 3-change teacher appointment
+	private Label lblUser;				//	                  request details: "2:classInCourse id:userId"
 	@FXML
-	private Label lblUser;
-
-
-	@FXML
-	Pane blockParentPane;
+	private TextArea tfRequestDetails,tfComments;
 
 	@FXML
-	private ListView<String> lvStudents;//list view to display blocked students in current semester
+	Pane blockParentPane,answerRequestsPane;
+
+	@FXML
+	private ListView<String> lvStudents,lvRequests;//list view to display blocked students in current semester
 
 	@FXML
 	private ComboBox<String> cbStudents,cbClasses;//combo box for class and students in current semester
@@ -53,12 +55,15 @@ public class SchoolManagerController implements Initializable{
 	private ObservableList<String> studentsDetails = FXCollections.observableArrayList();//saves student details from db
 	private ObservableList<String> classesDetails = FXCollections.observableArrayList();//saves class details from db
 	private ObservableList<String> blockedStudents = FXCollections.observableArrayList();//saves blocked students in current semester
+	private ObservableList<String> requestsDetails = FXCollections.observableArrayList();//saves requests details from db
 	ArrayList<String> arr ;//uses to send parameters to server
 	int newYear;
 	char newSemester;
 	HashMap<Integer, String> classes;//saves all classes in current semester
 	HashMap<String, ArrayList<String>> studentsInClass;//saves all students of chosen class in combo box
 	HashMap<String, ArrayList<String>> blockedStudentsHM;
+	HashMap<String, ArrayList<String>> managerRequests;
+
 
 	/**
 	 * change visible user window to appropriate window
@@ -90,7 +95,8 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void setAnswerRequestPaneHandler(ActionEvent event) {
-		setPane(blockParentPane);
+		initializeAnswerRequests();
+		setPane(answerRequestsPane);
 	}
 	/**
 	 * change visible user window to appropriate window
@@ -98,6 +104,7 @@ public class SchoolManagerController implements Initializable{
 	 */
 	void setPane(Pane pane){
 		blockParentPane.setVisible(false);
+		answerRequestsPane.setVisible(false);
 		pane.setVisible(true);
 	}
 	/**
@@ -163,6 +170,31 @@ public class SchoolManagerController implements Initializable{
 		}
 	}
 
+	/**
+	 * executes secretary request and send some comments to secretary INBOX about this approve
+	 * @param requrst from requests list view
+	 */
+	@FXML
+	void approveRequesthandler(ActionEvent event){
+
+	}
+
+	/**
+	 * change requests status to "dismissed" and send some comments to secretary INBOX about this dismiss
+	 * @param requrst from requests list view
+	 */
+	@FXML
+	void dismissRequesthandler(ActionEvent event){
+
+	}
+
+	/**
+	 * change request status in DB to given status as parameter
+	 * @param request status (String)
+	 */
+	void changeRequestStatus(String status){
+
+	}
 
 	/**
 	 * change user status to "offline" and go back to login window
@@ -197,6 +229,45 @@ public class SchoolManagerController implements Initializable{
 		lblUser.setText(UserClient.fullName);
 		initializeBlockParent();
 	}
+
+
+	/**
+	 * get and display all necessary data from db for answer requests window
+	 * @param 
+	 */
+	void initializeAnswerRequests(){
+
+		msg = new HashMap<String, ArrayList<String>>();
+		arr = new ArrayList<>();
+		msg.put("getManagerRequets",null);
+		LoginController.userClient.sendServer(msg);//ask from server next semester details
+		LoginController.syncWithServer();
+		msg.clear();
+		if(managerRequests!=null) managerRequests.clear();
+		managerRequests=(HashMap<String, ArrayList<String>>) UserClient.ans;
+		String request = "";
+		String[] requestdetails = new String[7] ;
+		for(String id: managerRequests.keySet()){
+			requestdetails = managerRequests.get(id).get(1).split("\\:");//[request_type,classInCourse,student id]
+						//: “2:secretary full name:student full name:student id:classInCourseId:course name”
+			//“3:secretary full name:old teacher full name:new teacher full name:new teacher id:classInCourseId:course name”
+
+			switch(requestdetails[0]){
+			case "1":
+				request= requestdetails[1]+" asks to remove student:"+requestdetails[2]+" from course: "+requestdetails[5];
+				break;
+			case "2":
+				request= requestdetails[1]+" asks to add student:"+requestdetails[2]+" to course: "+requestdetails[5];
+				break;
+			case "3":
+				request= requestdetails[1]+" asks to change teacher's appointment from : "+requestdetails[2]+" to : "+requestdetails[3]+" in course "+requestdetails[6];
+				break;
+			}
+			requestsDetails.add("request id:"+id+"\nrequest date:"+managerRequests.get(id).get(2)+"\nrequest:"+request);
+		}
+		lvRequests.setItems(requestsDetails);
+	}
+
 	/**
 	 * get and display all necessary data from db for blockParent window
 	 * @param 
@@ -222,7 +293,7 @@ public class SchoolManagerController implements Initializable{
 			arr.add(String.valueOf(--newYear));
 			arr.add("2");//if next semester is 'A' current is 'B' and current year is new year - 1
 		}
-		
+
 		msg.clear();
 		msg.put("getCurrentClasses",arr);
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
