@@ -252,7 +252,7 @@ public class TeacherController implements Initializable{
     }
 	@FXML
 	void createTaskHandler(ActionEvent event) {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDate = LocalDate.now();
 		course_id= "";
 		class_id="";
