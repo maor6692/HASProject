@@ -72,13 +72,18 @@ public class SecretaryController implements Initializable{
     private Label lblChooseStudentRS;
 	@FXML
 	private ComboBox<CourseComboBox> cmbCourse;
-
+	
 	private ComboBox<String> cmbTeacher;
-
+	@FXML
+	private ComboBox<ClassesInListView> cmbChooseStudentClassAS;
+	
 	@FXML
 	private ListView<String> lvStudents;
     @FXML
     private Button btnSendRequestToManager;
+    @FXML
+    private Button btnAddAS;
+    
     @FXML
     private ComboBox<String> cbChooseCourseRS;
 
@@ -87,12 +92,18 @@ public class SecretaryController implements Initializable{
 	
 	@FXML
 	private ListView<ClassesInListView> lvClasses;
-
+	
+	@FXML
+	private ComboBox<StudentsInClassAS> cmbChooseStudentAS;
 	@FXML
 	private TableView<StudentsExp> tblExceptions;
 
 	@FXML
+	private ComboBox<CourseComboBox> cmbChooseCourseAS;
+	@FXML
 	private Button btnAssign;
+    @FXML
+    private Label lblSuccessAS,lblErrAS;
     @FXML
     private TableColumn<StudentsExp, String> colSidExp;
     @FXML
@@ -115,13 +126,17 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	private Button btnMoveLeft;
+	@FXML
+	private ComboBox<ClassInCourseAS> cmbClassInCourseAS;
+	
 	ObservableList<ClassesInListView> selectedClasses;
 	private HashMap<Integer,HashMap<Integer,String>> courses;
 	HashMap<String, ArrayList<String>>	msg ;
 	ArrayList<String> params;
 	private CourseComboBox currCourseBox=null;
+	private CourseComboBox currCourseAS=null;
 	HashMap<Integer,String> comboClasses;
-	
+	ArrayList<String> currSemAS;
 	private ObservableList<StudentsExp> ExceptionStudents = FXCollections.observableArrayList();
 	//out hashmap <teaching unit id,map of teachers in this teaching unit>;
 	//inner hashmaps <teacher id,arraylist of teacher name and max hours>
@@ -129,6 +144,106 @@ public class SecretaryController implements Initializable{
 
 	private HashMap<Integer, Integer> coursesWeeklyHours; 
 
+	/**
+	 * send adding request of student to a course in class 
+	 * @param event, course, course in class, student
+	 */
+	@FXML
+	void addStudentASHandler(ActionEvent event){
+		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
+		
+		lblErrAS.setVisible(false);
+		lblSuccessAS.setVisible(false);
+		
+		if(cmbChooseStudentAS.getSelectionModel().getSelectedItem() == null || cmbClassInCourseAS.getSelectionModel().getSelectedItem() == null) {
+			lblErrAS.setVisible(true);
+			return;
+		}
+		ArrayList<String> args = new ArrayList<>();
+		args.add(cmbClassInCourseAS.getSelectionModel().getSelectedItem().getClassInCourseId());
+		args.add(cmbChooseStudentAS.getSelectionModel().getSelectedItem().getStudentId());
+		msg.put("check if student in class in course",args);
+		LoginController.userClient.sendServer(msg);//
+		LoginController.syncWithServer();
+		msg.clear();
+		if((boolean)UserClient.ans == false){
+			lblErrAS.setText("Student already in this course!");
+			lblErrAS.setVisible(true);
+			return;
+		}
+		
+		String detailes = "2:"+lblUser.getText()+":";
+		detailes+=cmbChooseStudentAS.getSelectionModel().getSelectedItem().getStudentFirstName()+" ";
+		detailes+=cmbChooseStudentAS.getSelectionModel().getSelectedItem().getStudentLastName()+":";
+		detailes+=cmbChooseStudentAS.getSelectionModel().getSelectedItem().getStudentId()+":";
+		detailes+=cmbClassInCourseAS.getSelectionModel().getSelectedItem().getClassInCourseId()+":";
+		detailes+=cmbChooseCourseAS.getSelectionModel().getSelectedItem().getCourseName();
+		ArrayList<String> reqArr = new ArrayList<>();
+		reqArr.add(LoginController.userClient.userName);
+		reqArr.add(detailes);
+		
+		msg.put("send add request to manager",reqArr);
+		LoginController.userClient.sendServer(msg);//
+		LoginController.syncWithServer();
+		msg.clear();
+		lblSuccessAS.setVisible(true);
+		
+	}
+	
+	
+	/**
+	 * prompting in next combobox the all students of this class
+	 * @param event
+	 */
+	@FXML
+	void chooseStudentClassASHandler(ActionEvent event){
+		lblErrAS.setVisible(false);
+		lblSuccessAS.setVisible(false);
+		cmbChooseStudentAS.getItems().clear();
+		ClassesInListView studentsClass = cmbChooseStudentClassAS.getSelectionModel().getSelectedItem();
+		msg = new HashMap<String, ArrayList<String>>();
+		ArrayList <String> s = new ArrayList<>();
+		s.add(String.valueOf(studentsClass.getClassId()));
+		msg.put("getStudentsInClass",s);
+		LoginController.userClient.sendServer(msg);
+		LoginController.syncWithServer();
+		msg.clear();
+		HashMap<String, ArrayList<String>> students = (HashMap<String, ArrayList<String>>) UserClient.ans;
+		//[student_id,[first_name,last_name,pblocked]]
+		//
+
+		for(String sid : students.keySet()){
+			ArrayList<String> st = students.get(sid);
+			cmbChooseStudentAS.getItems().add(new StudentsInClassAS(sid,st.get(0),st.get(1)));
+		}
+		
+	}
+	@FXML
+	void chooseCourseASHandler(ActionEvent event) {
+		lblErrAS.setVisible(false);
+		lblSuccessAS.setVisible(false);
+		cmbClassInCourseAS.getItems().clear();
+		currCourseAS = cmbChooseCourseAS.getSelectionModel().getSelectedItem();
+		msg = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> p = new ArrayList<>();
+		p.add(currSemAS.get(0));
+		p.add(currSemAS.get(1));
+		p.add(String.valueOf(currCourseAS.getCourseId()));
+		msg.put("getClassOfCourseAS",p); // p=[year,semester,course_id]
+		LoginController.userClient.sendServer(msg);
+		LoginController.syncWithServer();
+		msg.clear();
+		//recieve Map<String,ArrayList<String>> -- [class_in_course_id,[class_id,class_name]]
+		
+		HashMap<String,ArrayList<String>> t =(HashMap<String,ArrayList<String>>) UserClient.ans;
+		for(String cicid : t.keySet()){
+			ArrayList<String> cl = t.get(cicid);
+			cmbClassInCourseAS.getItems().add(new ClassInCourseAS(cl.get(0),cl.get(1),cicid));
+		}
+	}
+	
+	
+	
 	private boolean checkClassExists(ClassesInListView className){ // checks if class is exists in right side of table
 		for(ClassInCourseRow temp : classesInCourse){
 			if(temp.getClassName().equals(className.getClassName()))
@@ -136,10 +251,10 @@ public class SecretaryController implements Initializable{
 		}
 		return false;
 	}
+	
+	
+	
 	@FXML
-
-
-
 	void addClassesToCourseHandler(ActionEvent event) {
 		lblWarning.setVisible(false);
 		tblExceptions.setVisible(false);
@@ -548,6 +663,7 @@ void hideLabels(){
 	@FXML
 	void addStudentToCourseHandler(ActionEvent event) {
 		setPane(paneAddStudent);
+		initializeAddStudent();
 	}
 	@FXML
 	void removeStudentFromCourseHandler(ActionEvent event) {
@@ -688,11 +804,71 @@ void hideLabels(){
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lblUser.setText(UserClient.fullName);
 		initializeCreateSemester();
-
+		
+		
 	}
+/**
+ * setting first values, all courses and all class
+ */
+	void initializeAddStudent(){
+		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
+		
+		lblErrAS.setVisible(false);
+		lblSuccessAS.setVisible(false);
+		//get current semester
+		msg.put("getCurrentSemester",null);
+			LoginController.userClient.sendServer(msg);//ask from server next semester details
+			LoginController.syncWithServer();
+			msg.clear();
+			ArrayList<Object> currSemester=(ArrayList<Object>) UserClient.ans;
+			int newYear=(int) currSemester.get(0);
+			char newSemester=(char) currSemester.get(1);
+			ArrayList<String> arr = new ArrayList<String>();
+			if(newSemester == 'B'){//if next semester is 'B' current is 'A' and current year is the same
+				arr.add(String.valueOf(newYear));
+				arr.add("1");
+			}else{ 
+				arr.add(String.valueOf(--newYear));
+				arr.add("2");//if next semester is 'A' current is 'B' and current year is new year - 1
+			}
+			msg.clear();
+			//--
+			currSemAS = new ArrayList<>(arr);
+			//get current courses
+			msg.put("getCurrentCourses",arr);
+			LoginController.userClient.sendServer(msg);// 
+			LoginController.syncWithServer();
+			//TeachingUnit-->[Map<courseId,courseName>]
+			ArrayList<Object> tempAns = (ArrayList<Object>)UserClient.ans;
+			courses  = (HashMap<Integer,HashMap<Integer,String>>) tempAns.get(0);
+			
+			Collection<Integer> teachingUnits = courses.keySet();
 
-	void initializeDefineCourse(){
-
+			for(int singleTeachUnit : teachingUnits){ // foreach teaching unit
+				HashMap<Integer,String> coursesOfTeachingUnit = courses.get(singleTeachUnit); // get all course of single teaching unit
+				Collection<Integer> coursesIdOfSingleTeachUnit = coursesOfTeachingUnit.keySet();
+				for(int singleCourseId : coursesIdOfSingleTeachUnit){ // foreach course in teaching unit
+					CourseComboBox cmbRow;
+					String courseName = coursesOfTeachingUnit.get(singleCourseId);
+					cmbRow = new CourseComboBox(singleTeachUnit,singleCourseId,courseName);
+					cmbChooseCourseAS.getItems().add(cmbRow);
+				}
+			}
+			msg.clear();
+			//--
+			//get all current classes
+			msg.put("getCurrentClasses",arr);
+			LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
+			LoginController.syncWithServer();
+			msg.clear();
+			//current new way of getting course:
+			HashMap<Integer,String> currClasses = (HashMap<Integer,String>) UserClient.ans;
+			Collection<Integer> classesKeySet = currClasses.keySet();
+			for(int classId:classesKeySet){
+				String className = currClasses.get(classId);
+				cmbChooseStudentClassAS.getItems().add(new ClassesInListView(classId,className));
+			}
+			//--
 	}
 
 	void initializeCreateSemester(){
@@ -740,12 +916,6 @@ void hideLabels(){
 		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 		LoginController.syncWithServer();
 		msg.clear();
-		/*// current(old) way of getting course:(needs to be changed for getting course id)
-		ArrayList<String> comboClasses = (ArrayList<String>) UserClient.ans;
-		for(String comboClass: comboClasses)
-			lvClasses.getItems().add(comboClass);
-		lvClasses.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		//--*/
 		//current new way of getting course:
 		comboClasses = (HashMap<Integer,String>) UserClient.ans;
 		Collection<Integer> classesKeySet = comboClasses.keySet();
@@ -850,6 +1020,8 @@ void hideLabels(){
 			return false;
 		}
 	}
+	
+	
 	public static class ClassInCourseRow {
 
 		private final SimpleStringProperty className;
@@ -889,6 +1061,7 @@ void hideLabels(){
 			return false;
 		}
 	}
+	
 	class ClassesInListView {
 		private String className;
 		private int classId;
@@ -910,6 +1083,74 @@ void hideLabels(){
 		}
 		public void setClassId(int id){
 			classId = id;
+		}
+	}
+	
+	class ClassInCourseAS {
+		private String className;
+		private String classId;
+		private String classInCourseId;
+		public ClassInCourseAS(String id,String name,String cicid){
+			className = name;
+			classId  = id;
+			classInCourseId = cicid;
+		}
+		public String getClassName(){
+			return className;
+		}
+		public String getClassId(){
+			return classId;
+		}
+		public String getClassInCourseId(){
+			return classInCourseId;
+		}
+		public String toString(){
+			return className;
+		}
+		public void setClassName(String name){
+			className = name;
+		}
+		public void setClassId(String id){
+			classId = id;
+		}
+		public void setClassInCourseId(String cicid){
+			classInCourseId = cicid;
+		}
+	}
+	
+	class StudentsInClassAS {
+		private String studentId;
+		private String studentFirstName;
+		private String studentLastName;
+		
+		public StudentsInClassAS(String id,String fname,String lname){
+			studentId = id;
+			studentFirstName  = fname;
+			studentLastName = lname;
+		}
+		public String getStudentId(){
+			return studentId;
+		}
+		
+		public String getStudentFirstName(){
+			return studentFirstName;
+		}
+		public String getStudentLastName(){
+			return studentLastName;
+		}
+		public String toString(){
+			return studentFirstName+" "+studentLastName;
+		}
+		
+		
+		public void setStudentFirstName(String name){
+			studentFirstName = name;
+		}
+		public void setStudentLastName(String name){
+			studentLastName = name;
+		}
+		public void setStudentId(String id){
+			studentId= id;
 		}
 	}
 	
