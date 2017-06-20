@@ -62,7 +62,8 @@ public class EchoServer extends AbstractServer {
 	 *            The connection from which the message originated.
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
-
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		LocalDate localDate;
 		Statement stmt;
 		PreparedStatement pstmt;
 		ResultSet rs;
@@ -297,13 +298,15 @@ public class EchoServer extends AbstractServer {
 						//ans.clear();
 						break;
 					case "Create task":
+				    	dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+						localDate = LocalDate.now();
 						ans=(ArrayList<String>) message.get(key);
 						query = "INSERT INTO task_in_class_in_course (class_in_course_id,task_file,submission_date,release_date) VALUES (?,?,?,?)";
 						pstmt = conn.prepareStatement(query);
 						pstmt.setInt(1, Integer.parseInt(ans.get(0)));
 						pstmt.setString(2, ans.get(1));
 						pstmt.setDate(3, Date.valueOf(ans.get(2)));
-						pstmt.setDate(4, Date.valueOf("2017-05-23"));
+						pstmt.setDate(4, Date.valueOf(dtf.format(localDate)));
 						pstmt.executeUpdate();
 						ans.clear();
 						pstmt.close();
@@ -457,6 +460,46 @@ public class EchoServer extends AbstractServer {
 				 		}
 				         client.sendToClient(by);
 				         break;
+				     case "get courses for semester":
+				         ans= (ArrayList<String>)message.get(key);
+				         query= "SELECT teaching_unit,id,name FROM course WHERE year="+Integer.parseInt(ans.get(0))+" AND semester="+Integer.parseInt(ans.get(1));
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				          ans.add(rs.getInt(1)+""+rs.getInt(2)+" - "+rs.getString(3));
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(ans);
+				         break;
+				     case "get students for course":
+				         ans= (ArrayList<String>)message.get(key);
+				         query= "SELECT course_in_class_id,student_id FROM student_in_course_in_class WHERE course_in_class_id"
+				         		+ " IN (SELECT id FROM class_in_course WHERE course_id="+Integer.parseInt(ans.get(0))+")";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				          ans.add(rs.getInt(1)+" - "+rs.getString(2));
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(ans);
+				         break;
+				     case "send remove request to manager":
+				    	 dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+						localDate = LocalDate.now();
+				         ans= (ArrayList<String>)message.get(key);
+				         query= "INSERT INTO manager_request(secretary_id,details,status,date) VALUES (?,?,?,?)";
+							pstmt = conn.prepareStatement(query);
+							pstmt.setString(1, ans.get(0));
+							pstmt.setString(2, "1:"+ans.get(1)+":"+ans.get(2));
+							pstmt.setString(3, "Pending");
+							pstmt.setDate(4,Date.valueOf(dtf.format(localDate)));
+							pstmt.executeUpdate();
+							client.sendToClient(null);
+							break;
 					case "getCurrentSemester":
 
 						query = "SELECT year,sem FROM semester WHERE iscurrent=1";
@@ -471,7 +514,7 @@ public class EchoServer extends AbstractServer {
 						int newSemester = 0;
 						int newYear;
 						if(currSemester.equals("")){//if there is no current semester in DB
-							LocalDate localDate = LocalDate.now();
+							localDate = LocalDate.now();
 							newYear=Integer.parseInt(DateTimeFormatter.ofPattern("yyyy/MM/dd").format(localDate).substring(0, 4));
 							newSemester=1;
 						}else{
