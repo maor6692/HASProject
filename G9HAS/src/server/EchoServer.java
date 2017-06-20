@@ -345,6 +345,21 @@ public class EchoServer extends AbstractServer {
 				         rs.close();
 				         client.sendToClient(courses);
 				         break;
+				     case "check if student in class in course":
+				         //ans=[class_in_course_id,student_id]
+				         ans= (ArrayList<String>)message.get(key);
+				         boolean exists=false;
+				         query= "SELECT *  FROM student_in_course_in_class WHERE course_in_class_id='"+ans.get(0)+"' AND student_id='"+ans.get(1)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				          exists=true;
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(exists);
+				         break;
 				     case "get course id":
 				         ans = (ArrayList<String>) message.get("get course id");
 				         ArrayList<String> coursesid = new ArrayList<String>();
@@ -495,6 +510,19 @@ public class EchoServer extends AbstractServer {
 							pstmt = conn.prepareStatement(query);
 							pstmt.setString(1, ans.get(0));
 							pstmt.setString(2, "1:"+ans.get(1)+":"+ans.get(2));
+							pstmt.setString(3, "Pending");
+							pstmt.setDate(4,Date.valueOf(dtf.format(localDate)));
+							pstmt.executeUpdate();
+							client.sendToClient(null);
+							break;
+				     case "send add request to manager":
+				    	 dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+						localDate = LocalDate.now();
+				         ans= (ArrayList<String>)message.get(key);
+				         query= "INSERT INTO manager_request(secretary_id,details,status,date) VALUES (?,?,?,?)";
+							pstmt = conn.prepareStatement(query);
+							pstmt.setString(1,ans.get(0));
+							pstmt.setString(2,ans.get(1));
 							pstmt.setString(3, "Pending");
 							pstmt.setDate(4,Date.valueOf(dtf.format(localDate)));
 							pstmt.executeUpdate();
@@ -798,6 +826,20 @@ public class EchoServer extends AbstractServer {
 							ans.clear();
 						}
 						client.sendToClient(requests);
+						break;
+					case "getClassOfCourseAS":
+						ans= (ArrayList<String>)message.get(key); // 
+						HashMap<String,ArrayList<String>> classesInCourseAS = new HashMap<>();
+						query  = "SELECT c.name,c.id,cic.id FROM class_in_course cic, class c WHERE cic.course_id='"+ans.get(2)+"' AND cic.class_id=c.id AND c.year='"+ans.get(0)+"' AND c.semester='"+ans.get(1)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						while(rs.next()){
+							ArrayList<String> t = new ArrayList<>();
+							t.add(rs.getString(2));
+							t.add(rs.getString(1));
+							classesInCourseAS.put(rs.getString(3), t);
+						}
+						client.sendToClient(classesInCourseAS);
 						break;
 					}
 				}
