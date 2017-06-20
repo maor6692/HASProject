@@ -114,6 +114,19 @@ public class SecretaryController implements Initializable{
     private TableColumn<StudentsExp, String> colCidExp;
 	@FXML
 	private TableView<ClassInCourseRow> tblClassTeacher;
+	
+
+    @FXML
+    private TableColumn<ViewInboxTbl, String> colIdVI;
+    
+    @FXML
+    private TableView<ViewInboxTbl> tblViewInbox;
+    
+
+    @FXML
+    private TableColumn<ViewInboxTbl, String> colMsgVI;
+    
+    private ObservableList <ViewInboxTbl> secretaryInbox;
 
 	@FXML
 	private TableColumn<ClassInCourseRow,TeacherComboBox> teachers;
@@ -142,7 +155,9 @@ public class SecretaryController implements Initializable{
 	//inner hashmaps <teacher id,arraylist of teacher name and max hours>
 	private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo;
 
-	private HashMap<Integer, Integer> coursesWeeklyHours; 
+	private HashMap<Integer, Integer> coursesWeeklyHours;
+	@FXML
+	private Pane paneViewInbox; 
 
 	/**
 	 * send adding request of student to a course in class 
@@ -653,6 +668,7 @@ void hideLabels(){
 		paneCreateSemester.setVisible(false);
 		paneDefineClass.setVisible(false);
 		paneAddStudent.setVisible(false);
+		paneViewInbox.setVisible(false);
 		pane.setVisible(true);
 	}
 
@@ -660,6 +676,30 @@ void hideLabels(){
 	void createSemesterHandler(ActionEvent event) {
 		setPane(paneCreateSemester);
 	}
+	@FXML
+	void viewInboxHandler(ActionEvent event) {
+		setPane(paneViewInbox);
+		HashMap<String,ArrayList<String>>msg = new HashMap<>();
+		tblViewInbox.setPlaceholder(new Label("No Messages to Show"));
+		secretaryInbox = FXCollections.observableArrayList();
+		ArrayList<String> tos = new ArrayList<>();
+		tos.add(LoginController.userClient.userName);
+		msg.put("getSecretayInbox",tos);
+		LoginController.userClient.sendServer(msg);//
+		LoginController.syncWithServer();
+		
+		HashMap<String,String> msgMap=(HashMap<String,String>) UserClient.ans;
+		
+		colMsgVI.setCellValueFactory(new PropertyValueFactory<>("messageContent"));
+		colIdVI.setCellValueFactory(new PropertyValueFactory<>("messageId"));
+		for(String mid: msgMap.keySet()){
+			String msgc = msgMap.get(mid);
+			secretaryInbox.add(new ViewInboxTbl(mid,msgc));
+		}
+		tblViewInbox.setItems(secretaryInbox);
+
+	}
+	
 	@FXML
 	void addStudentToCourseHandler(ActionEvent event) {
 		setPane(paneAddStudent);
@@ -1177,6 +1217,20 @@ void hideLabels(){
 		}
 		public String getId(){
 			return id;
+		}
+	}
+	public class ViewInboxTbl {
+		private String messageId;
+		private String messageContent;
+		public ViewInboxTbl(String id, String msg){
+			messageId = id;
+			messageContent = msg;
+		}
+		public String getMessageId(){
+			return messageId;
+		}
+		public String getMessageContent(){
+			return messageContent;
 		}
 	}
 

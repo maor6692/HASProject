@@ -775,6 +775,19 @@ public class EchoServer extends AbstractServer {
 
 						client.sendToClient(studentsOfClass);
 						break;
+						
+					case "getSecretayInbox":
+						ans= (ArrayList<String>)message.get(key); //
+						HashMap<String,String> secMsg = new HashMap<>();
+						query  = "SELECT msg_id,msg FROM secretary_inbox WHERE secretary_id='"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while(rs.next())
+							secMsg.put(rs.getString(1), rs.getString(2));
+
+						client.sendToClient(secMsg);
+						break;
 					case "checkPreCourseFromArray":
 						boolean passed = false;
 						ans= (ArrayList<String>)message.get(key); // 
