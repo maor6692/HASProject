@@ -182,7 +182,7 @@ public class StudentController implements Initializable {
     
     @FXML
     void uploadTaskHandler(ActionEvent event) {
-    	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDate = LocalDate.now();
 
     	byte[] by = null;

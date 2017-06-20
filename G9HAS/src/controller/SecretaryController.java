@@ -57,6 +57,7 @@ public class SecretaryController implements Initializable{
 
 	int newYear;
 	char newSemester;
+	private ArrayList<String> studentCourse = new ArrayList<String>();
 	ArrayList<Object> currSemester;
 
 	@FXML
@@ -67,7 +68,8 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	private TextField tfClassId,tfClassName,tfStudentId;
-
+    @FXML
+    private Label lblChooseStudentRS;
 	@FXML
 	private ComboBox<CourseComboBox> cmbCourse;
 
@@ -75,7 +77,13 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	private ListView<String> lvStudents;
-	
+    @FXML
+    private Button btnSendRequestToManager;
+    @FXML
+    private ComboBox<String> cbChooseCourseRS;
+
+    @FXML
+    private ComboBox<String> cbChooseStudentRS;
 	
 	@FXML
 	private ListView<ClassesInListView> lvClasses;
@@ -544,7 +552,129 @@ void hideLabels(){
 	@FXML
 	void removeStudentFromCourseHandler(ActionEvent event) {
 		setPane(paneRemoveStudent);
+		cbChooseCourseRS.getItems().clear();
+		
+		char sem;
+		int semester=0,year=0;
+		HashMap <String,ArrayList<String>> hm = new HashMap <String,ArrayList<String>>();
+		ArrayList<String> arr = new ArrayList<String>();
+		hm.put("getCurrentSemester",null);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		if(LoginController.userClient.ans != null){
+			year = ((ArrayList<Integer>)LoginController.userClient.ans).get(0);
+			sem = ((ArrayList<Character>)LoginController.userClient.ans).get(1);
+			if(sem=='A')
+			{
+				year = year--;
+				semester = 2;
+			}
+			else
+			{
+				semester = 1;
+			}
+		}
+		arr.add(String.valueOf(year));
+		arr.add(String.valueOf(semester));
+		hm.remove("getCurrentSemester");
+		hm.put("get courses for semester",arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		if(LoginController.userClient.ans != null){
+			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
+			{
+				
+				if(!cbChooseCourseRS.getItems().contains(((ArrayList<String>)LoginController.userClient.ans).get(i)))
+				{
+					cbChooseCourseRS.getItems().add(((ArrayList<String>)LoginController.userClient.ans).get(i));
+				}
+				
+			}
+		}
+
+
+		
+		
 	}
+    @FXML
+    void ChooseCourseRSHandler(ActionEvent event) {
+    	cbChooseStudentRS.setVisible(true);
+    	cbChooseStudentRS.getItems().clear();
+    	studentCourse.clear();
+    	String currStud= "";
+    	int spacecnt=0;
+		HashMap <String,ArrayList<String>> hm = new HashMap <String,ArrayList<String>>();
+		ArrayList<String> arr = new ArrayList<String>();
+		arr.add(cbChooseCourseRS.getValue().substring(2, 5));
+		hm.put("get students for course", arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		if(LoginController.userClient.ans != null){
+			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
+			{
+				currStud = "";
+				spacecnt=0;
+				
+				for(int j=0;j<((ArrayList<String>)LoginController.userClient.ans).get(i).length();j++)
+				{
+					System.out.println(((ArrayList<String>)LoginController.userClient.ans).get(i));
+					studentCourse.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
+					if(((ArrayList<String>)LoginController.userClient.ans).get(i).charAt(j) == ' ')
+					{
+						spacecnt++;
+					}
+					if(spacecnt==2)
+					{
+						currStud = ((ArrayList<String>)LoginController.userClient.ans).get(i).substring(j+1, ((ArrayList<String>)LoginController.userClient.ans).get(i).length());
+						break;
+					}
+				}
+				if(!cbChooseStudentRS.getItems().contains(currStud))
+				{
+					cbChooseStudentRS.getItems().add(currStud);
+				}
+				
+			}
+			
+			
+		}
+		lblChooseStudentRS.setVisible(true);
+		cbChooseStudentRS.setVisible(true);
+		
+    }
+
+    @FXML
+    void ChooseStudentRSHandler(ActionEvent event) {
+
+    		
+    		btnSendRequestToManager.setVisible(true);
+    		
+    }
+    @FXML
+    void sendRequestToManagerHandler(ActionEvent event) {
+		ArrayList<String> arr = new ArrayList<String>();
+		HashMap <String,ArrayList<String>> hm = new HashMap <String,ArrayList<String>>();
+		int spacecnt=0;
+		String class_in_course_id="", studName="";
+		String arr1[];
+		//
+		
+		for(int i=0;i<studentCourse.size();i++)
+		{
+			arr1 = studentCourse.get(0).split(" - ");
+			if(arr1[1].equals(cbChooseStudentRS.getValue()))
+				class_in_course_id = arr1[0];
+		}
+		arr.add(LoginController.userClient.userName);
+		arr.add(class_in_course_id);
+		arr.add(cbChooseStudentRS.getValue());
+		hm.put("send remove request to manager", arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		
+		
+    }
+
 	@FXML
 	void changeAppointmentHandler(ActionEvent event) {
 		setPane(paneChangeAppointment);
