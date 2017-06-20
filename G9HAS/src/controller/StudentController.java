@@ -7,6 +7,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -53,13 +54,16 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class StudentController implements Initializable {
     private ArrayList<String> taskID = new ArrayList<String>();
+    HashMap<String,ArrayList<String>> details=new HashMap<String,ArrayList<String>>();
+    ArrayList<String> row=new ArrayList<String>();
     private String cid = "";
     private String filename="";
     private File selectedFile;
     @FXML
     private Hyperlink hlSubmitTask;
     
-
+    @FXML
+    private Label lblErrorST;
     @FXML
     private ComboBox<String> cbChooseCourseST;
     
@@ -131,20 +135,35 @@ public class StudentController implements Initializable {
     private Pane personalInfoPane;
     @FXML
     void chooseTaskHandler(ActionEvent event) {
+    	lblUpload.setVisible(true);
+    	btnUploadTask.setVisible(false);
+    	btnFile.setVisible(true);
+    	tfUploadPath.setVisible(true);
+    	filename="";
     	ArrayList<String> arr = new ArrayList<String>();
     	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
-    	filename="";
+    	filename=cbChooseCourseST.getValue().substring(0, 5)+"_";
+    	filename+=LoginController.userClient.userName+"-";
+    	if(cbChooseTask.getValue()!=null){
+    		btnDownload.setVisible(true);
 		arr.add(taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue())));
 		hm.put("get file name for task id", arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
+		row.clear();
+		row.add(LoginController.userClient.userName);
+		row.add(taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue())));
+		row.add(cbChooseCourseST.getValue().substring(2, 5));
 		filename += ((ArrayList<String>)LoginController.userClient.ans).get(0);
+		row.add(filename);
+		
+		}
     }
     @FXML
     void downloadHandler(ActionEvent event) {
     	ArrayList<String> arr = new ArrayList<String>();
     	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
-    	String path = "";
+    	String path = "",fname="";
 		Stage downloadStage = new Stage();
 		downloadStage.setTitle("Task Download");
 		DirectoryChooser dc = new DirectoryChooser();
@@ -153,13 +172,20 @@ public class StudentController implements Initializable {
 		 if(folderpath != null)
 			 path = folderpath.getAbsolutePath();
     	byte[] by;
-    	arr.add(filename);
-    	hm.put("get file from filename", arr);
+    	arr.add(taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue())));
+    	hm.put("get file name for task id", arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		fname = ((ArrayList<String>)LoginController.userClient.ans).get(0);
+		arr.clear();
+		arr.add(fname);
+		hm.remove("get file name for task id");
+		hm.put("get file from filename", arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
 		by = ((byte[])LoginController.userClient.ans);
 		try {
-			Files.write((Paths.get(path+"\\"+filename)), by);
+			Files.write(Paths.get(path+"\\"+fname), by);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -168,6 +194,7 @@ public class StudentController implements Initializable {
     }
     @FXML
     void fileUploadHandler(ActionEvent event) {
+    	
 		Stage uploadStage = new Stage();
 		uploadStage.setTitle("Submission upload");
     	 FileChooser fileChooser = new FileChooser();
@@ -176,6 +203,7 @@ public class StudentController implements Initializable {
     	         new ExtensionFilter("Document Files", "*.txt", "*.doc","*.docx","*.pdf","*.xls"));
     	 selectedFile = fileChooser.showOpenDialog(uploadStage);
     	 if (selectedFile != null) {
+    		 btnUploadTask.setVisible(true);
     		tfUploadPath.setText(selectedFile.getAbsolutePath());	 
     	 }
     }
@@ -184,7 +212,13 @@ public class StudentController implements Initializable {
     void uploadTaskHandler(ActionEvent event) {
     	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDate = LocalDate.now();
-
+		row.add(String.valueOf(localDate));
+		details.put("add task to student",row);
+		LoginController.userClient.sendServer(details);
+        LoginController.syncWithServer();
+        if(((String)(LoginController.userClient.ans)).equals("exist"))
+        	lblErrorST.setText("There is already submission for this task");
+		//
     	byte[] by = null;
     	HashMap<String,HashMap<String,byte[]>> hm = new HashMap<String,HashMap<String,byte[]>>();
     	HashMap<String,byte[]> hmName = new HashMap<String,byte[]>();
@@ -195,7 +229,7 @@ public class StudentController implements Initializable {
         File file = new File(tfUploadPath.getText());
         try {
 			by = Files.readAllBytes(file.toPath());
-			hmName.put(LoginController.userClient.userName+"-"+selectedFile.getName(), by);
+			hmName.put(filename, by);
 			hm.put("Submission upload", hmName);
 			 
 			
@@ -210,15 +244,12 @@ public class StudentController implements Initializable {
     }
     @FXML
     void ChooseCourseSTHandler(ActionEvent event) {
-    	lblUpload.setVisible(true);
-    	btnUploadTask.setVisible(true);
-    	btnFile.setVisible(true);
-    	tfUploadPath.setVisible(true);
+
+    	cbChooseTask.getItems().clear();
     	ArrayList<String> arr = new ArrayList<String>();
     	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
     	cid = "";
-    	cid += cbChooseCourseST.getValue().substring(0, 3);
-    	
+    	cid += cbChooseCourseST.getValue().substring(2, 5);
     	arr.add(cid);
     	hm.put("get class in course id for course id", arr);
 		LoginController.userClient.sendServer(hm);
@@ -232,12 +263,15 @@ public class StudentController implements Initializable {
 		hm.put("get tasks id",((ArrayList<String>)LoginController.userClient.ans));
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
+		if(!((ArrayList<String>)LoginController.userClient.ans).isEmpty()){
 		for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 		{
+		if(!taskID.contains(((ArrayList<String>)LoginController.userClient.ans).get(i)))
 		taskID.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
 		if(!(cbChooseTask.getItems().contains("Task no. "+(i+1))))
 		cbChooseTask.getItems().add(i, "Task no. "+(i+1));
 		}
+    }
 		hm.remove("get tasks id");
 		arr.clear();
 
@@ -251,6 +285,7 @@ public class StudentController implements Initializable {
 		ArrayList<String> arr=new ArrayList<String>();
 		HashMap<String,ArrayList<String>> hm= new HashMap<String,ArrayList<String>>();
 		arr.add(UserClient.userName);
+
 		hm.put("get course in class", arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
@@ -267,8 +302,9 @@ public class StudentController implements Initializable {
 		LoginController.syncWithServer();
 		arr.clear();
 		if(LoginController.userClient.ans != null){
-			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
+			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++){
 				arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
+			}			
 		}
 		//System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString());
 		hm.remove("get course id");
@@ -279,11 +315,14 @@ public class StudentController implements Initializable {
 		if(LoginController.userClient.ans != null){
 			for(int i=0; i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 			{
+				if(!(cbChooseCourseST.getItems().contains(arr.get(i)+" - "+((ArrayList<String>)LoginController.userClient.ans).get(i).toString())))
 				cbChooseCourseST.getItems().add(i,arr.get(i)+" - "+((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
 			}
 		}
-		
+
 		arr.clear();
+
+		
     }
 
 	@FXML
@@ -351,6 +390,7 @@ public class StudentController implements Initializable {
     }
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		btnDownload.setVisible(false);
 		lblUpload.setVisible(false);
 		btnUploadTask.setVisible(false);
 		btnFile.setVisible(false);
