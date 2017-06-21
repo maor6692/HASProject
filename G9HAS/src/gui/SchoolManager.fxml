@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
@@ -29,21 +30,9 @@
                </font>
             </Hyperlink>
             <Hyperlink layoutX="11.0" layoutY="130.0" onAction="#setBlockParentAccessPaneHandler" style="-fx-border-color: transparent;" text="block parent accsess" textFill="WHITE" />
-            <Hyperlink layoutX="12.0" layoutY="189.0" onAction="#setGetStatisticReportPaneHandler" style="-fx-border-color: transparent;" text="get statistic report" textFill="WHITE">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink layoutX="12.0" layoutY="252.0" onAction="#setViewAllInformationPaneHandler" style="-fx-border-color: transparent;" text="view all information" textFill="WHITE">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink layoutX="13.0" layoutY="318.0" onAction="#setAnswerRequestPaneHandler" style="-fx-border-color: transparent;" text="answer requests" textFill="WHITE">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Hyperlink>
+            <Hyperlink layoutX="12.0" layoutY="198.0" onAction="#setGetStatisticReportPaneHandler" style="-fx-border-color: transparent;" text="get statistic report" textFill="WHITE" />
+            <Hyperlink layoutX="12.0" layoutY="272.0" onAction="#setViewAllInformationPaneHandler" style="-fx-border-color: transparent;" text="view all information" textFill="WHITE" />
+            <Hyperlink layoutX="20.0" layoutY="357.0" onAction="#setAnswerRequestPaneHandler" style="-fx-border-color: transparent;" text="answer requests" textFill="WHITE" />
             <Separator layoutX="-4.0" layoutY="97.0" prefWidth="200.0" />
          </children>
       </Pane>
@@ -92,7 +81,7 @@
                   <Button fx:id="btnReturnAccess" layoutX="455.0" layoutY="390.0" mnemonicParsing="false" onAction="#returnAccessHandler" prefHeight="34.0" prefWidth="163.0" text="return access to student" />
                </children>
             </Pane>
-            <Pane fx:id="answerRequestsPane" prefHeight="612.0" prefWidth="755.0">
+            <Pane fx:id="answerRequestsPane" prefHeight="612.0" prefWidth="755.0" visible="false">
                <children>
                   <ListView fx:id="lvRequests" editable="true" layoutX="46.0" layoutY="154.0" prefHeight="229.0" prefWidth="654.0" />
                   <Label layoutX="53.0" layoutY="107.0" prefHeight="34.0" prefWidth="289.0" text="secretary requests :" underline="true">
@@ -100,7 +89,7 @@
                         <Font name="Apple Chancery" size="29.0" />
                      </font>
                   </Label>
-                  <Label layoutX="241.0" layoutY="26.0" prefHeight="34.0" prefWidth="289.0" text="Answer Requests" underline="true">
+                  <Label layoutX="241.0" layoutY="26.0" prefHeight="58.0" prefWidth="324.0" text="Answer Requests" underline="true">
                      <font>
                         <Font name="Apple Chancery" size="40.0" />
                      </font>
@@ -137,6 +126,27 @@
                         <Font name="Apple Chancery" size="29.0" />
                      </font>
                   </Label>
+               </children>
+            </Pane>
+            <Pane fx:id="cmbArbGSR" layoutY="-2.0" onDragDetected="#GetReportEx" prefHeight="619.0" prefWidth="754.0">
+               <children>
+                  <Label layoutX="252.0" layoutY="51.0" text="Get Statistic Report" underline="true">
+                     <font>
+                        <Font name="System Bold" size="31.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="30.0" layoutY="123.0" text="Grades in/of:" />
+                  <ComboBox fx:id="cmbOpGSR" layoutX="143.0" layoutY="117.0" onAction="#OperationGSR" prefHeight="39.0" prefWidth="213.0" promptText="Operation" />
+                  <ComboBox fx:id="cmbOpGSR1" layoutX="482.0" layoutY="116.0" onAction="#OperationGSR" prefHeight="39.0" prefWidth="235.0" promptText="Arbitrator" />
+                  <Label layoutX="371.0" layoutY="123.0" text="Grades in/of:" />
+                  <AreaChart fx:id="GChart" layoutX="17.0" layoutY="185.0" prefHeight="426.0" prefWidth="719.0" style="-fx-background-color: ffffff;" title="Grades Chart">
+                    <xAxis>
+                      <CategoryAxis fx:id="GCXAxis" label="Semester" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis fx:id="GCYAxis" label="Scores Average" prefHeight="346.0" prefWidth="67.0" side="LEFT" />
+                    </yAxis>
+                  </AreaChart>
                </children>
             </Pane>
          </children>
