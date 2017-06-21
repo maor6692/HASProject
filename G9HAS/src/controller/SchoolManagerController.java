@@ -35,7 +35,7 @@ public class SchoolManagerController implements Initializable{
 	private Hyperlink linkLogout;
 
 	@FXML							     //   1-remove student from course, 2-add student to course, 3-change teacher appointment
-	private Label lblUser;				//	                  request details: "2:classInCourse id:userId"
+	private Label lblUser,lblChooseRequest;				//	                  request details: "2:classInCourse id:userId"
 	@FXML
 	private TextArea tfRequestDetails,tfComments;
 
@@ -176,7 +176,43 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void approveRequesthandler(ActionEvent event){
-
+		lblChooseRequest.setVisible(false);
+		String request_id="";
+		String course_in_class_id="";
+		String student_id="";
+		String teacher_id="";
+		String query="";
+		if(lvRequests.getSelectionModel().getSelectedItem() == null){
+			lblChooseRequest.setVisible(true);
+			return;
+		}else{
+			request_id=lvRequests.getSelectionModel().getSelectedItem().split("\\r?\\n")[0];//get first line of selected item in list view
+			request_id=request_id.substring(11,request_id.length());//extract request id from end of line
+			switch(managerRequests.get(request_id).get(1).split("\\:")[0]){
+			case "1":
+				course_in_class_id=managerRequests.get(request_id).get(1).split("\\:")[4];//extract course_in_class_id from details field from table manager_request
+				student_id=managerRequests.get(request_id).get(3);
+				query = "DELETE FROM student_in_course_in_class WHERE course_in_class_id ="+ course_in_class_id +"AND student_id = '"+student_id+"' LIMIT 1";
+				break;
+			case "2":
+				course_in_class_id=managerRequests.get(request_id).get(1).split("\\:")[4];
+				student_id=managerRequests.get(request_id).get(1).split("\\:")[3];
+				query = "INSERT INTO student_in_course_in_class VALUES("+course_in_class_id+",'"+student_id+"',-1)";
+				break;
+			case "3":
+				course_in_class_id=managerRequests.get(request_id).get(1).split("\\:")[5];
+				teacher_id=managerRequests.get(request_id).get(1).split("\\:")[4];
+				query = "UPDATE class_in_course SET teacher_id='"+teacher_id+"' WHERE id="+course_in_class_id;
+				break;
+			}
+			arr.clear();
+			arr.add(query);
+			msg.put("approveRequest",arr);
+			LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
+			LoginController.syncWithServer();
+			msg.clear();
+			changeRequestStatus("approved");
+		}
 	}
 
 	/**
@@ -185,7 +221,8 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void dismissRequesthandler(ActionEvent event){
-
+		lblChooseRequest.setVisible(false);
+		changeRequestStatus("dismissed");
 	}
 
 	/**
@@ -193,7 +230,30 @@ public class SchoolManagerController implements Initializable{
 	 * @param request status (String)
 	 */
 	void changeRequestStatus(String status){
-
+		if(lvRequests.getSelectionModel().getSelectedItem()==null) {
+			tfComments.clear();
+			return;
+		}
+		arr.clear();
+		String request_id=lvRequests.getSelectionModel().getSelectedItem().split("\\r?\\n")[0];
+		request_id=request_id.substring(11,request_id.length());
+		arr.add(managerRequests.get(request_id).get(1).split("\\:")[0]);//secretary id
+		//prepare message for secretary includes request details, status(approved/dismissed) and school manager comments
+		arr.add(lvRequests.getSelectionModel().getSelectedItem().split("\\r?\\n")[2]+" :"+status+"\nschool manager comments: "+tfComments.getText());//comments
+		msg.put("notifySecretary",arr);
+		LoginController.userClient.sendServer(msg);//send comments to secretary INBOX
+		LoginController.syncWithServer();
+		msg.clear();
+		arr.clear();
+		arr.add(status);
+		arr.add(request_id);
+		msg.put("changeRequestStatus",arr);
+		LoginController.userClient.sendServer(msg);//ask from server to change request status and delete request from list view
+		LoginController.syncWithServer();
+		msg.clear();
+		requestsDetails.remove(lvRequests.getSelectionModel().getSelectedItem());
+		lvRequests.setItems(requestsDetails);
+		tfComments.clear();
 	}
 
 	/**
@@ -249,7 +309,7 @@ public class SchoolManagerController implements Initializable{
 		String[] requestdetails = new String[7] ;
 		for(String id: managerRequests.keySet()){
 			requestdetails = managerRequests.get(id).get(1).split("\\:");//[request_type,classInCourse,student id]
-						//: “2:secretary full name:student full name:student id:classInCourseId:course name”
+			//: “2:secretary full name:student full name:student id:classInCourseId:course name”
 			//“3:secretary full name:old teacher full name:new teacher full name:new teacher id:classInCourseId:course name”
 
 			switch(requestdetails[0]){
