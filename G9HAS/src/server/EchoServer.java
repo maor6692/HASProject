@@ -921,6 +921,61 @@ public class EchoServer extends AbstractServer {
 						}
 						client.sendToClient(classesInCourseAS);
 						break;
+								case "getTeachersAndClassesGSR":
+						String currYear="";
+						String currSem="";
+						String bottomYear="";
+						String bottomSem="";
+						ArrayList<Object> arr= new ArrayList<Object>();
+						ArrayList<String> tempList = new ArrayList<String> ();
+						ArrayList<String> semesters = new ArrayList<String> ();
+						ArrayList<ArrayList<String>> teacher = new ArrayList<ArrayList<String>> ();
+						ArrayList<ArrayList<String>> classes = new ArrayList<ArrayList<String>> ();
+						stmt = conn.createStatement();
+			
+						rs=stmt.executeQuery("select * from semester");
+						while(rs.next()){
+							if(rs.getString(3).equals("1")) {
+								currYear=rs.getString(1);
+								currSem=rs.getString(2);
+							}else semesters.add(rs.getString(0)+rs.getString(1));	
+						}
+						Collections.sort(semesters);
+						
+						rs = stmt.executeQuery("select * from class where year<>"+currYear+" OR sem<>"+currSem);
+						while(rs.next()){
+							tempList.add(rs.getString(1));
+							tempList.add(rs.getString(2));
+							tempList.add(rs.getString(3));
+							tempList.add(rs.getString(4));
+							classes.add(new ArrayList<String>(tempList));
+							tempList.clear();
+						}
+						
+						rs = stmt.executeQuery("SELECT"+
+						"co.id,co.name,cic.class_id,cic.teacher_id,cl.id,u.first_name,u.last_name"+
+						"FROM"+
+						"hasproject.course co,hasproject.class_in_course cic,hasproject.class cl,hasproject.users u"+
+						"WHERE"+
+						"(co.semester < "+currSem+" OR co.year < "+currYear+") AND"+
+					    "cic.course_id= co.id AND"+
+						"cic.class_id = cl.id AND cl.year = co.year AND cl.year=co.year AND"+
+						"u.user_name = cic.teacher_id;");
+						
+						while(rs.next()){
+							tempList.add(rs.getString(1));
+							tempList.add(rs.getString(2));
+							tempList.add(rs.getString(3));
+							teacher.add(new ArrayList<String>(tempList));
+							tempList.clear();
+						}
+						
+						arr.add(semesters);
+						arr.add(teachers);
+						arr.add(classes);
+						
+						client.sendToClient(null);
+						break;
 					}
 				}
 			}
