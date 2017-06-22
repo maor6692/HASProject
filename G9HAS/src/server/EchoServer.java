@@ -231,6 +231,24 @@ public class EchoServer extends AbstractServer {
 						rs.close();
 						client.sendToClient(ans);
 						break;
+					case "get course teaching unit":
+						ans=(ArrayList<String>) message.get(key);
+						ArrayList<String> answ=new ArrayList<String>();
+						for(int k=0;k<ans.size();k++){
+						query = "SELECT teaching_unit FROM course where id='"+ans.get(k)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						while (rs.next()) { 
+							if(!answ.contains(rs.getString(1)))
+								answ.add(rs.getString(1));
+						}
+			
+						stmt.close();
+						rs.close();
+						}
+						System.out.println(answ.toString());
+						client.sendToClient(answ);
+						break;
 					case "Search for course name":
 						ans = (ArrayList<String>) message.get("Search for course name");
 						ArrayList<String> newans = new ArrayList<String>();
@@ -240,6 +258,7 @@ public class EchoServer extends AbstractServer {
 							stmt = conn.createStatement();
 							rs = stmt.executeQuery(query);
 							while (rs.next()) { 
+								if(!(newans.contains(rs.getString(1))))
 								newans.add(rs.getString(1));
 							}
 							stmt.close();
@@ -475,6 +494,54 @@ public class EchoServer extends AbstractServer {
 				 		}
 				         client.sendToClient(by);
 				         break;
+						 				     case "get child id":
+				    	 String str=(String)message.get(key);
+				    	 query= "SELECT child_id FROM children_of_parent WHERE parent_id='"+str+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ArrayList<String> childId=new ArrayList<String>();
+				         while (rs.next()) { 
+				        	 childId.add(rs.getString(1));
+				         }
+				         System.out.println(childId.toString());
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(childId);
+				         break;
+				     case "get child username":
+				    	 ArrayList<String> cidarr=(ArrayList<String>)message.get(key);
+				    	 ArrayList<String> users=new ArrayList<String>();
+				    	 for(int j=0;j<cidarr.size();j++){
+				    	 query= "SELECT first_name FROM users WHERE user_name='"+cidarr.get(j)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         while (rs.next()) { 
+				        	 users.add(rs.getString(1));
+				         }
+				    	 
+				         stmt.close();
+				         rs.close();
+				    	 }
+				         client.sendToClient(users);
+				         break;
+				    case "get block status":
+				    	 ArrayList<String> child=(ArrayList<String>)message.get(key);
+				    	 ArrayList<String> isBlocked =new ArrayList<String>();
+				    	 for(int j=0;j<child.size();j++){
+				    	 query= "SELECT pblocked FROM Student WHERE id='"+child.get(j)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         while (rs.next()) { 
+				        	 isBlocked.add(rs.getString(1));
+				         }
+				    	 
+				         stmt.close();
+				         rs.close();
+				    	 }
+				         client.sendToClient(isBlocked);
+				         break;
+				    	
+
 				     case "get courses for semester":
 				         ans= (ArrayList<String>)message.get(key);
 				         query= "SELECT teaching_unit,id,name FROM course WHERE year="+Integer.parseInt(ans.get(0))+" AND semester="+Integer.parseInt(ans.get(1));
