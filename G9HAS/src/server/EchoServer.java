@@ -63,7 +63,7 @@ public class EchoServer extends AbstractServer {
 	 *            The connection from which the message originated.
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDate;
 		Statement stmt;
 		PreparedStatement pstmt;
@@ -353,7 +353,6 @@ public class EchoServer extends AbstractServer {
 						
 						break;
 					case "Create task":
-				    	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 						localDate = LocalDate.now();
 						ans=(ArrayList<String>) message.get(key);
 						query = "INSERT INTO task_in_class_in_course (class_in_course_id,task_file,submission_date,release_date) VALUES (?,?,?,?)";
