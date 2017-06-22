@@ -124,7 +124,7 @@ public class SchoolManagerController implements Initializable{
 	void setGetStatisticReportPaneHandler(ActionEvent event) {
 		setPane(getStatisticReportPane);
 		cmbOpGSR.getItems().clear();
-		cmbOpGSR.getItems().add("All Grades of a teahcer");
+		cmbOpGSR.getItems().add("All Grades of a teacher");
 		cmbOpGSR.getItems().add("All Teachers of a class");
 		cmbOpGSR.getItems().add("All Courses of a class");
 		lblArb.setVisible(false);
@@ -177,6 +177,7 @@ public class SchoolManagerController implements Initializable{
 	void setPane(Pane pane){
 		blockParentPane.setVisible(false);
 		answerRequestsPane.setVisible(false);
+		getStatisticReportPane.setVisible(false);
 		pane.setVisible(true);
 	}
 	/**
@@ -460,9 +461,33 @@ public class SchoolManagerController implements Initializable{
 		lvStudents.setItems(blockedStudents);
 
 	}
-	
+	/**
+	 * gets all chosen report inputs and generating a report
+	 * @cmbOpGSR which operation
+	 * @cmbArb  get arbitrator for selected operation
+	 * @cmbPeriodGSR get period for the report, since chosen one until now
+	 * @bcStatistic BarChart to put the data inside
+	 * @axisAvg Y axis
+	 * @axisSem X axis
+	 */
 		   @FXML
 		void GetReportGSR(ActionEvent event) {
+			   String op = cmbOpGSR.getSelectionModel().getSelectedItem();
+			   String arb = cmbArb.getSelectionModel().getSelectedItem();
+			   String period = cmbPeriodGSR.getSelectionModel().getSelectedItem();
+			   bcStatistic.setTitle(op+" "+arb);
+			   HashMap<String,ArrayList<String>> msg = new HashMap<>();
+			   ArrayList<String> arrGSR = new ArrayList<>();
+			   arrGSR.add(op);
+			   arrGSR.add(arb);
+			   arrGSR.add(period);
+			   //Sending server [operation,arbitrator,period]
+			   //operation values: ""All Grades of a teacher","All Teachers of a class","All Courses of a class"
+			   msg.put("GetReportGSR", arrGSR);
+			   LoginController.userClient.sendServer(msg); 
+			   LoginController.syncWithServer();
+			   msg.clear();
+
 		
 		}
 		   /**
@@ -502,7 +527,7 @@ public class SchoolManagerController implements Initializable{
 				cmbPeriodGSR.setVisible(false);
 				
 				switch(cmbOpGSR.getSelectionModel().getSelectedItem()){
-				case "All Grades of a teahcer":
+				case "All Grades of a teacher":
 					lblArb.setText("Choose teacher:");
 					lblArb.setVisible(true);
 					ArrayList<String> tempList = new ArrayList<>();
