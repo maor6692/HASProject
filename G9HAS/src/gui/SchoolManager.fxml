@@ -128,7 +128,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="cmbArbGSR" layoutY="-2.0" onDragDetected="#GetReportEx" prefHeight="619.0" prefWidth="754.0">
+            <Pane fx:id="getStatisticReportPane" layoutY="-2.0" prefHeight="619.0" prefWidth="754.0">
                <children>
                   <Label layoutX="252.0" layoutY="51.0" text="Get Statistic Report" underline="true">
                      <font>
@@ -137,16 +137,19 @@
                   </Label>
                   <Label layoutX="30.0" layoutY="123.0" text="Grades in/of:" />
                   <ComboBox fx:id="cmbOpGSR" layoutX="143.0" layoutY="117.0" onAction="#OperationGSR" prefHeight="39.0" prefWidth="213.0" promptText="Operation" />
-                  <ComboBox fx:id="cmbOpGSR1" layoutX="482.0" layoutY="116.0" onAction="#OperationGSR" prefHeight="39.0" prefWidth="235.0" promptText="Arbitrator" />
-                  <Label layoutX="371.0" layoutY="123.0" text="Grades in/of:" />
-                  <AreaChart fx:id="GChart" layoutX="17.0" layoutY="185.0" prefHeight="426.0" prefWidth="719.0" style="-fx-background-color: ffffff;" title="Grades Chart">
+                  <ComboBox fx:id="cmbArb" layoutX="482.0" layoutY="116.0" onAction="#arbGSR" prefHeight="39.0" prefWidth="235.0" promptText="Arbitrator" />
+                  <Label fx:id="lblArb" layoutX="371.0" layoutY="123.0" text="Grades in/of:" />
+                  <BarChart fx:id="bcStatistic" layoutX="4.0" layoutY="213.0" opacity="0.83" prefHeight="402.0" prefWidth="746.0" style="-fx-background-color: ffffff;">
                     <xAxis>
-                      <CategoryAxis fx:id="GCXAxis" label="Semester" />
+                      <CategoryAxis fx:id="axisSem" label="Semester" side="BOTTOM" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis fx:id="GCYAxis" label="Scores Average" prefHeight="346.0" prefWidth="67.0" side="LEFT" />
+                      <NumberAxis fx:id="axisAvg" label="Grades Average" side="LEFT" />
                     </yAxis>
-                  </AreaChart>
+                  </BarChart>
+                  <ComboBox fx:id="cmbPeriodGSR" layoutX="144.0" layoutY="164.0" onAction="#periodHandlerGSR" prefHeight="39.0" prefWidth="324.0" promptText="Period" />
+                  <Label fx:id="lblPeriodGSR" layoutX="9.0" layoutY="170.0" text="Choose period:" />
+                  <Button fx:id="btnShowReportGSR" layoutX="482.0" layoutY="164.0" mnemonicParsing="false" onAction="#GetReportGSR" prefHeight="39.0" prefWidth="174.0" text="Show Report" />
                </children>
             </Pane>
          </children>

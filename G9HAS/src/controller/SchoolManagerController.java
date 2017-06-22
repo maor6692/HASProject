@@ -19,6 +19,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
@@ -40,7 +44,7 @@ public class SchoolManagerController implements Initializable{
 	private TextArea tfRequestDetails,tfComments;
 
 	@FXML
-	Pane blockParentPane,answerRequestsPane;
+	Pane blockParentPane,answerRequestsPane,getStatisticReportPane;
 
 	@FXML
 	private ListView<String> lvStudents,lvRequests;//list view to display blocked students in current semester
@@ -50,6 +54,33 @@ public class SchoolManagerController implements Initializable{
 
 	@FXML
 	private Button btnReturnAccess,btnBlock;
+	
+    @FXML
+    private ComboBox<String> cmbOpGSR;
+
+	
+	@FXML
+    private ComboBox<String> cmbArb;
+	
+	
+	@FXML
+    private ComboBox<String> cmbPeriodGSR;
+	
+    @FXML
+    private Label lblArb;
+	
+	
+	@FXML
+    private Button btnShowReportGSR;
+	
+	@FXML
+    private BarChart<String,Number> bcStatistic;
+	
+	@FXML
+    private NumberAxis axisAvg;
+	
+    @FXML
+    private CategoryAxis axisSem;
 
 	HashMap<String, ArrayList<String>>	msg ;
 	private ObservableList<String> studentsDetails = FXCollections.observableArrayList();//saves student details from db
@@ -63,7 +94,12 @@ public class SchoolManagerController implements Initializable{
 	HashMap<String, ArrayList<String>> studentsInClass;//saves all students of chosen class in combo box
 	HashMap<String, ArrayList<String>> blockedStudentsHM;
 	HashMap<String, ArrayList<String>> managerRequests;
+	ArrayList<String> semRangGSR = new ArrayList<>();
+	ArrayList<ArrayList<String>> teachersGSR = new ArrayList<>();
+	ArrayList<ArrayList<String>> classesGSR = new ArrayList<>();
 
+	@FXML
+	private Label lblPeriodGSR;
 
 	/**
 	 * change visible user window to appropriate window
@@ -77,9 +113,37 @@ public class SchoolManagerController implements Initializable{
 	 * change visible user window to appropriate window
 	 * @param pane
 	 */
+	
+	
+	/**
+	 * initialize info for choosing report
+	 * @param teachers and classes info that was/is last 4 semesters
+	 */
 	@FXML
 	void setGetStatisticReportPaneHandler(ActionEvent event) {
-		setPane(blockParentPane);
+		setPane(getStatisticReportPane);
+		cmbOpGSR.getItems().add("All Grades of a teahcer");
+		cmbOpGSR.getItems().add("All Teachers of a class");
+		cmbOpGSR.getItems().add("All Courses of a class");
+		lblArb.setVisible(false);
+		cmbArb.setVisible(false);
+		lblPeriodGSR.setVisible(false);
+		cmbPeriodGSR.setVisible(false);
+		btnShowReportGSR.setVisible(false);
+		bcStatistic.setVisible(false);
+		HashMap<String,ArrayList<String>> msg = new HashMap<>();
+		msg.put("getTeachersAndClassesGSR", null);
+		LoginController.userClient.sendServer(msg); 
+		LoginController.syncWithServer();
+		msg.clear();
+		//save recieved objects in class attr
+		ArrayList<Object> ans = new ArrayList<Object>((ArrayList<Object>)UserClient.ans);
+		semRangGSR = new ArrayList<String>((ArrayList<String>)ans.get(0));
+		teachersGSR = new ArrayList<>((ArrayList<ArrayList<String>>)ans.get(1));
+		classesGSR = new ArrayList<>((ArrayList<ArrayList<String>>)ans.get(2));
+		//--
+		for(String s: semRangGSR)
+			cmbPeriodGSR.getItems().add("since "+s.substring(0,5)+" semester: "+s.substring(5));
 	}
 	/**
 	 * change visible user window to appropriate window
@@ -309,8 +373,8 @@ public class SchoolManagerController implements Initializable{
 		String[] requestdetails = new String[7] ;
 		for(String id: managerRequests.keySet()){
 			requestdetails = managerRequests.get(id).get(1).split("\\:");//[request_type,classInCourse,student id]
-			//: “2:secretary full name:student full name:student id:classInCourseId:course name”
-			//“3:secretary full name:old teacher full name:new teacher full name:new teacher id:classInCourseId:course name”
+			//: 2:secretary full name:student full name:student id:classInCourseId:course name
+			//3:secretary full name:old teacher full name:new teacher full name:new teacher id:classInCourseId:course name
 
 			switch(requestdetails[0]){
 			case "1":
@@ -388,4 +452,66 @@ public class SchoolManagerController implements Initializable{
 		lvStudents.setItems(blockedStudents);
 
 	}
+	
+		   @FXML
+		void GetReportGSR(ActionEvent event) {
+		
+		}
+		   /**
+		    * opens period combo box
+		    * @cmbArb get artbitrator for making report
+		    */
+		   @FXML
+		void arbGSR(ActionEvent event) {
+			   cmbPeriodGSR.getItems().clear();
+			   lblPeriodGSR.setVisible(true);
+			   cmbPeriodGSR.setVisible(true);
+			   btnShowReportGSR.setVisible(false);
+			   bcStatistic.setVisible(false);
+		}
+		   /**
+		    * opens the option to execute report 
+		    * @cmbPeriodGSR get period for the report
+		    */
+		   @FXML
+		   void periodHandlerGSR(ActionEvent event) {
+			   btnShowReportGSR.setVisible(true);
+			   bcStatistic.setVisible(false);
+		   }
+		   
+		/**
+		 * showing Arbitrator for chosen operation
+		 * @cmbOpGSR get required operation
+		 */
+		    @FXML
+		void OperationGSR(ActionEvent event) {
+				lblArb.setVisible(false);
+				cmbArb.setVisible(false);
+				cmbArb.getItems().clear();
+				btnShowReportGSR.setVisible(false);
+				bcStatistic.setVisible(false);
+				lblPeriodGSR.setVisible(false);
+				cmbPeriodGSR.setVisible(false);
+				
+				switch(cmbOpGSR.getSelectionModel().getSelectedItem()){
+				case "All Grades of a teahcer":
+					lblArb.setText("Choose teacher:");
+					lblArb.setVisible(true);
+					for(ArrayList<String> arr: teachersGSR)
+						cmbArb.getItems().add(arr.get(1));
+					cmbArb.setVisible(true);
+					break;
+				case "All Teachers of a class":
+				case "All Courses of a class":
+					lblArb.setText("Choose class:");
+					lblArb.setVisible(true);
+					for(ArrayList<String> arr: classesGSR)
+						cmbArb.getItems().add(arr.get(1));
+					cmbArb.setVisible(true);
+					break;
+				}
+				
+		}
 }
+
+
