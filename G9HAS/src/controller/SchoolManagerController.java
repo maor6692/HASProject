@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -122,6 +123,7 @@ public class SchoolManagerController implements Initializable{
 	@FXML
 	void setGetStatisticReportPaneHandler(ActionEvent event) {
 		setPane(getStatisticReportPane);
+		cmbOpGSR.getItems().clear();
 		cmbOpGSR.getItems().add("All Grades of a teahcer");
 		cmbOpGSR.getItems().add("All Teachers of a class");
 		cmbOpGSR.getItems().add("All Courses of a class");
@@ -142,8 +144,14 @@ public class SchoolManagerController implements Initializable{
 		teachersGSR = new ArrayList<>((ArrayList<ArrayList<String>>)ans.get(1));
 		classesGSR = new ArrayList<>((ArrayList<ArrayList<String>>)ans.get(2));
 		//--
-		for(String s: semRangGSR)
-			cmbPeriodGSR.getItems().add("since "+s.substring(0,5)+" semester: "+s.substring(5));
+		cmbPeriodGSR.getItems().clear();
+		ArrayList <String> tempList = new ArrayList<>(); 
+		for(String s: semRangGSR){
+			tempList.add("since "+s.substring(0,4)+" semester: "+s.substring(4));
+		}
+		Collections.sort(tempList);
+		cmbPeriodGSR.getItems().addAll(tempList);
+
 	}
 	/**
 	 * change visible user window to appropriate window
@@ -463,7 +471,7 @@ public class SchoolManagerController implements Initializable{
 		    */
 		   @FXML
 		void arbGSR(ActionEvent event) {
-			   cmbPeriodGSR.getItems().clear();
+			   
 			   lblPeriodGSR.setVisible(true);
 			   cmbPeriodGSR.setVisible(true);
 			   btnShowReportGSR.setVisible(false);
@@ -497,8 +505,11 @@ public class SchoolManagerController implements Initializable{
 				case "All Grades of a teahcer":
 					lblArb.setText("Choose teacher:");
 					lblArb.setVisible(true);
+					ArrayList<String> tempList = new ArrayList<>();
 					for(ArrayList<String> arr: teachersGSR)
-						cmbArb.getItems().add(arr.get(1));
+						tempList.add(arr.get(1));
+					Collections.sort(tempList);
+					cmbArb.getItems().addAll(tempList);
 					cmbArb.setVisible(true);
 					break;
 				case "All Teachers of a class":
@@ -506,7 +517,7 @@ public class SchoolManagerController implements Initializable{
 					lblArb.setText("Choose class:");
 					lblArb.setVisible(true);
 					for(ArrayList<String> arr: classesGSR)
-						cmbArb.getItems().add(arr.get(1));
+						cmbArb.getItems().add(arr.get(1)+"  ["+arr.get(2)+","+arr.get(3)+"]");
 					cmbArb.setVisible(true);
 					break;
 				}
