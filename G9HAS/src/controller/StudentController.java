@@ -59,6 +59,9 @@ public class StudentController implements Initializable {
     private String cid = "";
     private String filename="";
     private File selectedFile;
+    private String file_type="";
+    @FXML
+    private Label lblGradeInTask;
     @FXML
     private Hyperlink hlSubmitTask;
     
@@ -119,7 +122,10 @@ public class StudentController implements Initializable {
 
 	@FXML
 	private Label lblTask;
-
+    @FXML
+    private Label lblTeacherNotes;
+    @FXML
+    private TextArea taTeacherNotes;
 	@FXML
 	private Label lblAvg;
 
@@ -139,8 +145,14 @@ public class StudentController implements Initializable {
     	btnUploadTask.setVisible(false);
     	btnFile.setVisible(true);
     	tfUploadPath.setVisible(true);
+    	lblErrorST.setVisible(false);
+    	lblGradeInTask.setVisible(false);
+    	lblTeacherNotes.setVisible(false);
+    	taTeacherNotes.setVisible(false);
+    	String tempstr[],stemp;
     	filename="";
     	ArrayList<String> arr = new ArrayList<String>();
+    	int i;
     	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
     	filename=cbChooseCourseST.getValue().substring(0, 5)+"_";
     	filename+=LoginController.userClient.userName+"-";
@@ -154,9 +166,39 @@ public class StudentController implements Initializable {
 		row.add(LoginController.userClient.userName);
 		row.add(taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue())));
 		row.add(cbChooseCourseST.getValue().substring(2, 5));
-		filename += ((ArrayList<String>)LoginController.userClient.ans).get(0);
-		row.add(filename);
+//		for(i=0;i<((ArrayList<String>)LoginController.userClient.ans).get(0).length();i++)
+//		{
+//			if(((ArrayList<String>)LoginController.userClient.ans).get(0).charAt(i)=='.' && (i==((ArrayList<String>)LoginController.userClient.ans).get(0).length()-5 || i== ((ArrayList<String>)LoginController.userClient.ans).get(0).length()-4))
+//				break;
+//			
+//		}
+
+		tempstr = ((ArrayList<String>)LoginController.userClient.ans).get(0).split("\\.");
+		stemp = tempstr[tempstr.length-1];
+		filename += ((ArrayList<String>)LoginController.userClient.ans).get(0).substring(0, ((ArrayList<String>)LoginController.userClient.ans).get(0).length()-stemp.length()-1)+".";
+
 		
+		//filename += ((ArrayList<String>)LoginController.userClient.ans).get(0).substring(0, i);
+		//System.out.println(file_type);
+		//filename += file_type;
+		
+		hm.clear();
+		hm.put("get status for task of student",row);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		if(((ArrayList<String>)LoginController.userClient.ans).size()>0 && Float.parseFloat(((ArrayList<String>)LoginController.userClient.ans).get(0))!=0)
+		{
+			lblGradeInTask.setText("Your task grade is: "+((ArrayList<String>)LoginController.userClient.ans).get(0));
+			lblGradeInTask.setVisible(true);
+			lblUpload.setVisible(false);
+			tfUploadPath.setVisible(false);
+			btnFile.setVisible(false);
+			btnUploadTask.setVisible(false);
+			lblTeacherNotes.setVisible(true);
+			taTeacherNotes.setVisible(true);
+			taTeacherNotes.setText(((ArrayList<String>)LoginController.userClient.ans).get(1));
+		}
+		hm.clear();
 		}
     }
     @FXML
@@ -171,26 +213,32 @@ public class StudentController implements Initializable {
 		 File folderpath = dc.showDialog(downloadStage);
 		 if(folderpath != null)
 			 path = folderpath.getAbsolutePath();
-    	byte[] by;
-    	arr.add(taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue())));
-    	hm.put("get file name for task id", arr);
-		LoginController.userClient.sendServer(hm);
-		LoginController.syncWithServer();
-		fname = ((ArrayList<String>)LoginController.userClient.ans).get(0);
-		arr.clear();
-		arr.add(fname);
-		hm.remove("get file name for task id");
-		hm.put("get file from filename", arr);
-		LoginController.userClient.sendServer(hm);
-		LoginController.syncWithServer();
-		by = ((byte[])LoginController.userClient.ans);
-		try {
-			Files.write(Paths.get(path+"\\"+fname), by);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		lblDownloadComplete.setVisible(true);
+
+			 byte[] by;
+			 arr.add(taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue())));
+			 hm.put("get file name for task id", arr);
+			 LoginController.userClient.sendServer(hm);
+			 LoginController.syncWithServer();
+			 fname = ((ArrayList<String>)LoginController.userClient.ans).get(0);
+			 arr.clear();
+			 arr.add(fname);
+			 hm.remove("get file name for task id");
+				 hm.put("get file from filename", arr);
+				 LoginController.userClient.sendServer(hm);
+				 LoginController.syncWithServer();
+				 by = ((byte[])LoginController.userClient.ans);
+				 try {
+					 Files.write(Paths.get(path+"\\"+fname), by);
+					 lblDownloadComplete.setVisible(true);
+				 } catch (IOException e1) {
+					 // TODO Auto-generated catch block
+					 //e1.printStackTrace();
+				 }
+			 catch(Exception e)
+			 {
+				 
+			 }	 
+		 
     }
     @FXML
     void fileUploadHandler(ActionEvent event) {
@@ -204,7 +252,11 @@ public class StudentController implements Initializable {
     	 selectedFile = fileChooser.showOpenDialog(uploadStage);
     	 if (selectedFile != null) {
     		 btnUploadTask.setVisible(true);
-    		tfUploadPath.setText(selectedFile.getAbsolutePath());	 
+    		tfUploadPath.setText(selectedFile.getAbsolutePath());
+//    		if(selectedFile.getName().substring(selectedFile.getName().length()-5, selectedFile.getName().length()-2).charAt(0)== '.')
+//    		file_type += selectedFile.getName().substring(selectedFile.getName().length()-5);
+//    		else
+//    			file_type += selectedFile.getName().substring(selectedFile.getName().length()-4);
     	 }
     }
     
@@ -212,12 +264,22 @@ public class StudentController implements Initializable {
     void uploadTaskHandler(ActionEvent event) {
     	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDate = LocalDate.now();
+		String tempstr[],stemp;
+		tempstr = selectedFile.getName().split("\\.");
+		stemp = tempstr[tempstr.length-1];
+		filename += stemp;
+		row.add(filename);
 		row.add(String.valueOf(localDate));
+		details.clear();
 		details.put("add task to student",row);
 		LoginController.userClient.sendServer(details);
         LoginController.syncWithServer();
+        if((LoginController.userClient.ans)!= null)
         if(((String)(LoginController.userClient.ans)).equals("exist"))
+        {
         	lblErrorST.setText("There is already submission for this task");
+        	lblErrorST.setVisible(true);
+        }
 		//
     	byte[] by = null;
     	HashMap<String,HashMap<String,byte[]>> hm = new HashMap<String,HashMap<String,byte[]>>();
@@ -241,6 +303,8 @@ public class StudentController implements Initializable {
         LoginController.syncWithServer();
         hm.clear();
         hmName.clear();
+        lblErrorST.setText("Task uploaded successfuly");
+        lblErrorST.setVisible(true);
     }
     @FXML
     void ChooseCourseSTHandler(ActionEvent event) {
@@ -365,7 +429,7 @@ public class StudentController implements Initializable {
 		HashMap<String,ArrayList<String>> hm= new HashMap<String,ArrayList<String>>();
 		arr.add(LoginController.userClient.userName);
 		String temp = "";
-		for(int i=0;i<3;i++)
+		for(int i=2;i<5;i++)
 		{
 			temp+= cbCourseInClass.getValue().charAt(i);
 		}
@@ -425,6 +489,7 @@ public class StudentController implements Initializable {
 		//work//
 		hm.remove("get course in class");
 		hm.put("get course id",arr);
+
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
 		arr.clear();
@@ -432,12 +497,10 @@ public class StudentController implements Initializable {
 			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 				arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
 		}
-		//System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString());
 		hm.remove("get course id");
 		hm.put("Search for course name",arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-		//System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString()+"!!!!!");
 		if(LoginController.userClient.ans != null){
 			for(int i=0; i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 			{
@@ -497,12 +560,7 @@ public class StudentController implements Initializable {
 				sumgrades += Float.parseFloat(((ArrayList<String>)LoginController.userClient.ans).get(i));
 			}
 		}
-		//System.out.println(sumgrades/((ArrayList<String>)LoginController.userClient.ans).size());
 		lblAvg.setText(String.valueOf((Float)(sumgrades/((ArrayList<String>)LoginController.userClient.ans).size())));
-//		hm.remove("get course in class");
-//		hm.put("get course id",((ArrayList<String>)LoginController.userClient.ans));
-//		LoginController.userClient.sendServer(hm);
-//		LoginController.syncWithServer();
         
 	}
 
