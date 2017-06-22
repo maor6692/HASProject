@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -921,12 +922,13 @@ public class EchoServer extends AbstractServer {
 						}
 						client.sendToClient(classesInCourseAS);
 						break;
-								case "getTeachersAndClassesGSR":
+					case "getTeachersAndClassesGSR":
 						String currYear="";
 						String currSem="";
 						String bottomYear="";
 						String bottomSem="";
-						ArrayList<Object> arr= new ArrayList<Object>();
+						
+						ArrayList<Object> arrGSR= new ArrayList<Object>();
 						ArrayList<String> tempList = new ArrayList<String> ();
 						ArrayList<String> semesters = new ArrayList<String> ();
 						ArrayList<ArrayList<String>> teacher = new ArrayList<ArrayList<String>> ();
@@ -938,11 +940,11 @@ public class EchoServer extends AbstractServer {
 							if(rs.getString(3).equals("1")) {
 								currYear=rs.getString(1);
 								currSem=rs.getString(2);
-							}else semesters.add(rs.getString(0)+rs.getString(1));	
+							}else semesters.add(rs.getString(1)+rs.getString(2));	
 						}
 						Collections.sort(semesters);
 						
-						rs = stmt.executeQuery("select * from class where year<>"+currYear+" OR sem<>"+currSem);
+						rs = stmt.executeQuery("select * from class where year<>"+currYear+" OR semester<>"+currSem);
 						while(rs.next()){
 							tempList.add(rs.getString(1));
 							tempList.add(rs.getString(2));
@@ -952,29 +954,29 @@ public class EchoServer extends AbstractServer {
 							tempList.clear();
 						}
 						
-						rs = stmt.executeQuery("SELECT"+
-						"co.id,co.name,cic.class_id,cic.teacher_id,cl.id,u.first_name,u.last_name"+
-						"FROM"+
-						"hasproject.course co,hasproject.class_in_course cic,hasproject.class cl,hasproject.users u"+
-						"WHERE"+
-						"(co.semester < "+currSem+" OR co.year < "+currYear+") AND"+
-					    "cic.course_id= co.id AND"+
-						"cic.class_id = cl.id AND cl.year = co.year AND cl.year=co.year AND"+
-						"u.user_name = cic.teacher_id;");
+						rs = stmt.executeQuery("SELECT "+
+						"DISTINCT co.id,co.name,cic.class_id,cic.teacher_id,cl.id,u.first_name,u.last_name"+
+						" FROM "+
+						"course co,class_in_course cic,class cl,users u"+
+						" WHERE"+
+						"(co.semester < "+currSem+" OR co.year < "+currYear+") AND "+
+					    "cic.course_id= co.id AND "+
+						"cic.class_id = cl.id AND cl.year = co.year AND cl.year=co.year AND "+
+						"u.user_name = cic.teacher_id");
 						
 						while(rs.next()){
-							tempList.add(rs.getString(1));
-							tempList.add(rs.getString(2));
-							tempList.add(rs.getString(3));
+							tempList.add(rs.getString(4));
+							tempList.add(rs.getString(6)+" "+rs.getString(7));
+							
 							teacher.add(new ArrayList<String>(tempList));
 							tempList.clear();
 						}
 						
-						arr.add(semesters);
-						arr.add(teachers);
-						arr.add(classes);
+						arrGSR.add(semesters);
+						arrGSR.add(teacher);
+						arrGSR.add(classes);
 						
-						client.sendToClient(null);
+						client.sendToClient(arrGSR);
 						break;
 					}
 				}
