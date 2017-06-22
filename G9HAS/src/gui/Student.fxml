@@ -153,6 +153,22 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
+                  <Label fx:id="lblErrorST" layoutX="27.0" layoutY="319.0" prefHeight="17.0" prefWidth="494.0" textFill="#f50707">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblGradeInTask" layoutX="8.0" layoutY="281.0" prefHeight="21.0" prefWidth="240.0" textFill="#eb0707">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblTeacherNotes" layoutX="27.0" layoutY="311.0" text="Teacher notes:" textFill="#ee0707" visible="false">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <TextArea fx:id="taTeacherNotes" layoutX="216.0" layoutY="311.0" prefHeight="122.0" prefWidth="261.0" visible="false" />
                </children>
             </Pane>
          </children>
