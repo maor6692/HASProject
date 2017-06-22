@@ -483,11 +483,12 @@ public class SchoolManagerController implements Initializable{
 			   arrGSR.add(period);
 			   //Sending server [operation,arbitrator,period]
 			   //operation values: ""All Grades of a teacher","All Teachers of a class","All Courses of a class"
+			   /* uncomment after finish SetReportGSR case in EchoServer
 			   msg.put("GetReportGSR", arrGSR);
 			   LoginController.userClient.sendServer(msg); 
 			   LoginController.syncWithServer();
 			   msg.clear();
-
+				*/
 		
 		}
 		   /**
