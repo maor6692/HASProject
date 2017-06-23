@@ -4,7 +4,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -18,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -32,13 +36,15 @@ public class LoginController extends Application implements Initializable {
 	private PasswordField tfPassword;
 	@FXML
 	public TextField tfUserName,tfPort,tfHost;
+	@FXML
+	public CheckBox checkBox;
 	public ArrayList<String> arrans;
 	public static HashMap<String, ArrayList<String>> msg;
 	public static UserClient userClient;
-	
-/**
- * change user status to 'offline' in DB
- */
+
+	/**
+	 * change user status to 'offline' in DB
+	 */
 	static void logout(){
 		HashMap<String, ArrayList<String>> msg = new HashMap<String, ArrayList<String>>();
 		ArrayList<String> arr = new ArrayList<String>();
@@ -53,13 +59,13 @@ public class LoginController extends Application implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * change user status to 'online' in DB and open appropriate window due to user_type
 	 */
 	@FXML
 	void signinHandler(ActionEvent event) {
-		
+
 		lblWrongUser.setText("Wrong User Name or Password!");
 		lblWrongUser.setVisible(false);
 		lblConnection.setVisible(false);
@@ -69,13 +75,13 @@ public class LoginController extends Application implements Initializable {
 			lblConnection.setVisible(true);
 			return;
 		}
-		
+
 		msg = new HashMap<String, ArrayList<String>>();
 		ArrayList<String> userInfo = new ArrayList<String>();
 		userInfo.add(tfUserName.getText());
 		userInfo.add(tfPassword.getText());
 		msg.put("login",userInfo);
-	//	if(userClient==null)
+		//	if(userClient==null)
 		userClient.sendServer(msg);//send to server user info to verify user details 
 		syncWithServer();
 		arrans =  (ArrayList<String>)(UserClient.ans);
@@ -84,12 +90,12 @@ public class LoginController extends Application implements Initializable {
 			userClient.userName = tfUserName.getText();
 			String user_type = arrans.get(0);
 			Parent nextWindow;
-//			if(arrans.get(3).equals("online")){
-//				lblWrongUser.setText("User Already Connected!");
-//				lblWrongUser.setVisible(true);
-//				return;
-//			}
-			
+			//			if(arrans.get(3).equals("online")){
+			//				lblWrongUser.setText("User Already Connected!");
+			//				lblWrongUser.setVisible(true);
+			//				return;
+			//			}
+
 			try {
 				if(user_type.equals("Manager"))user_type="SchoolManager";
 				nextWindow = FXMLLoader.load(getClass().getResource("../gui/"+user_type+".fxml"));//Prepare appropriate window due to user_type
@@ -105,7 +111,7 @@ public class LoginController extends Application implements Initializable {
 						System.exit(0);
 					}
 				});
-			
+
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -113,6 +119,33 @@ public class LoginController extends Application implements Initializable {
 		}
 		else{
 			lblWrongUser.setVisible(true);
+		}
+	}
+
+	@FXML
+	void checkBoxClicked(ActionEvent event) {
+		if(checkBox.isFocused()){
+			try {
+
+				FileInputStream fileInputStream = new FileInputStream("mf.mp3");
+
+				Player player = new Player(fileInputStream);
+				System.out.println("אכלת אותה ויקטור...");
+				player.play();
+
+			} catch (FileNotFoundException e) {
+
+				// TODO Auto-generated catch block
+
+				e.printStackTrace();
+
+			} catch (JavaLayerException e) {
+
+				// TODO Auto-generated catch block
+
+				e.printStackTrace();
+
+			}
 		}
 	}
 	/**

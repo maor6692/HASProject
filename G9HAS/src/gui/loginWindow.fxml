@@ -57,5 +57,6 @@
       <TextField fx:id="tfPort" layoutX="323.0" layoutY="314.0" prefHeight="31.0" prefWidth="149.0" text="5555" />
       <Label fx:id="lblWrongUser" layoutX="323.0" layoutY="164.0" prefHeight="31.0" prefWidth="167.0" text="wrong user name or password" textFill="#eb0909" visible="false" />
       <Label fx:id="lblConnection" layoutX="323.0" layoutY="257.0" prefHeight="31.0" prefWidth="167.0" text="connection failed" textFill="#eb0808" visible="false" />
+      <CheckBox fx:id="checkBox" layoutX="437.0" layoutY="375.0" mnemonicParsing="false" onAction="#checkBoxClicked" />
    </children>
 </AnchorPane>
