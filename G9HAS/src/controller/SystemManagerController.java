@@ -80,10 +80,18 @@ public class SystemManagerController implements Initializable{
 
     @FXML
     private Button btnCreateCourse;
+    /**
+     * sets the pane of the controller to define course
+     * @param event
+     */
     @FXML
     void defineCourseHandler(ActionEvent event) {
     	setPane(defineCoursePane);
     }
+    /**
+     * create new course for selected teaching unit
+     * @param event
+     */
     @FXML
     void createCourseHandler(ActionEvent event) {
 
@@ -178,7 +186,10 @@ public class SystemManagerController implements Initializable{
     }
 
 		
-    
+    /**
+     * logout handler, logout the user if X is pressed and change the window to login window.
+     * @param event
+     */
 	@FXML
 	void logoutHandler(ActionEvent event) {
 		Parent nextWindow;
@@ -202,6 +213,11 @@ public class SystemManagerController implements Initializable{
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * sets the pane to the selected parameter
+	 * @param pane - selected pane to display
+	 * 
+	 */
 	void setPane(Pane pane){
 		pane.setVisible(true);
 	}
