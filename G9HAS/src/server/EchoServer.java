@@ -790,12 +790,7 @@ public class EchoServer extends AbstractServer {
 						pstmt = conn.prepareStatement(query);
 						pstmt.setInt(1, Integer.parseInt(ans.get(0)));
 						pstmt.setString(2, ans.get(1));
-						if(ans.get(2).charAt(1) == ' ')
-							pstmt.setInt(3, Character.getNumericValue(ans.get(2).charAt(0)));
-						else
-						{
-							pstmt.setInt(3, Integer.parseInt(Character.getNumericValue(ans.get(2).charAt(0)) + ""+Character.getNumericValue(ans.get(2).charAt(1))));
-						}
+						pstmt.setInt(3, Integer.parseInt(ans.get(2)));
 						pstmt.setInt(4, Integer.parseInt(ans.get(3)));
 						pstmt.setInt(5, Integer.parseInt(ans.get(4)));
 						pstmt.setInt(6, Integer.parseInt(ans.get(5)));
@@ -804,7 +799,16 @@ public class EchoServer extends AbstractServer {
 						//client.sendToClient(ans);//sends the answer to client.
 						client.sendToClient(null);
 						break;
+					case "check if course exists":
 
+						ans=(ArrayList<String>) message.get(key);
+						query = "SELECT id,teaching_unit FROM Course WHERE id='"+ans.get(0)+"' AND teaching_unit='"+ans.get(2)+"'";
+						stmt = conn.createStatement();
+						rs=stmt.executeQuery(query);
+						if(rs.next()) client.sendToClient("exist");
+						else
+						client.sendToClient(null);
+						break;
 					case "logout":
 
 						ans=(ArrayList<String>) message.get(key);
