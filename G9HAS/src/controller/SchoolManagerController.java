@@ -255,8 +255,7 @@ public class SchoolManagerController implements Initializable{
 		String student_id="";
 		String teacher_id="";
 		String query="";
-		if(lvRequests.getSelectionModel().getSelectedItem() == null){
-			lblChooseRequest.setVisible(true);
+			if(lvRequests.getSelectionModel().getSelectedItem() == null){
 			return;
 		}else{
 			request_id=lvRequests.getSelectionModel().getSelectedItem().split("\\r?\\n")[0];//get first line of selected item in list view
@@ -264,7 +263,7 @@ public class SchoolManagerController implements Initializable{
 			switch(managerRequests.get(request_id).get(1).split("\\:")[0]){
 			case "1":
 				course_in_class_id=managerRequests.get(request_id).get(1).split("\\:")[4];//extract course_in_class_id from details field from table manager_request
-				student_id=managerRequests.get(request_id).get(3);
+				student_id=managerRequests.get(request_id).get(1).split("\\:")[3];
 				query = "DELETE FROM student_in_course_in_class WHERE course_in_class_id ="+ course_in_class_id +"AND student_id = '"+student_id+"' LIMIT 1";
 				break;
 			case "2":
