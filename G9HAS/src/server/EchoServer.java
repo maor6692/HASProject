@@ -1081,7 +1081,7 @@ public class EchoServer extends AbstractServer {
 						}
 						
 						rs = stmt.executeQuery("SELECT "+
-						"DISTINCT co.id,co.name,cic.class_id,cic.teacher_id,cl.id,u.first_name,u.last_name"+
+						"DISTINCT cic.teacher_id,u.first_name,u.last_name"+
 						" FROM "+
 						"course co,class_in_course cic,class cl,users u"+
 						" WHERE"+
@@ -1091,8 +1091,8 @@ public class EchoServer extends AbstractServer {
 						"u.user_name = cic.teacher_id");
 						
 						while(rs.next()){
-							tempList.add(rs.getString(4));
-							tempList.add(rs.getString(6)+" "+rs.getString(7));
+							tempList.add(rs.getString(1));
+							tempList.add(rs.getString(2)+" "+rs.getString(3));
 							
 							teacher.add(new ArrayList<String>(tempList));
 							tempList.clear();
@@ -1103,6 +1103,56 @@ public class EchoServer extends AbstractServer {
 						arrGSR.add(classes);
 						
 						client.sendToClient(arrGSR);
+						break;
+					case "GetReportGSR":
+						ans= (ArrayList<String>)message.get(key); 
+						//[operation,arbitrator,period]
+						//operation values: ""All Classes of a teacher","All Teachers of a class","All Courses of a class"
+						//arbitrator values:teacher,class,class
+						//period values: yyyys
+						String currY="",currS="";
+						stmt = conn.createStatement();
+						rs=stmt.executeQuery("select * from semester");
+						while(rs.next()){
+							if(rs.getString(3).equals("1")) {
+								currY=rs.getString(1);
+								currS=rs.getString(2);
+								}
+							}
+							HashMap<String,ArrayList<String>> report = new HashMap<>();
+						int currP = Integer.parseInt(currY+currS);
+						int destP = Integer.parseInt(ans.get(2));
+						String pYear = ans.get(2).substring(0, 4);
+						String pSem = ans.get(2).substring(4);
+						
+						String q;
+						switch(ans.get(0)){
+						case"All Classes of a teacher":
+							//query on loop by period
+							for(;destP<currP;){
+								pYear = String.valueOf(destP).substring(0, 4);
+								pSem = String.valueOf(destP).substring(4);
+								 
+								ArrayList<String> vals = new ArrayList<>();
+							q = "SELECT cl.name,co.name FROM course co,class_in_course cic,class cl WHERE cic.teacher_id = '"+ans.get(1)+"' AND cic.class_id=cl.id AND cic.course_id=co.id AND cl.year=co.year AND cl.semester = co.semester AND cl.year = '"+pYear+"' AND cl.semester='"+pSem+"'";
+							rs=stmt.executeQuery(q);
+									
+									while(rs.next()){
+										vals.add(rs.getString(1)+","+rs.getString(2));
+									}
+									report.put(String.valueOf(destP), vals);
+									destP = destP%10 == 1 ? destP+1 : ((destP/10)+1)*10+1;
+							}
+							
+							break;
+						case"All Teachers of a class":
+							break;
+						case"All Courses of a class":
+							break;
+						}
+						
+						
+						client.sendToClient(report);
 						break;
 					}
 				}
