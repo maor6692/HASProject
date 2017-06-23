@@ -1000,6 +1000,20 @@ public class EchoServer extends AbstractServer {
 
 						client.sendToClient(secMsg);
 						break;
+						
+					case "getTeacherInbox":
+						ans= (ArrayList<String>)message.get(key); //
+						HashMap<String,String> teacherMsg = new HashMap<>();
+						query  = "SELECT msg_id,msg FROM teacher_inbox WHERE teacher_id='"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while(rs.next())
+							teacherMsg.put(rs.getString(1), rs.getString(2));
+
+						client.sendToClient(teacherMsg);
+						break;
+						
 					case "checkPreCourseFromArray":
 						boolean passed = false;
 						ans= (ArrayList<String>)message.get(key); // 
@@ -1122,6 +1136,31 @@ public class EchoServer extends AbstractServer {
 						
 						client.sendToClient(arrGSR);
 						break;
+						
+					case "approveRequest":
+					      try{
+					       stmt = conn.createStatement();
+					       ans= (ArrayList<String>)message.get(key);
+					       stmt.executeUpdate(ans.get(0));
+					      }catch (SQLException e) {
+					       client.sendToClient(null);
+					      } 
+					      client.sendToClient(null);
+					      break;
+						
+					case "notifySecretary":
+					      stmt = conn.createStatement();
+					      ans= (ArrayList<String>)message.get(key);
+					      stmt.executeUpdate("INSERT INTO secretary_inbox VALUES("+"0"+","+ans.get(0)+",'"+ans.get(1)+"')");
+					      client.sendToClient(null);
+					      break;
+					      
+					case "changeRequestStatus":
+					      stmt = conn.createStatement();
+					      ans= (ArrayList<String>)message.get(key);
+					      stmt.executeUpdate("UPDATE manager_request SET status='"+ans.get(0)+"' WHERE id="+ans.get(1));
+					      client.sendToClient(null);
+					      break;
 					}
 				}
 			}
