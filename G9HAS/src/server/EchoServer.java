@@ -413,6 +413,23 @@ public class EchoServer extends AbstractServer {
 				         rs.close();
 				         client.sendToClient(courses);
 				         break;
+					 case "get course id from course name":
+				         ans = (ArrayList<String>) message.get("get course id from course name");
+				         ArrayList<String> crsid = new ArrayList<String>();
+
+				          query = "SELECT id FROM course WHERE name='"+ans.get(0)+"'";
+				          stmt = conn.createStatement();
+				          rs = stmt.executeQuery(query);
+				          while (rs.next()) { 
+				        	  crsid.add(rs.getString(1));
+				          }
+				          stmt.close();
+				          
+				         
+				         System.out.println(crsid.toString()+"++");
+				         ans.clear();
+				         client.sendToClient(crsid);
+				         break;
 				     case "check if student in class in course":
 				         //ans=[class_in_course_id,student_id]
 				         ans= (ArrayList<String>)message.get(key);
