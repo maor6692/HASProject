@@ -64,7 +64,9 @@ public class StudentController implements Initializable {
     private Label lblGradeInTask;
     @FXML
     private Hyperlink hlSubmitTask;
-    
+
+    @FXML
+    private Label lblLateSubmission;
     @FXML
     private Label lblErrorST;
     @FXML
@@ -145,6 +147,7 @@ public class StudentController implements Initializable {
      */
     @FXML
     void chooseTaskHandler(ActionEvent event) {
+    	lblLateSubmission.setVisible(false);
     	lblUpload.setVisible(true);
     	btnUploadTask.setVisible(false);
     	btnFile.setVisible(true);
@@ -279,6 +282,7 @@ public class StudentController implements Initializable {
     void uploadTaskHandler(ActionEvent event) {
     	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDate = LocalDate.now();
+		Date actualSD,sd;
 		String tempstr[],stemp;
 		tempstr = selectedFile.getName().split("\\.");
 		stemp = tempstr[tempstr.length-1];
@@ -320,6 +324,43 @@ public class StudentController implements Initializable {
         hmName.clear();
         lblErrorST.setText("Task uploaded successfuly");
         lblErrorST.setVisible(true);
+        hms.clear();
+        msg.clear();
+        String tid;
+        tid = taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue()));
+        msg.add(tid);
+        hms.put("get submission date for task id", msg);
+        LoginController.userClient.sendServer(hms);
+        LoginController.syncWithServer();
+
+        
+        localDate = LocalDate.now();
+        
+        actualSD = Date.valueOf(dtf.format(localDate));	
+        
+        hms.clear();
+        sd = Date.valueOf(((ArrayList<String>)LoginController.userClient.ans).get(0));
+        msg.clear();
+	
+        if(actualSD.after(sd))
+        {
+        	lblLateSubmission.setVisible(true);
+        tempstr = cbChooseCourseST.getValue().split("\\s");
+        msg.add(tempstr[0].substring(2));
+        hms.put("get teacher id for course id",msg);
+        LoginController.userClient.sendServer(hms);
+        LoginController.syncWithServer();
+        msg.clear();
+        hms.clear();
+        msg.add(((String)LoginController.userClient.ans));
+        msg.add("The student: "+LoginController.userClient.fullName+ " on course: "+tempstr[tempstr.length-1] +"\n submitted "+cbChooseTask.getValue()+" after the last submission date provided");
+        hms.put("send mail to teacher",msg);
+        LoginController.userClient.sendServer(hms);
+        LoginController.syncWithServer();
+        msg.clear();
+        hms.clear();
+        }
+        
     }
     /**
      * chooses the course which we need to upload solution to task.
@@ -327,7 +368,7 @@ public class StudentController implements Initializable {
      */
     @FXML
     void ChooseCourseSTHandler(ActionEvent event) {
-
+    	lblLateSubmission.setVisible(false);
     	cbChooseTask.getItems().clear();
     	ArrayList<String> arr = new ArrayList<String>();
     	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
