@@ -717,7 +717,7 @@ public class EchoServer extends AbstractServer {
 				         query= "INSERT INTO manager_request(secretary_id,details,status,date) VALUES (?,?,?,?)";
 							pstmt = conn.prepareStatement(query);
 							pstmt.setString(1, ans.get(0));
-							pstmt.setString(2, "1:"+ans.get(1)+":"+ans.get(2));
+							pstmt.setString(2, "1:"+ans.get(1)+":"+ans.get(2)+":"+ans.get(3)+":"+ans.get(4)+":"+ans.get(5));
 							pstmt.setString(3, "Pending");
 							pstmt.setDate(4,Date.valueOf(dtf.format(localDate)));
 							pstmt.executeUpdate();

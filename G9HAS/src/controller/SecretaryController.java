@@ -810,6 +810,7 @@ void hideLabels(){
     void sendRequestToManagerHandler(ActionEvent event) {
 		ArrayList<String> arr = new ArrayList<String>();
 		HashMap <String,ArrayList<String>> hm = new HashMap <String,ArrayList<String>>();
+		String sfullname="";
 		int spacecnt=0;
 		String class_in_course_id="", studName="";
 		String arr1[];
@@ -821,6 +822,24 @@ void hideLabels(){
 			if(arr1[1].equals(cbChooseStudentRS.getValue()))
 				class_in_course_id = arr1[0];
 		}
+		arr.add(cbChooseStudentRS.getValue());
+		hm.put("get user full name", arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		sfullname = ((ArrayList<String>)LoginController.userClient.ans).get(0);
+		arr.clear();
+		hm.clear();
+		
+		arr.add(LoginController.userClient.userName);
+		arr.add(LoginController.userClient.fullName);
+		arr.add(sfullname);
+		arr.add(cbChooseStudentRS.getValue());
+		arr.add(class_in_course_id);
+		arr.add(cbChooseCourseRS.getValue().substring(8));
+		hm.put("send remove request to manager", arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		/*
 		arr.add(LoginController.userClient.userName);
 		arr.add(class_in_course_id);
 		arr.add(cbChooseStudentRS.getValue());
@@ -828,7 +847,7 @@ void hideLabels(){
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
 		
-		
+		*/
     }
 
 	@FXML
