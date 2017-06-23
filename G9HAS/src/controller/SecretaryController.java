@@ -261,7 +261,7 @@ public class SecretaryController implements Initializable{
 		LoginController.userClient.sendServer(msg);//
 		LoginController.syncWithServer();
 		msg.clear();
-		if((boolean)UserClient.ans == false){
+		if((boolean)UserClient.ans == true){
 			lblErrAS.setText("Student already in this course!");
 			lblErrAS.setVisible(true);
 			return;
