@@ -92,7 +92,7 @@
                         <Font name="System Bold" size="22.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="taTasks" layoutX="61.0" layoutY="271.0" prefHeight="222.0" prefWidth="273.0" visible="false" />
+                  <TextArea fx:id="taTasks" editable="false" layoutX="61.0" layoutY="271.0" prefHeight="222.0" prefWidth="273.0" visible="false" />
                   <Label layoutX="295.0" layoutY="171.0" text="Current semester average:">
                      <font>
                         <Font size="16.0" />
@@ -140,7 +140,7 @@
                   </Label>
                   <ComboBox fx:id="cbChooseTask" layoutX="166.0" layoutY="138.0" onAction="#chooseTaskHandler" prefWidth="150.0" />
                   <Button fx:id="btnDownload" layoutX="340.0" layoutY="138.0" mnemonicParsing="false" onAction="#downloadHandler" text="Download Task" />
-                  <TextField fx:id="tfUploadPath" layoutX="55.0" layoutY="206.0" />
+                  <TextField fx:id="tfUploadPath" editable="false" layoutX="55.0" layoutY="206.0" />
                   <Button fx:id="btnFile" layoutX="204.0" layoutY="206.0" mnemonicParsing="false" onAction="#fileUploadHandler" prefHeight="25.0" prefWidth="94.0" text="Choose File..." />
                   <Button fx:id="btnUploadTask" layoutX="100.0" layoutY="249.0" mnemonicParsing="false" onAction="#uploadTaskHandler" prefHeight="25.0" prefWidth="84.0" text="Upload Task" />
                   <Label fx:id="lblDownloadComplete" layoutX="383.0" layoutY="185.0" text="Download Completed" textFill="#078d07" visible="false">
@@ -169,6 +169,11 @@
                      </font>
                   </Label>
                   <TextArea fx:id="taTeacherNotes" layoutX="216.0" layoutY="311.0" prefHeight="122.0" prefWidth="261.0" visible="false" />
+                  <Label fx:id="lblLateSubmission" layoutX="194.0" layoutY="252.0" text="You passed the task submission date" textFill="#eb0707" visible="false">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
          </children>
