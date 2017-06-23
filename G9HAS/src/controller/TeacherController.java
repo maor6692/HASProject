@@ -158,6 +158,10 @@ public class TeacherController implements Initializable{
     
     @FXML
     private Pane checkTaskPane;
+    /**
+     * sets visibility of the download task button
+     * @param event
+     */
     @FXML
     void cbStudentHandler(ActionEvent event) {
     	if(cbStudent.getValue()== null)
@@ -177,6 +181,10 @@ public class TeacherController implements Initializable{
     	lblTaskGrade.setVisible(false);
     	
     }  
+    /**
+     * task handler, shows all the students with the given task.
+     * @param event
+     */
     @FXML
     void selectTaskHandler(ActionEvent event) {
     	taSubmissionComments.setVisible(false);
@@ -233,6 +241,10 @@ public class TeacherController implements Initializable{
         			cbStudent.getItems().add(((ArrayList<String>)LoginController.userClient.ans).get(i));
     }
     }
+    /**
+     * Download Handler - gets the solution file of the students to selected task.
+     * @param event
+     */
     @FXML
     void DownloadHandler(ActionEvent event) {
     	ArrayList<String> arr = new ArrayList<String>();
@@ -292,14 +304,20 @@ public class TeacherController implements Initializable{
     		}
     	}
     }
-
+    /**
+     * change pane to check task.
+     * @param event
+     */
     @FXML
     void hlCheckTaskOnClick(ActionEvent event) {
     	
     	createTaskPane.setVisible(false);
     	checkTaskPane.setVisible(true);
     }
-
+    /**
+     * handles the comments file upload of the teacher to the given solution file of the selected student.
+     * @param event
+     */
     @FXML
     void CheckUploadHandler(ActionEvent event) {
     	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -380,7 +398,11 @@ public class TeacherController implements Initializable{
         lblMsg.setText("The task updated successfuly");
         lblMsg.setVisible(true);
     }
-    
+    /**
+     * handles the change in the class number.
+     * shows all the tasks to the class selected in the given course.
+     * @param event
+     */
     @FXML
     void ClassIDHandler(ActionEvent event) {
     	lblSubmissionComments.setVisible(false);
@@ -430,7 +452,10 @@ public class TeacherController implements Initializable{
     	}
   	
     }
-    
+    /**
+     * logout handler, logout the user if X is pressed and change the window to login window.
+     * @param event
+     */
 	@FXML
 	void logoutHandler(ActionEvent event) {
 		Parent nextWindow;
@@ -454,17 +479,27 @@ public class TeacherController implements Initializable{
 			e.printStackTrace();
 		}
 	}
-
+    /**
+     * handles change in class for create task window.
+     * @param event
+     */
     @FXML
     void cbClassHandler(ActionEvent event) {
     	lblTaskCreated.setVisible(false);
     }
-
+    /**
+     * changes the window by changing pane to create task.
+     * @param event
+     */
     @FXML
     void hlcreateTaskOnClick(ActionEvent event) {
     	createTaskPane.setVisible(true);
     	checkTaskPane.setVisible(false);
     }
+    /**
+     * creates new task and upload it.
+     * @param event
+     */
 	@FXML
 	void createTaskHandler(ActionEvent event) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -530,7 +565,10 @@ public class TeacherController implements Initializable{
         lblTaskCreated.setVisible(true);
 	}
 
-	
+    /**
+     * File chooser handles the choose of file. restrict file extensions to document only.
+     * @param event
+     */
     @FXML
     void fileChooserHandler(ActionEvent event) {
 		Stage uploadStage = new Stage();
@@ -547,7 +585,10 @@ public class TeacherController implements Initializable{
          
     }
 
-    /////////
+    /**
+     * File chooser handles the choose of file. restrict file extensions to document only.
+     * @param event
+     */
     @FXML
     void CheckfileChooserHandler(ActionEvent event) {
     	btnCheckUpload.setVisible(true);
@@ -565,7 +606,10 @@ public class TeacherController implements Initializable{
          
     }
 
-    /////////
+    /**
+     * Handles course change in check task window.
+     * @param event
+     */
     @FXML
     void TeacherCourseHandler(ActionEvent event) {
     	ArrayList<String> params = new ArrayList<String>();
@@ -588,14 +632,14 @@ public class TeacherController implements Initializable{
     	lblTaskGrade.setVisible(false);
     	btnDownload.setVisible(false);
     	
-    	///////////////////////////////////////////////////////////////////////
+    	
     	String temp="";
     	temp += cbTeacherCourse.getValue().substring(2, 5);
     	
     	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
 
     	params.add(temp);
-    	//System.out.println(temp);
+    	
     	params.add(LoginController.userClient.userName);
     	hm.put("Get class id for task", params);
         LoginController.userClient.sendServer(hm);
@@ -614,7 +658,10 @@ public class TeacherController implements Initializable{
         hm.clear();
         params.clear();
     }
-    
+    /**
+     * handles the course change in create task window.
+     * @param event
+     */
     @FXML
     void cbCourseHandler(ActionEvent event) {
     	
