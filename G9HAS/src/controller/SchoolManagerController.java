@@ -45,7 +45,7 @@ public class SchoolManagerController implements Initializable{
 	private TextArea tfRequestDetails,tfComments;
 
 	@FXML
-	Pane blockParentPane,answerRequestsPane,getStatisticReportPane;
+	Pane blockParentPane,answerRequestsPane,getStatisticReportPane,viewAllInformationPane;
 
 	@FXML
 	private ListView<String> lvStudents,lvRequests;//list view to display blocked students in current semester
@@ -159,7 +159,7 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void setViewAllInformationPaneHandler(ActionEvent event) {
-		setPane(blockParentPane);
+		setPane(viewAllInformationPane);
 	}
 	/**
 	 * change visible user window to appropriate window
