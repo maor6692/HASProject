@@ -40,7 +40,7 @@ public class SchoolManagerController implements Initializable{
 	private Hyperlink linkLogout;
 
 	@FXML							     //   1-remove student from course, 2-add student to course, 3-change teacher appointment
-	private Label lblUser,lblChooseRequest;				//	                  request details: "2:classInCourse id:userId"
+	private Label lblUser;				//	                  request details: "2:classInCourse id:userId"
 	@FXML
 	private TextArea tfRequestDetails,tfComments;
 
@@ -249,7 +249,6 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void approveRequesthandler(ActionEvent event){
-		lblChooseRequest.setVisible(false);
 		String request_id="";
 		String course_in_class_id="";
 		String student_id="";
@@ -293,7 +292,6 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void dismissRequesthandler(ActionEvent event){
-		lblChooseRequest.setVisible(false);
 		changeRequestStatus("dismissed");
 	}
 
