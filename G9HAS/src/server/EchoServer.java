@@ -243,28 +243,20 @@ public class EchoServer extends AbstractServer {
 						}
 						client.sendToClient(null);
 						break;
-											case "add task to student":
+						case "add task to student":
 						ans=(ArrayList<String>) message.get(key);
-						query = "INSERT INTO task_of_student_in_course (student_id,task_id,course_id,submission_file) VALUES (?,?,?,?)";
+						query = "INSERT INTO task_of_student_in_course (student_id,task_id,course_id,submission_file) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE submission_file=?";
 						pstmt = conn.prepareStatement(query);
 						pstmt.setString(1, ans.get(0));
 						pstmt.setInt(2,Integer.parseInt( ans.get(1)));
 						pstmt.setInt(3, Integer.parseInt(ans.get(2)));
 						pstmt.setString(4, ans.get(3));
-						try{
+						pstmt.setString(5, ans.get(3));
 						pstmt.executeUpdate();
-						}
-						catch(Exception e)
-						{
-							client.sendToClient("exist");
-						}
+
 						ans.clear();
 						pstmt.close();
-						//JOptionPane.showMessageDialog(null, "Task uploaded successfuly","Task Upload",JOptionPane.PLAIN_MESSAGE);
-						
-						
-						client.sendToClient(null);
-						
+						client.sendToClient(null);	
 					break;
 					case "Submission upload":					
 						HashMap<String,byte[]> submission =  (HashMap<String, byte[]>) message.get("Submission upload");
@@ -352,7 +344,7 @@ public class EchoServer extends AbstractServer {
 						}
 						client.sendToClient(snewans);
 						break;
-											case "insert task grade":
+						case "insert task grade":
 						ans = (ArrayList<String>)message.get(key);
 						query = "UPDATE task_of_student_in_course SET task_grade=?,comments=? WHERE student_id=? AND task_id=? AND course_id=?";
 						pstmt = conn.prepareStatement(query);

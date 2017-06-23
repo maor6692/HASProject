@@ -173,21 +173,12 @@ public class StudentController implements Initializable {
 		row.add(LoginController.userClient.userName);
 		row.add(taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue())));
 		row.add(cbChooseCourseST.getValue().substring(2, 5));
-//		for(i=0;i<((ArrayList<String>)LoginController.userClient.ans).get(0).length();i++)
-//		{
-//			if(((ArrayList<String>)LoginController.userClient.ans).get(0).charAt(i)=='.' && (i==((ArrayList<String>)LoginController.userClient.ans).get(0).length()-5 || i== ((ArrayList<String>)LoginController.userClient.ans).get(0).length()-4))
-//				break;
-//			
-//		}
 
 		tempstr = ((ArrayList<String>)LoginController.userClient.ans).get(0).split("\\.");
 		stemp = tempstr[tempstr.length-1];
 		filename += ((ArrayList<String>)LoginController.userClient.ans).get(0).substring(0, ((ArrayList<String>)LoginController.userClient.ans).get(0).length()-stemp.length()-1)+".";
 
-		
-		//filename += ((ArrayList<String>)LoginController.userClient.ans).get(0).substring(0, i);
-		//System.out.println(file_type);
-		//filename += file_type;
+
 		
 		hm.clear();
 		hm.put("get status for task of student",row);
@@ -293,13 +284,6 @@ public class StudentController implements Initializable {
 		details.put("add task to student",row);
 		LoginController.userClient.sendServer(details);
         LoginController.syncWithServer();
-        if((LoginController.userClient.ans)!= null)
-        if(((String)(LoginController.userClient.ans)).equals("exist"))
-        {
-        	lblErrorST.setText("There is already submission for this task");
-        	lblErrorST.setVisible(true);
-        }
-		//
     	byte[] by = null;
     	HashMap<String,HashMap<String,byte[]>> hm = new HashMap<String,HashMap<String,byte[]>>();
     	HashMap<String,byte[]> hmName = new HashMap<String,byte[]>();
@@ -312,14 +296,14 @@ public class StudentController implements Initializable {
 			by = Files.readAllBytes(file.toPath());
 			hmName.put(filename, by);
 			hm.put("Submission upload", hmName);
-			 
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         LoginController.userClient.sendServer(hm);
         LoginController.syncWithServer();
+        filename = filename.substring(0, filename.length()-stemp.length());
         hm.clear();
         hmName.clear();
         lblErrorST.setText("Task uploaded successfuly");
@@ -341,7 +325,6 @@ public class StudentController implements Initializable {
         hms.clear();
         sd = Date.valueOf(((ArrayList<String>)LoginController.userClient.ans).get(0));
         msg.clear();
-	
         if(actualSD.after(sd))
         {
         	lblLateSubmission.setVisible(true);
