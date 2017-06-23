@@ -145,7 +145,43 @@ public class EchoServer extends AbstractServer {
 						rs.close();
 						client.sendToClient(sendans);//sends currSemester to SecretaryController.
 						break;
-
+				     case "get teacher id for course id":
+				         ans=(ArrayList<String>) message.get(key);
+				         String teacher_id="";
+				         query = "SELECT teacher_id FROM class_in_course WHERE course_id='"+ans.get(0)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         while (rs.next()) { 
+				          teacher_id =(rs.getString(1));
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(teacher_id);
+				         break;
+				     case "send mail to teacher":
+							ans=(ArrayList<String>) message.get(key);
+							query = "INSERT INTO teacher_inbox (teacher_id,msg) VALUES (?,?)";
+							pstmt = conn.prepareStatement(query);
+							pstmt.setString(1, ans.get(0));
+							pstmt.setString(2, ans.get(1));
+							pstmt.executeUpdate();
+							ans.clear();
+							pstmt.close();							
+							client.sendToClient(null);
+							break;
+				     case "get submission date for task id":
+				         ans=(ArrayList<String>) message.get(key);
+				         query = "SELECT submission_date FROM task_in_class_in_course WHERE id='"+ans.get(0)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				        	 ans.add(String.valueOf(rs.getDate(1)));
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(ans);
+				         break;
 					case "getCurrentClasses":
 					
 						ans = (ArrayList<String>) message.get("getCurrentClasses");
