@@ -61,7 +61,7 @@ public class SchoolManagerController implements Initializable{
 
 	
 	@FXML
-    private ComboBox<String> cmbArb;
+  private ComboBox<ArbitratorComboBox> cmbArb;
 	
 	
 	@FXML
@@ -124,7 +124,7 @@ public class SchoolManagerController implements Initializable{
 	void setGetStatisticReportPaneHandler(ActionEvent event) {
 		setPane(getStatisticReportPane);
 		cmbOpGSR.getItems().clear();
-		cmbOpGSR.getItems().add("All Grades of a teacher");
+		cmbOpGSR.getItems().add("All Classes of a teacher");
 		cmbOpGSR.getItems().add("All Teachers of a class");
 		cmbOpGSR.getItems().add("All Courses of a class");
 		lblArb.setVisible(false);
@@ -473,8 +473,8 @@ public class SchoolManagerController implements Initializable{
 		   @FXML
 		void GetReportGSR(ActionEvent event) {
 			   String op = cmbOpGSR.getSelectionModel().getSelectedItem();
-			   String arb = cmbArb.getSelectionModel().getSelectedItem();
-			   String period = cmbPeriodGSR.getSelectionModel().getSelectedItem();
+			   String arb = cmbArb.getSelectionModel().getSelectedItem().getArbId();
+			   String period = cmbPeriodGSR.getSelectionModel().getSelectedItem().substring(6, 10)+cmbPeriodGSR.getSelectionModel().getSelectedItem().substring(21,22);
 			   bcStatistic.setTitle(op+" "+arb);
 			   HashMap<String,ArrayList<String>> msg = new HashMap<>();
 			   ArrayList<String> arrGSR = new ArrayList<>();
@@ -482,13 +482,13 @@ public class SchoolManagerController implements Initializable{
 			   arrGSR.add(arb);
 			   arrGSR.add(period);
 			   //Sending server [operation,arbitrator,period]
-			   //operation values: ""All Grades of a teacher","All Teachers of a class","All Courses of a class"
-			   /* uncomment after finish SetReportGSR case in EchoServer
+			   //operation values: ""All Classes of a teacher","All Teachers of a class","All Courses of a class"
+			   ///* uncomment after finish SetReportGSR case in EchoServer
 			   msg.put("GetReportGSR", arrGSR);
 			   LoginController.userClient.sendServer(msg); 
 			   LoginController.syncWithServer();
 			   msg.clear();
-				*/
+			   HashMap<String,ArrayList<String>> report  = (HashMap<String,ArrayList<String>>) UserClient.ans;
 		
 		}
 		   /**
@@ -528,12 +528,12 @@ public class SchoolManagerController implements Initializable{
 				cmbPeriodGSR.setVisible(false);
 				
 				switch(cmbOpGSR.getSelectionModel().getSelectedItem()){
-				case "All Grades of a teacher":
+				case "All Classes of a teacher":
 					lblArb.setText("Choose teacher:");
 					lblArb.setVisible(true);
-					ArrayList<String> tempList = new ArrayList<>();
+					ArrayList<ArbitratorComboBox> tempList = new ArrayList<>();
 					for(ArrayList<String> arr: teachersGSR)
-						tempList.add(arr.get(1));
+						tempList.add(new ArbitratorComboBox(arr.get(0),arr.get(1)) );
 					Collections.sort(tempList);
 					cmbArb.getItems().addAll(tempList);
 					cmbArb.setVisible(true);
@@ -543,11 +543,76 @@ public class SchoolManagerController implements Initializable{
 					lblArb.setText("Choose class:");
 					lblArb.setVisible(true);
 					for(ArrayList<String> arr: classesGSR)
-						cmbArb.getItems().add(arr.get(1)+"  ["+arr.get(2)+","+arr.get(3)+"]");
+						cmbArb.getItems().add(new ArbitratorComboBox(arr.get(0),arr.get(1),arr.get(2),arr.get(3)) );
 					cmbArb.setVisible(true);
 					break;
 				}
-				
+						    public class ArbitratorComboBox {
+		    	private String teacherId;
+		    	private String teacherName;
+		    	private String className;
+		    	private String classId;
+		    	private String classYear;
+		    	private String classSem;
+		    	private String tos;
+		    	private String arbId;
+		    	public ArbitratorComboBox(String id,String name){
+		    		teacherId = id;
+		    		teacherName = name;
+		    		tos = name;
+		    		arbId=id;
+		    	}
+		    	public ArbitratorComboBox(String id,String name,String year,String sem){
+		    		classId = id;
+		    		className = name;
+		    		classYear=year;
+		    		classSem=sem;
+		    		tos = className+" ["+classYear+","+classSem+"]";
+		    		arbId=id;
+		    	}
+		    	public String getTeacherId() {
+		    		return teacherId;
+		    	}
+		    	public void setTeacherId(String teacherId) {
+		    		this.teacherId = teacherId;
+		    	}
+		    	public String getTeacherName() {
+		    		return teacherName;
+		    	}
+		    	public void setTeacherName(String teacherName) {
+		    		this.teacherName = teacherName;
+		    	}
+		    	public String getClassName() {
+		    		return className;
+		    	}
+		    	public void setClassName(String className) {
+		    		this.className = className;
+		    	}
+		    	public String getClassId() {
+		    		return classId;
+		    	}
+		    	public void setClassId(String classId) {
+		    		this.classId = classId;
+		    	}
+		    	public String getClassYear() {
+		    		return classYear;
+		    	}
+		    	public void setClassYear(String classYear) {
+		    		this.classYear = classYear;
+		    	}
+		    	public String getClassSem() {
+		    		return classSem;
+		    	}
+		    	public String getArbId(){
+		    		return arbId;
+		    	}
+		    	public void setClassSem(String classSem) {
+		    		this.classSem = classSem;
+		    	}
+		    	public String toString(){
+		    		return tos;
+		    	}
+		    }
 		}
 }
 
