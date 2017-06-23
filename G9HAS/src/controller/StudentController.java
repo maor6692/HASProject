@@ -139,10 +139,6 @@ public class StudentController implements Initializable {
 	private Label lblShowClass;
     @FXML
     private Pane personalInfoPane;
-    /**
-     * Changes the task details to task selected
-     * @param event
-     */
     @FXML
     void chooseTaskHandler(ActionEvent event) {
     	lblUpload.setVisible(true);
@@ -205,10 +201,6 @@ public class StudentController implements Initializable {
 		hm.clear();
 		}
     }
-    /**
-     * Responsible for download the selected task
-     * @param event
-     */
     @FXML
     void downloadHandler(ActionEvent event) {
     	ArrayList<String> arr = new ArrayList<String>();
@@ -248,10 +240,6 @@ public class StudentController implements Initializable {
 			 }	 
 		 
     }
-    /**
-     * responsible for the path of the file we want to upload
-     * @param event
-     */
     @FXML
     void fileUploadHandler(ActionEvent event) {
     	
@@ -271,10 +259,7 @@ public class StudentController implements Initializable {
 //    			file_type += selectedFile.getName().substring(selectedFile.getName().length()-4);
     	 }
     }
-    /**
-     * upload the chosen file as a solution to selected task.
-     * @param event
-     */
+    
     @FXML
     void uploadTaskHandler(ActionEvent event) {
     	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -321,10 +306,6 @@ public class StudentController implements Initializable {
         lblErrorST.setText("Task uploaded successfuly");
         lblErrorST.setVisible(true);
     }
-    /**
-     * chooses the course which we need to upload solution to task.
-     * @param event
-     */
     @FXML
     void ChooseCourseSTHandler(ActionEvent event) {
 
@@ -361,10 +342,6 @@ public class StudentController implements Initializable {
 		
     	
     }
-    /**
-     * changes pane to submit task.
-     * @param event
-     */
     @FXML
     void hlSubmitTaskOnClick(ActionEvent event) {
     	personalInfoPane.setVisible(false);
@@ -411,10 +388,7 @@ public class StudentController implements Initializable {
 
 		
     }
-    /**
-     * logout handler, logout the user if X is pressed and change the window to login window.
-     * @param event
-     */
+
 	@FXML
 	void logoutHandler(ActionEvent event) {
 		Parent nextWindow;
@@ -444,10 +418,7 @@ public class StudentController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-    /**
-     * Responsible for displaying personal information of the student to selected course.
-     * @param event
-     */
+
 	@FXML
 	void cbCourseInClassHandler(ActionEvent event) {
 		float gradeAvg=0;
@@ -475,10 +446,7 @@ public class StudentController implements Initializable {
 		}
 		lblCourseAvg.setText("Course Average: "+ gradeAvg/((ArrayList<String>)LoginController.userClient.ans).size());
 	}
-    /**
-     * change pane to personal info
-     * @param event
-     */
+
     @FXML
     void PersonalInfoHandler(ActionEvent event) {
     	personalInfoPane.setVisible(true);

@@ -54,13 +54,12 @@ public class SecretaryController implements Initializable{
 	private ObservableList<ClassInCourseRow> classesInCourse = FXCollections.observableArrayList();
 	private ObservableList<String> teachersnames = FXCollections.observableArrayList();
 	private ObservableList<TeacherComboBox> teachersBoxValues = FXCollections.observableArrayList();
-	
+
 	int newYear;
 	char newSemester;
 	private ArrayList<String> studentCourse = new ArrayList<String>();
 	ArrayList<Object> currSemester;
 
-	
 	@FXML
 	private Pane paneRemoveStudent,paneChangeAppointment,paneCreateSemester,paneDefineClass,paneAddStudent;
 
@@ -84,11 +83,7 @@ public class SecretaryController implements Initializable{
     private Button btnSendRequestToManager;
     @FXML
     private Button btnAddAS;
-    @FXML
-    private ComboBox<String> cbClass;
-    @FXML
-    private ComboBox<String> cbCourse;
- 
+    
     @FXML
     private ComboBox<String> cbChooseCourseRS;
 
@@ -155,12 +150,10 @@ public class SecretaryController implements Initializable{
 	private CourseComboBox currCourseAS=null;
 	HashMap<Integer,String> comboClasses;
 	ArrayList<String> currSemAS;
-	ArrayList<String> args = new ArrayList<String>();///kobi//
 	private ObservableList<StudentsExp> ExceptionStudents = FXCollections.observableArrayList();
 	//out hashmap <teaching unit id,map of teachers in this teaching unit>;
 	//inner hashmaps <teacher id,arraylist of teacher name and max hours>
 	private HashMap<String,HashMap<String,ArrayList<String>>> teachersInfo;
-	private HashMap<String,ArrayList<String>> tCTA;
 
 	private HashMap<Integer, Integer> coursesWeeklyHours;
 	@FXML
@@ -170,79 +163,6 @@ public class SecretaryController implements Initializable{
 	 * send adding request of student to a course in class 
 	 * @param event, course, course in class, student
 	 */
-	@SuppressWarnings("unchecked")
-	/////////////////FOR CHANGE TEACHER'S APPOINTMENT///////////////
-	   @FXML
-	    void cbChooseCourseHandler(ActionEvent event) {
-		   if(cbCourse.getSelectionModel().getSelectedItem()==null) return;
-		   cbClass.getItems().clear();
-/*		   HashMap<Integer,String> cls=new HashMap<Integer,String>();
-		   HashMap<String,ArrayList<String>> ms=new HashMap<String,ArrayList<String>>();
-			ms.clear();
-			ms.put("getCurrentClasses",args);
-			LoginController.userClient.sendServer(ms);//
-			LoginController.syncWithServer();
-			cls=(HashMap<Integer,String>)(LoginController.userClient.ans);	
-			ArrayList<Integer> cid=new ArrayList<Integer>();
-			String temp2;
-			for(Integer key : cls.keySet()){
-				temp2=cls.get(key);
-				
-				cbClass.getItems().add(key+" - "+temp2);
-			}
-			ms.clear();
-			ms.put("get classes", value)*/
-			String currCourse = cbCourse.getSelectionModel().getSelectedItem();
-			msg = new HashMap<String, ArrayList<String>>();
-			
-			ArrayList<String> p = new ArrayList<>();
-			p.add(cbCourse.getValue());
-			msg.put("get course id from course name",p);
-			LoginController.userClient.sendServer(msg);
-			LoginController.syncWithServer();
-			p.clear();
-			String cid="";
-			cid+=((ArrayList<String>)LoginController.userClient.ans).get(0);
-			p.add(args.get(0));
-			p.add(args.get(1));
-			p.add(cid);
-			msg.clear();
-			msg.put("getClassOfCourseAS",p); // p=[year,semester,course_id]
-			LoginController.userClient.sendServer(msg);
-			LoginController.syncWithServer();
-			msg.clear();
-//			if(UserClient.ans instanceof HashMap<?,?>){
-			//recieve Map<String,ArrayList<String>> -- [class_in_course_id,[class_id,class_name]]	
-			 tCTA =(HashMap<String,ArrayList<String>>) UserClient.ans;
-			for(ArrayList<String> classes : tCTA.values())
-				if(classes!=null)
-				cbClass.getItems().add(classes.get(0)+"-"+classes.get(1));
-		
-//	    }
-			
-	}
-	    @FXML
-	    void cbClassHandler(ActionEvent event) {
-	    	HashMap <String,ArrayList<String>> hm=new HashMap <String,ArrayList<String>>();
-	    	HashMap <String,ArrayList<String>> hm1=new HashMap <String,ArrayList<String>>();
-	    	ArrayList<String> crs = new ArrayList<>();
-	    	//for(int i=0;i<cbClass.getItems().size();i++)
-	    		//crs.add(cbClass.getItems().get(i));
-	    	String chosenClass=cbClass.getValue();
-	    	String classid="";
-	    	int i=0;
-	    	while(chosenClass.charAt(i)!='-')
-	    		classid+=chosenClass.charAt(i);
-	    	crs.add(classid);
-	    	hm.put("getStudentsInClass", crs);
-			LoginController.userClient.sendServer(msg);
-			LoginController.syncWithServer();
-			
-			
-	    	
-
-	    }
-/////////////////FOR CHANGE TEACHER'S APPOINTMENT///////////////
 	@FXML
 	void addStudentASHandler(ActionEvent event){
 		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
@@ -749,7 +669,6 @@ void hideLabels(){
 		paneDefineClass.setVisible(false);
 		paneAddStudent.setVisible(false);
 		paneViewInbox.setVisible(false);
-		
 		pane.setVisible(true);
 	}
 
@@ -891,7 +810,6 @@ void hideLabels(){
     void sendRequestToManagerHandler(ActionEvent event) {
 		ArrayList<String> arr = new ArrayList<String>();
 		HashMap <String,ArrayList<String>> hm = new HashMap <String,ArrayList<String>>();
-		String sfullname="";
 		int spacecnt=0;
 		String class_in_course_id="", studName="";
 		String arr1[];
@@ -903,83 +821,19 @@ void hideLabels(){
 			if(arr1[1].equals(cbChooseStudentRS.getValue()))
 				class_in_course_id = arr1[0];
 		}
-				arr.add(cbChooseStudentRS.getValue());		
-				hm.put("get user full name", arr);		
-				LoginController.userClient.sendServer(hm);		
-				LoginController.syncWithServer();		
-				sfullname = ((ArrayList<String>)LoginController.userClient.ans).get(0);		
-				arr.clear();		
-				hm.clear();		
-						
-				arr.add(LoginController.userClient.userName);		
-				arr.add(LoginController.userClient.fullName);		
-				arr.add(sfullname);		
-				arr.add(cbChooseStudentRS.getValue());		
-				arr.add(class_in_course_id);		
-				arr.add(cbChooseCourseRS.getValue().substring(8));		
-				hm.put("send remove request to manager", arr);		
-				LoginController.userClient.sendServer(hm);		
-				LoginController.syncWithServer();		
-				/*
 		arr.add(LoginController.userClient.userName);
 		arr.add(class_in_course_id);
 		arr.add(cbChooseStudentRS.getValue());
 		hm.put("send remove request to manager", arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-		*/
+		
 		
     }
 
 	@FXML
 	void changeAppointmentHandler(ActionEvent event) {
 		setPane(paneChangeAppointment);
-		cbCourse.getItems().clear();
-///////////change teacher's appointment///////////
-		HashMap<Integer,String> cls=new HashMap<Integer,String>();
-		ArrayList<String> courses=new ArrayList<String>();
-		 HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
-		 HashMap<Integer,Integer>	coursesWeeklyHours = new HashMap<Integer,Integer>();
-		 HashMap<Integer,HashMap<Integer,String>>	currCourses = new HashMap<Integer,HashMap<Integer,String>>();
-		   msg.put("getCurrentSemester", null);
-			int year=0,semester = 0;
-			char sem = ' ';
-			LoginController.userClient.sendServer(msg);//
-			LoginController.syncWithServer();
-			msg.clear();
-			year=(((ArrayList<Integer>)LoginController.userClient.ans).get(0));
-			sem=(((ArrayList<Character>)LoginController.userClient.ans).get(1));
-			
-			HashMap<Integer, String> temp = new HashMap<Integer, String>();
-			if(LoginController.userClient.ans != null){
-				year = ((ArrayList<Integer>)LoginController.userClient.ans).get(0);
-				sem = ((ArrayList<Character>)LoginController.userClient.ans).get(1);
-				if(sem=='A')
-				{
-					year = year--;
-					semester = 2;
-				}
-				else
-				{
-					semester = 1;
-				}
-			}
-			args.add(String.valueOf(year));
-			args.add(String.valueOf(semester));
-			msg.put("getCurrentCourses",args);
-			LoginController.userClient.sendServer(msg);//
-			LoginController.syncWithServer();
-			currCourses=(HashMap<Integer,HashMap<Integer,String>>)(((ArrayList<Object>)(LoginController.userClient.ans)).get(0));
-			for(Integer key : currCourses.keySet()){
-				temp=currCourses.get(key);
-				for(Integer key2 : temp.keySet())
-					courses.add(temp.get(key2));
-			}
-			if(courses!=null){
-				for(int i=0;i<courses.size();i++)
-					cbCourse.getItems().add(courses.get(i));
-			}
-			/////////courses in semester////////
 	}
 	@FXML
 	void defineClassHandler(ActionEvent event) {
@@ -991,7 +845,6 @@ void hideLabels(){
 		lblUser.setText(UserClient.fullName);
 		initializeCreateSemester();
 		
-			
 		
 	}
 /**
@@ -1382,9 +1235,6 @@ void hideLabels(){
 	}
 
 } 
-
-
-
 
 
 

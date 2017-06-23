@@ -385,20 +385,6 @@ public class EchoServer extends AbstractServer {
 					      
 					      client.sendToClient(ans1);
 					      break;
-				     case "get user full name":
-				         ArrayList<String> fullname=new ArrayList<String>();
-				         ans= (ArrayList<String>)message.get(key);
-				         query= "SELECT first_name,last_name  FROM users WHERE user_name='"+ans.get(0)+"'";
-				         stmt = conn.createStatement();
-				         rs = stmt.executeQuery(query);
-				         ans.clear();
-				         while (rs.next()) { 
-				        	 fullname.add(rs.getString(1) + " " + rs.getString(2));
-				         }
-				         stmt.close();
-				         rs.close();
-				         client.sendToClient(fullname);
-				         break;
 				     case "get course in class":
 				         ArrayList<String> courses=new ArrayList<String>();
 				         ans= (ArrayList<String>)message.get(key);
@@ -412,23 +398,6 @@ public class EchoServer extends AbstractServer {
 				         stmt.close();
 				         rs.close();
 				         client.sendToClient(courses);
-				         break;
-					 case "get course id from course name":
-				         ans = (ArrayList<String>) message.get("get course id from course name");
-				         ArrayList<String> crsid = new ArrayList<String>();
-
-				          query = "SELECT id FROM course WHERE name='"+ans.get(0)+"'";
-				          stmt = conn.createStatement();
-				          rs = stmt.executeQuery(query);
-				          while (rs.next()) { 
-				        	  crsid.add(rs.getString(1));
-				          }
-				          stmt.close();
-				          
-				         
-				         System.out.println(crsid.toString()+"++");
-				         ans.clear();
-				         client.sendToClient(crsid);
 				         break;
 				     case "check if student in class in course":
 				         //ans=[class_in_course_id,student_id]
@@ -734,7 +703,7 @@ public class EchoServer extends AbstractServer {
 				         query= "INSERT INTO manager_request(secretary_id,details,status,date) VALUES (?,?,?,?)";
 							pstmt = conn.prepareStatement(query);
 							pstmt.setString(1, ans.get(0));
-							pstmt.setString(2, "1:"+ans.get(1)+":"+ans.get(2)+":"+ans.get(3)+":"+ans.get(4)+":"+ans.get(5));
+							pstmt.setString(2, "1:"+ans.get(1)+":"+ans.get(2));
 							pstmt.setString(3, "Pending");
 							pstmt.setDate(4,Date.valueOf(dtf.format(localDate)));
 							pstmt.executeUpdate();
@@ -807,7 +776,12 @@ public class EchoServer extends AbstractServer {
 						pstmt = conn.prepareStatement(query);
 						pstmt.setInt(1, Integer.parseInt(ans.get(0)));
 						pstmt.setString(2, ans.get(1));
-						pstmt.setInt(3, Integer.parseInt(ans.get(2)));
+						if(ans.get(2).charAt(1) == ' ')
+							pstmt.setInt(3, Character.getNumericValue(ans.get(2).charAt(0)));
+						else
+						{
+							pstmt.setInt(3, Integer.parseInt(Character.getNumericValue(ans.get(2).charAt(0)) + ""+Character.getNumericValue(ans.get(2).charAt(1))));
+						}
 						pstmt.setInt(4, Integer.parseInt(ans.get(3)));
 						pstmt.setInt(5, Integer.parseInt(ans.get(4)));
 						pstmt.setInt(6, Integer.parseInt(ans.get(5)));
@@ -816,16 +790,7 @@ public class EchoServer extends AbstractServer {
 						//client.sendToClient(ans);//sends the answer to client.
 						client.sendToClient(null);
 						break;
-					case "check if course exists":
 
-						ans=(ArrayList<String>) message.get(key);
-						query = "SELECT id,teaching_unit FROM Course WHERE id='"+ans.get(0)+"' AND teaching_unit='"+ans.get(2)+"'";
-						stmt = conn.createStatement();
-						rs=stmt.executeQuery(query);
-						if(rs.next()) client.sendToClient("exist");
-						else
-						client.sendToClient(null);
-						break;
 					case "logout":
 
 						ans=(ArrayList<String>) message.get(key);
@@ -1017,20 +982,6 @@ public class EchoServer extends AbstractServer {
 
 						client.sendToClient(secMsg);
 						break;
-						
-					case "getTeacherInbox":
-						ans= (ArrayList<String>)message.get(key); //
-						HashMap<String,String> teacherMsg = new HashMap<>();
-						query  = "SELECT msg_id,msg FROM teacher_inbox WHERE teacher_id='"+ans.get(0)+"'";
-						stmt = conn.createStatement();
-						rs = stmt.executeQuery(query);
-						ans.clear();
-						while(rs.next())
-							teacherMsg.put(rs.getString(1), rs.getString(2));
-
-						client.sendToClient(teacherMsg);
-						break;
-						
 					case "checkPreCourseFromArray":
 						boolean passed = false;
 						ans= (ArrayList<String>)message.get(key); // 
@@ -1130,7 +1081,6 @@ public class EchoServer extends AbstractServer {
 						}
 						
 						rs = stmt.executeQuery("SELECT "+
-
 						"DISTINCT cic.teacher_id,u.first_name,u.last_name"+
 						" FROM "+
 						"course co,class_in_course cic,class cl,users u"+
@@ -1204,31 +1154,6 @@ public class EchoServer extends AbstractServer {
 						
 						client.sendToClient(report);
 						break;
-						
-					case "approveRequest":
-					      try{
-					       stmt = conn.createStatement();
-					       ans= (ArrayList<String>)message.get(key);
-					       stmt.executeUpdate(ans.get(0));
-					      }catch (SQLException e) {
-					       client.sendToClient(null);
-					      } 
-					      client.sendToClient(null);
-					      break;
-						
-					case "notifySecretary":
-					      stmt = conn.createStatement();
-					      ans= (ArrayList<String>)message.get(key);
-					      stmt.executeUpdate("INSERT INTO secretary_inbox VALUES("+"0"+","+ans.get(0)+",'"+ans.get(1)+"')");
-					      client.sendToClient(null);
-					      break;
-					      
-					case "changeRequestStatus":
-					      stmt = conn.createStatement();
-					      ans= (ArrayList<String>)message.get(key);
-					      stmt.executeUpdate("UPDATE manager_request SET status='"+ans.get(0)+"' WHERE id="+ans.get(1));
-					      client.sendToClient(null);
-					      break;
 					}
 				}
 			}

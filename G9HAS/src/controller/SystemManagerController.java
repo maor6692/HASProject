@@ -56,9 +56,7 @@ public class SystemManagerController implements Initializable{
     private TextField tfYear;
 
     @FXML
-    private Label lblUser; 
-    @FXML
-    private Label lblError;
+    private Label lblUser;
 
     @FXML
     private Label lblTeachingUnit;
@@ -80,116 +78,41 @@ public class SystemManagerController implements Initializable{
 
     @FXML
     private Button btnCreateCourse;
-    /**
-     * sets the pane of the controller to define course
-     * @param event
-     */
     @FXML
     void defineCourseHandler(ActionEvent event) {
     	setPane(defineCoursePane);
     }
-    /**
-     * create new course for selected teaching unit
-     * @param event
-     */
     @FXML
     void createCourseHandler(ActionEvent event) {
-
-    	lblError.setText("Course already exist");
-    	lblError.setVisible(false);
-    	if(tfCourseName.getText().equals("") || tfWeeklyHours.getText().equals(""))
-    	{
-    		lblError.setText("Please fill all the fields");
-    		lblError.setVisible(true);
-    		return;
-    	}
-
-    	msg = new HashMap<String, ArrayList<String>>();
-    	ArrayList<String> courseInfo = new ArrayList<String>();
-    	String tu[];
-    	try{
-    		if(String.valueOf(Integer.parseInt(tfCourseID.getText())).length()==3 && Integer.parseInt(tfCourseID.getText())>0)	
-    			courseInfo.add(String.valueOf(Integer.parseInt(tfCourseID.getText())));
-    		else{
-    			JOptionPane.showMessageDialog(null, "Illegal value");
-    			return;
-    		}
-    	}
-    	catch(NumberFormatException ne)
-    	{
-    		JOptionPane.showMessageDialog(null, "Invalid input");
-    		return;
-    	}
-
-    	if(cbTeachingUnit.getValue()!= null)
-    		tu = cbTeachingUnit.getValue().split("\\s");
-    	else
-    	{
-    		JOptionPane.showMessageDialog(null, "Illegal value");
-    		return;
-    	}
-    	int year=0,semester = 0;
-    	char sem = ' ';
-    	msg.clear();
-    	msg.put("getCurrentSemester",null);
-    	LoginController.userClient.sendServer(msg);
-    	LoginController.syncWithServer();
-    	if(LoginController.userClient.ans != null){
-    		year = ((ArrayList<Integer>)LoginController.userClient.ans).get(0);
-    		sem = ((ArrayList<Character>)LoginController.userClient.ans).get(1);
-    		if(sem=='A')
-    		{
-    			year = year--;
-    			semester = 2;
-    		}
-    		else
-    		{
-    			semester = 1;
-    		}
-        	try{	
-        			courseInfo.add(String.valueOf(Integer.parseInt(tfWeeklyHours.getText())));
-        			courseInfo.clear();
-        			if(Integer.parseInt(tfWeeklyHours.getText())<0)
-        				throw new NumberFormatException();
-        	}
-        	catch(NumberFormatException ne)
-        	{
-        		JOptionPane.showMessageDialog(null, "Invalid input");
-        		courseInfo.clear();
-        		return;
-        	}
-        	
-        	courseInfo.add(String.valueOf(Integer.parseInt(tfCourseID.getText())));
-    		courseInfo.add(tfCourseName.getText());
-    		courseInfo.add(tu[0]);
-    		courseInfo.add(tfWeeklyHours.getText());
-    		courseInfo.add(String.valueOf(year));
-    		courseInfo.add(String.valueOf(semester));
-    		msg.clear();
-    		msg.put("check if course exists",courseInfo);
-    		LoginController.userClient.sendServer(msg); 
-    		LoginController.syncWithServer();
-
-    		if(LoginController.userClient.ans!= null &&((String)LoginController.userClient.ans).equals("exist"))
-    			lblError.setVisible(true);
-    		else
-    		{
-    			lblError.setVisible(false);
-    			msg.clear();	
-    			msg.put("Create Course",courseInfo);
-    			LoginController.userClient.sendServer(msg);
-    			LoginController.syncWithServer();
-    			JOptionPane.showMessageDialog(null, "Course added successfully");
-    			return;
-    		}
-    	}
+		msg = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> courseInfo = new ArrayList<String>();
+		try{
+		if(String.valueOf(Integer.parseInt(tfCourseID.getText())).length()==3)	
+			courseInfo.add(String.valueOf(Integer.parseInt(tfCourseID.getText())));
+		else{
+			JOptionPane.showMessageDialog(null, "Illegal value");
+			return;
+		}
+		courseInfo.add(tfCourseName.getText());
+		courseInfo.add(cbTeachingUnit.getValue().toString());
+		courseInfo.add(tfWeeklyHours.getText());
+		courseInfo.add(tfYear.getText());
+		courseInfo.add(tfSemester.getText());
+		msg.put("Create Course",courseInfo);
+		JOptionPane.showMessageDialog(null, "Course added successfully");
+		}
+		catch(NumberFormatException e){
+			JOptionPane.showMessageDialog(null, "Illegal value");
+		}
+		try{
+		LoginController.userClient.sendServer(msg);
+		}
+		catch(Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Error, the course not added.");
+		}
+			
     }
-
-		
-    /**
-     * logout handler, logout the user if X is pressed and change the window to login window.
-     * @param event
-     */
 	@FXML
 	void logoutHandler(ActionEvent event) {
 		Parent nextWindow;
@@ -213,11 +136,6 @@ public class SystemManagerController implements Initializable{
 			e.printStackTrace();
 		}
 	}
-	/**
-	 * sets the pane to the selected parameter
-	 * @param pane - selected pane to display
-	 * 
-	 */
 	void setPane(Pane pane){
 		pane.setVisible(true);
 	}
