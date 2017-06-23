@@ -66,7 +66,8 @@ public class LoginController extends Application implements Initializable {
 		try {
 			userClient = new UserClient(tfHost.getText(),Integer.parseInt(tfPort.getText()));
 		} catch (Exception e1) {
-			lblConnection.setVisible(false);
+			lblConnection.setVisible(true);
+			return;
 		}
 		
 		msg = new HashMap<String, ArrayList<String>>();
@@ -74,6 +75,7 @@ public class LoginController extends Application implements Initializable {
 		userInfo.add(tfUserName.getText());
 		userInfo.add(tfPassword.getText());
 		msg.put("login",userInfo);
+	//	if(userClient==null)
 		userClient.sendServer(msg);//send to server user info to verify user details 
 		syncWithServer();
 		arrans =  (ArrayList<String>)(UserClient.ans);
