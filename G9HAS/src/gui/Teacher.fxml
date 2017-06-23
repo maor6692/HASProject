@@ -30,20 +30,21 @@
             </Hyperlink>
             <Hyperlink fx:id="hlCreateTask" layoutX="14.0" layoutY="103.0" onAction="#hlcreateTaskOnClick" prefHeight="23.0" prefWidth="169.0" text="Create task" textFill="#529ceb" />
             <Hyperlink fx:id="hlCheckTask" layoutX="14.0" layoutY="138.0" onAction="#hlCheckTaskOnClick" text="Check Task" textFill="#529ceb" />
+            <Hyperlink fx:id="hlViewInbox" layoutX="14.0" layoutY="170.0" onAction="#hlViewInboxHandler" text="View Mailbox" textFill="#529ceb" />
          </children>
       </Pane>
    </left>
    <center>
       <Pane fx:id="defineCoursePane" prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane fx:id="createTaskPane" layoutY="1.0" prefHeight="498.0" prefWidth="611.0" visible="false">
+            <Pane fx:id="createTaskPane" layoutY="1.0" prefHeight="498.0" prefWidth="611.0">
                <children>
-                  <ImageView fitHeight="508.0" fitWidth="611.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="531.0" fitWidth="611.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../resources/background.jpg" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="200.0" fitWidth="200.0">
+                  <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="-1.0" layoutY="-54.0">
                      <image>
                         <Image url="@../../resources/logo.png" />
                      </image>
@@ -61,7 +62,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-               <Label fx:id="lblCreateTask" layoutX="184.0" layoutY="105.0" prefHeight="41.0" prefWidth="219.0" text="Create task" textAlignment="CENTER" textFill="#c7a958">
+               <Label fx:id="lblCreateTask" layoutX="178.0" layoutY="75.0" prefHeight="41.0" prefWidth="219.0" text="Create task" textAlignment="CENTER" textFill="#c7a958">
                               <font>
                               <Font name="System Bold" size="28.0" />
                            </font>
@@ -130,13 +131,18 @@
                   </Label>
                </children>
             </Pane>
-            <ImageView fitHeight="500.0" fitWidth="626.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../resources/background.jpg" />
-               </image>
-            </ImageView>
-               <Pane fx:id="paneViewInbox" prefHeight="506.0" prefWidth="615.0">
+               <Pane fx:id="paneViewInbox" prefHeight="506.0" prefWidth="615.0" visible="false">
                <children>
+                  <ImageView fitHeight="500.0" fitWidth="626.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/background.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="200.0" fitWidth="200.0" layoutY="-46.0">
+                     <image>
+                        <Image url="@../../resources/logo.png" />
+                     </image>
+                  </ImageView>
                   <Label layoutX="180.0" layoutY="34.0" text="         view inbox" textAlignment="CENTER">
                      <effect>
                         <Reflection>
@@ -167,11 +173,6 @@
                   </TableView>
                </children>
             </Pane>
-            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="7.0" layoutY="-42.0">
-               <image>
-                  <Image url="@../../resources/logo.png" />
-               </image>
-            </ImageView>
          </children>
       </Pane>
    </center>
