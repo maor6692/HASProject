@@ -98,6 +98,42 @@ public class EchoServer extends AbstractServer {
 						client.sendToClient(ans);//sends the answer to client.
 						break;
 
+					 case "get course in class id":
+				         ans= (ArrayList<String>)message.get(key);
+				         query= "SELECT id  FROM class_in_course WHERE course_id='"+ans.get(0)+"'AND class_id='"+ans.get(1)+"'AND teacher_id='"+ans.get(2)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         String class_in_course="";
+				         while (rs.next()) { 
+				          class_in_course+=rs.getString(1);// course in class id
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(class_in_course);
+				         break;
+					case "get teacher fullname":
+						String teacher_id= (String)message.get(key); // 
+						query = "SELECT first_name,last_name FROM users WHERE user_name='"+teacher_id+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						String tname="";
+						while(rs.next())
+							 tname+=rs.getString(1)+" "+rs.getString(2);
+						client.sendToClient(tname);
+						break;
+					case "get teachers from teaching_unit":
+						int teaching_u=(Integer)message.get(key);
+						query = "SELECT teacher_id FROM teacher_teaching_unit WHERE teaching_unit='"+teaching_u+"'";
+						stmt = conn.createStatement();
+						rs=stmt.executeQuery(query);
+						ArrayList<String> teacherss=new ArrayList<String>();
+				        while (rs.next()) { 
+					        teacherss.add(rs.getString(1));
+				         }
+						stmt.close();
+						client.sendToClient(teacherss);
+						break;
 					case "getCurrentCourses":
 						ans = (ArrayList<String>) message.get("getCurrentCourses");
 						query = "SELECT name,teaching_unit,id,weekly_hours FROM course WHERE year='"+ans.get(0)+"' AND semester='"+ans.get(1)+"'";
@@ -145,9 +181,63 @@ public class EchoServer extends AbstractServer {
 						rs.close();
 						client.sendToClient(sendans);//sends currSemester to SecretaryController.
 						break;
+					 case "send change teacher appointment to manager":
+				          dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				      localDate = LocalDate.now();
+				             ans= (ArrayList<String>)message.get(key);
+				             query= "INSERT INTO manager_request(secretary_id,details,status,date) VALUES (?,?,?,?)";
+				       pstmt = conn.prepareStatement(query);
+				       pstmt.setString(1, ans.get(0));
+				       pstmt.setString(2, "3:"+ans.get(1)+":"+ans.get(2)+":"+ans.get(3)+":"+ans.get(4)+":"+ans.get(5)+":"+ans.get(6));
+				       pstmt.setString(3, "Pending");
+				       pstmt.setDate(4,Date.valueOf(dtf.format(localDate)));
+				       pstmt.executeUpdate();
+				       client.sendToClient(null);
+				       break;
+					case "get teacher class in course":
+						ans=(ArrayList<String>) message.get(key);
+						String teacher_name="";
+						query = "SELECT teacher_id FROM class_in_course WHERE course_id='"+ans.get(0)+"' AND class_id='"+ans.get(1)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						while (rs.next()) { 
+							teacher_name+=(rs.getString(1));
+						}
+						stmt.close();
+						rs.close();
+						client.sendToClient(teacher_name);
+						
+						break;
+					case "get teacher teaching_unit":
+						ans=(ArrayList<String>) message.get(key);
+						query = "SELECT teaching_unit FROM teacher_teaching_unit WHERE teacher_id='"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs=stmt.executeQuery(query);
+						String tu="";
+				        while (rs.next()) { 
+					         tu+=rs.getString(1);
+				         }
+						stmt.close();
+						client.sendToClient(tu);
+						break;
+					case "get id":
+			         ans=(ArrayList<String>) message.get(key);
+			         String teacher_un="";                  
+			         query = "SELECT user_name FROM users WHERE first_name='"+ans.get(0)+"'AND last_name='"+ans.get(1)+"'";
+			         stmt = conn.createStatement();
+			         rs = stmt.executeQuery(query);
+			         while (rs.next()) { 
+			          teacher_id =(rs.getString(1));
+			         }
+			         stmt.close();
+			         rs.close();
+			         client.sendToClient(teacher_un);
+			         break;
+				
+					
 				     case "get teacher id for course id":
 				         ans=(ArrayList<String>) message.get(key);
-				         String teacher_id="";
+				         String teacherid="";
 				         query = "SELECT teacher_id FROM class_in_course WHERE course_id='"+ans.get(0)+"'";
 				         stmt = conn.createStatement();
 				         rs = stmt.executeQuery(query);
@@ -156,7 +246,7 @@ public class EchoServer extends AbstractServer {
 				         }
 				         stmt.close();
 				         rs.close();
-				         client.sendToClient(teacher_id);
+				         client.sendToClient(teacherid);
 				         break;
 				     case "send mail to teacher":
 							ans=(ArrayList<String>) message.get(key);
