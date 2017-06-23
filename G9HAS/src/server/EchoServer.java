@@ -385,6 +385,20 @@ public class EchoServer extends AbstractServer {
 					      
 					      client.sendToClient(ans1);
 					      break;
+				     case "get user full name":
+				         ArrayList<String> fullname=new ArrayList<String>();
+				         ans= (ArrayList<String>)message.get(key);
+				         query= "SELECT first_name,last_name  FROM users WHERE user_name='"+ans.get(0)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				        	 fullname.add(rs.getString(1) + " " + rs.getString(2));
+				         }
+				         stmt.close();
+				         rs.close();
+				         client.sendToClient(fullname);
+				         break;
 				     case "get course in class":
 				         ArrayList<String> courses=new ArrayList<String>();
 				         ans= (ArrayList<String>)message.get(key);
