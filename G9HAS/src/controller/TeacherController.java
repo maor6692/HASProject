@@ -168,7 +168,8 @@ public class TeacherController implements Initializable{
 
 	@FXML
 	private ComboBox<String> cbTeacherCourse;
-
+    @FXML
+    private Hyperlink hlViewInbox;
 	@FXML
 	private Pane checkTaskPane,paneViewInbox,createTaskPane;
 	/**
@@ -203,25 +204,7 @@ public class TeacherController implements Initializable{
 
 	@FXML
 	void viewInboxHandler(ActionEvent event) {
-		setPane(paneViewInbox);
-		HashMap<String,ArrayList<String>>msg = new HashMap<>();
-		tblViewInbox.setPlaceholder(new Label("No Messages to Show"));
-		teacherInbox = FXCollections.observableArrayList();
-		ArrayList<String> tos = new ArrayList<>();
-		tos.add(LoginController.userClient.userName);
-		msg.put("getTeacherInbox",tos);
-		LoginController.userClient.sendServer(msg);//
-		LoginController.syncWithServer();
 
-		HashMap<String,String> msgMap=(HashMap<String,String>) UserClient.ans;
-
-		colMsgVI.setCellValueFactory(new PropertyValueFactory<>("messageContent"));
-		colIdVI.setCellValueFactory(new PropertyValueFactory<>("messageId"));
-		for(String mid: msgMap.keySet()){
-			String msgc = msgMap.get(mid);
-			teacherInbox.add(new ViewInboxTbl(mid,msgc));
-		}
-		tblViewInbox.setItems(teacherInbox);
 
 	}
 	/**
@@ -299,7 +282,6 @@ public class TeacherController implements Initializable{
 
 		taSubmissionComments.setVisible(true);
 		lblSubmissionComments.setVisible(true);
-		////////////////////////////////////////////////////
 		Stage downloadStage = new Stage();
 		downloadStage.setTitle("Task Download");
 		DirectoryChooser dc = new DirectoryChooser();
@@ -353,10 +335,36 @@ public class TeacherController implements Initializable{
 	 */
 	@FXML
 	void hlCheckTaskOnClick(ActionEvent event) {
-
-		createTaskPane.setVisible(false);
-		checkTaskPane.setVisible(true);
+		
+		setPane(checkTaskPane);
 	}
+	/**
+	 * change pane to view inbox
+	 * @param event
+	 */
+    @FXML
+    void hlViewInboxHandler(ActionEvent event) {
+    	setPane(paneViewInbox);
+		setPane(paneViewInbox);
+		HashMap<String,ArrayList<String>>msg = new HashMap<>();
+		tblViewInbox.setPlaceholder(new Label("No Messages to Show"));
+		teacherInbox = FXCollections.observableArrayList();
+		ArrayList<String> tos = new ArrayList<>();
+		tos.add(LoginController.userClient.userName);
+		msg.put("getTeacherInbox",tos);
+		LoginController.userClient.sendServer(msg);//
+		LoginController.syncWithServer();
+
+		HashMap<String,String> msgMap=(HashMap<String,String>) UserClient.ans;
+
+		colMsgVI.setCellValueFactory(new PropertyValueFactory<>("messageContent"));
+		colIdVI.setCellValueFactory(new PropertyValueFactory<>("messageId"));
+		for(String mid: msgMap.keySet()){
+			String msgc = msgMap.get(mid);
+			teacherInbox.add(new ViewInboxTbl(mid,msgc));
+		}
+		tblViewInbox.setItems(teacherInbox);
+    }
 	/**
 	 * handles the comments file upload of the teacher to the given solution file of the selected student.
 	 * @param event
@@ -529,6 +537,7 @@ public class TeacherController implements Initializable{
 	@FXML
 	void cbClassHandler(ActionEvent event) {
 		lblTaskCreated.setVisible(false);
+		
 	}
 	/**
 	 * changes the window by changing pane to create task.
@@ -536,8 +545,7 @@ public class TeacherController implements Initializable{
 	 */
 	@FXML
 	void hlcreateTaskOnClick(ActionEvent event) {
-		createTaskPane.setVisible(true);
-		checkTaskPane.setVisible(false);
+		setPane(createTaskPane);
 	}
 	/**
 	 * creates new task and upload it.
