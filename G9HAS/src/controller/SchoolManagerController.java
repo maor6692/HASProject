@@ -518,7 +518,7 @@ public class SchoolManagerController implements Initializable{
 		 * @cmbOpGSR get required operation
 		 */
 		    @FXML
-		void OperationGSR(ActionEvent event) {
+			void OperationGSR(ActionEvent event) {
 				lblArb.setVisible(false);
 				cmbArb.setVisible(false);
 				cmbArb.getItems().clear();
@@ -534,7 +534,7 @@ public class SchoolManagerController implements Initializable{
 					ArrayList<ArbitratorComboBox> tempList = new ArrayList<>();
 					for(ArrayList<String> arr: teachersGSR)
 						tempList.add(new ArbitratorComboBox(arr.get(0),arr.get(1)) );
-					Collections.sort(tempList);
+					
 					cmbArb.getItems().addAll(tempList);
 					cmbArb.setVisible(true);
 					break;
@@ -547,7 +547,9 @@ public class SchoolManagerController implements Initializable{
 					cmbArb.setVisible(true);
 					break;
 				}
-						    public class ArbitratorComboBox {
+				
+		}
+			public class ArbitratorComboBox {
 		    	private String teacherId;
 		    	private String teacherName;
 		    	private String className;
@@ -613,7 +615,6 @@ public class SchoolManagerController implements Initializable{
 		    		return tos;
 		    	}
 		    }
-		}
 }
 
 
