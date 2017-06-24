@@ -328,7 +328,7 @@ public class TeacherController implements Initializable{
 					Files.write(Paths.get(path+"\\"+fname), by);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					//e1.printStackTrace();
 				}
 				}
 			}
