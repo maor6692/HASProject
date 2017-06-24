@@ -1215,6 +1215,23 @@ public class EchoServer extends AbstractServer {
 						}
 						client.sendToClient(classesInCourseAS);
 						break;
+					case "getClassesOfCourseSM":
+						ans= (ArrayList<String>)message.get(key); // 
+						HashMap<String,ArrayList<String>> classesInCourseSM = new HashMap<>();
+						query  = "SELECT c.name,c.id,cic.id, u.first_name, u.last_name FROM class_in_course cic, class c, users u WHERE cic.course_id='"+ans.get(2)+"' AND cic.class_id=c.id AND c.year='"+ans.get(0)+"' AND c.semester='"+ans.get(1)+"' AND cic.teacher_id=u.user_name";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						
+						while(rs.next()){
+							ArrayList<String> t = new ArrayList<>();
+							t.add(rs.getString(2));
+							t.add(rs.getString(1));
+							t.add(rs.getString(4)+" "+rs.getString(5));
+							classesInCourseSM.put(rs.getString(3), t);
+							
+						}
+						client.sendToClient(classesInCourseSM);
+						break;
 					case "getTeachersAndClassesGSR":
 						String currYear="";
 						String currSem="";
@@ -1415,6 +1432,7 @@ public class EchoServer extends AbstractServer {
 							ans.add(rs.getString(3));
 							ans.add(rs.getString(4));
 							hmAns2.put(rs.getString(1), new ArrayList<String>(ans));
+							ans.clear();
 						}
 						stmt.close();
 						rs.close(); 

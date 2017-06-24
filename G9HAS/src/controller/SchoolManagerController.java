@@ -591,10 +591,35 @@ public class SchoolManagerController implements Initializable{
 			break;
 
 		case "all courses":
+			info="";
 			query ="select * from course where year='"+cbYear.getValue()+"' AND semester='"+cbSemester.getValue()+"'";
 			params.add(query);
-			queryGenerator(params,"getAllCoursesOfSemester");
-
+			hm = (HashMap<String, ArrayList<String>>) queryGenerator(params,"getAllCoursesOfSemester");
+//			ArrayList<String> courses_id = new ArrayList<String>();
+//			for(String key : hm.keySet()){
+//				courses_id.add(key);
+//			}
+			HashMap<String, ArrayList<String>> classes;
+			for(String key : hm.keySet()){
+				if(key!=null)
+				{
+					info+="\ncourse "+hm.get(key).get(0)+" ("+hm.get(key).get(1)+""+key+"):\n";//id:name, teaching_unit,weekly_hours,year,semester
+					info+="weekly hours:"+hm.get(key).get(2)+"\n";
+					info+="classes who learn this course: \n";
+					params.clear();
+					params.add(cbYear.getValue());
+					params.add(cbSemester.getValue());
+					params.add(key);
+					classes = (HashMap<String, ArrayList<String>>) queryGenerator(params,"getClassesOfCourseSM");
+					params.clear();
+					for(String cl : classes.keySet()){
+						info+="class name:"+classes.get(cl).get(1)+"\n";
+						info+="teacher name: "+classes.get(cl).get(2) +"\n";
+					}
+					info+="...................................................................................................................................\n";
+				}
+			}
+			textAreaViewAllInfo.setText(info);
 			break;
 
 		case "classes in courses":
