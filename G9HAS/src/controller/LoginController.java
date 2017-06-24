@@ -130,7 +130,6 @@ public class LoginController extends Application implements Initializable {
 				FileInputStream fileInputStream = new FileInputStream("mf.mp3");
 
 				Player player = new Player(fileInputStream);
-				System.out.println("אכלת אותה ויקטור...");
 				player.play();
 
 			} catch (FileNotFoundException e) {

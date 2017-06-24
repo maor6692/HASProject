@@ -174,9 +174,25 @@
                         <Font name="Baskerville Old Face" size="47.0" />
                      </font>
                   </Label>
-                  <Pane layoutX="15.0" layoutY="283.0" prefHeight="537.0" prefWidth="983.0" visible="false" />
-                  <Pane layoutX="20.0" layoutY="295.0" prefHeight="514.0" prefWidth="973.0" visible="false" />
-                  <Pane layoutX="18.0" layoutY="270.0" prefHeight="547.0" prefWidth="990.0" />
+                  <ComboBox fx:id="cbOptions" layoutX="487.0" layoutY="159.0" prefWidth="150.0" promptText="information options" />
+                  <Label layoutX="207.0" layoutY="156.0" text="choose information to display:">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="209.0" layoutY="199.0" text="choose semester:">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="cbSemester" layoutX="569.0" layoutY="202.0" prefHeight="25.0" prefWidth="67.0" promptText="sem'" />
+                  <ComboBox fx:id="cbYear" layoutX="486.0" layoutY="202.0" prefHeight="25.0" prefWidth="83.0" promptText="year" />
+                  <Button fx:id="btnView" layoutX="657.0" layoutY="156.0" mnemonicParsing="false" onAction="#viewButtonHandler" prefHeight="72.0" prefWidth="102.0" text="view">
+                     <font>
+                        <Font size="21.0" />
+                     </font>
+                  </Button>
+                  <TextArea fx:id="textAreaViewAllInfo" editable="false" layoutX="29.0" layoutY="274.0" prefHeight="529.0" prefWidth="956.0" />
                </children>
             </Pane>
          </children>

@@ -178,6 +178,7 @@ public class SchoolManagerController implements Initializable{
 		blockParentPane.setVisible(false);
 		answerRequestsPane.setVisible(false);
 		getStatisticReportPane.setVisible(false);
+		viewAllInformationPane.setVisible(false);
 		pane.setVisible(true);
 	}
 	/**
@@ -547,6 +548,14 @@ public class SchoolManagerController implements Initializable{
 				}
 				
 		}
+		    /**
+			 *  display view all information pane
+			 * @param 
+			 */
+			void initializeViewAllInformation(){
+				setPane(viewAllInformationPane);
+			}
+			
 			public class ArbitratorComboBox {
 		    	private String teacherId;
 		    	private String teacherName;
