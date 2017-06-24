@@ -307,7 +307,7 @@ public class SchoolManagerController implements Initializable{
 		arr.clear();
 		String request_id=lvRequests.getSelectionModel().getSelectedItem().split("\\r?\\n")[0];
 		request_id=request_id.substring(11,request_id.length());
-		arr.add(managerRequests.get(request_id).get(1).split("\\:")[0]);//secretary id
+		arr.add(managerRequests.get(request_id).get(0));//secretary id
 		//prepare message for secretary includes request details, status(approved/dismissed) and school manager comments
 		arr.add(lvRequests.getSelectionModel().getSelectedItem().split("\\r?\\n")[2]+" :"+status+"\nschool manager comments: "+tfComments.getText());//comments
 		msg.put("notifySecretary",arr);
@@ -366,7 +366,7 @@ public class SchoolManagerController implements Initializable{
 	 * @param 
 	 */
 	void initializeAnswerRequests(){
-
+		requestsDetails.clear();
 		msg = new HashMap<String, ArrayList<String>>();
 		arr = new ArrayList<>();
 		msg.put("getManagerRequets",null);
@@ -377,6 +377,7 @@ public class SchoolManagerController implements Initializable{
 		managerRequests=(HashMap<String, ArrayList<String>>) UserClient.ans;
 		String request = "";
 		String[] requestdetails = new String[7] ;
+		if(managerRequests == null) return;
 		for(String id: managerRequests.keySet()){
 			requestdetails = managerRequests.get(id).get(1).split("\\:");//[request_type,classInCourse,student id]
 			//: 2:secretary full name:student full name:student id:classInCourseId:course name
@@ -390,7 +391,7 @@ public class SchoolManagerController implements Initializable{
 				request= requestdetails[1]+" asks to add student:"+requestdetails[2]+" to course: "+requestdetails[5];
 				break;
 			case "3":
-				request= requestdetails[1]+" asks to change teacher's appointment from : "+requestdetails[2]+" to : "+requestdetails[3]+" in course "+requestdetails[6];
+				request= requestdetails[1]+" asks to change teacher appointment from : "+requestdetails[2]+" to : "+requestdetails[3]+" in course "+requestdetails[6];
 				break;
 			}
 			requestsDetails.add("request id:"+id+"\nrequest date:"+managerRequests.get(id).get(2)+"\nrequest:"+request);

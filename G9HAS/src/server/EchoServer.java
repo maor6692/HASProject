@@ -1286,7 +1286,7 @@ public class EchoServer extends AbstractServer {
 					case "notifySecretary":
 					      stmt = conn.createStatement();
 					      ans= (ArrayList<String>)message.get(key);
-					      stmt.executeUpdate("INSERT INTO secretary_inbox VALUES("+"0"+","+ans.get(0)+",'"+ans.get(1)+"')");
+					      stmt.executeUpdate("INSERT INTO secretary_inbox VALUES("+"0"+",'"+ans.get(0)+"','"+ans.get(1)+"')");
 					      client.sendToClient(null);
 					      break;
 					      
