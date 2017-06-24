@@ -10,11 +10,11 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -70,7 +70,7 @@ public class TeacherController implements Initializable{
 	private String fname;
 	private ObservableList <ViewInboxTbl> teacherInbox;
 	@FXML
-	private Label lblSelectStudent;
+	private Label lblSelectStudent,lblErrorST;
 	@FXML
 	private TextField tfCheckUploadPath;
 
@@ -182,6 +182,7 @@ public class TeacherController implements Initializable{
 			btnDownload.setVisible(false);
 		else
 			btnDownload.setVisible(true);
+		
 		lblMsg.setVisible(false);
 		cbClass.setVisible(false);
 		lblClass.setVisible(false);
@@ -213,6 +214,7 @@ public class TeacherController implements Initializable{
 	 */
 	@FXML
 	void selectTaskHandler(ActionEvent event) {
+		lblMsg.setVisible(false);
 		taSubmissionComments.setVisible(false);
 		lblSubmissionComments.setVisible(false);
 		lblMsg.setVisible(false);
@@ -365,6 +367,19 @@ public class TeacherController implements Initializable{
 		}
 		tblViewInbox.setItems(teacherInbox);
     }
+    
+    private boolean isNum(String str)
+    {
+    	try{
+    	Float.parseFloat(str);
+    	return true;
+    	}
+    	catch(Exception e)
+    	{
+    	 return false;
+    	}
+    }
+    
 	/**
 	 * handles the comments file upload of the teacher to the given solution file of the selected student.
 	 * @param event
@@ -373,6 +388,7 @@ public class TeacherController implements Initializable{
 	void CheckUploadHandler(ActionEvent event) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDate = LocalDate.now();
+		lblMsg.setVisible(false);
 		int i=0;
 		class_id="";
 		byte[] by = null;
@@ -394,7 +410,16 @@ public class TeacherController implements Initializable{
 		}
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-		evaluation.add(tfGrade.getText());
+		if(isNum(tfGrade.getText()) && Float.parseFloat(tfGrade.getText()) >= 0 && Float.parseFloat(tfGrade.getText()) <= 100)
+			evaluation.add(tfGrade.getText());
+		else
+		{
+			lblMsg.setText("Ilegal grade");
+			lblMsg.setVisible(true);
+			return;
+		}
+///////////////////////////////////////////////////////////
+		
 		evaluation.add(taSubmissionComments.getText());
 		hms.put("insert task grade", evaluation);
 		LoginController.userClient.sendServer(hms);
@@ -456,6 +481,7 @@ public class TeacherController implements Initializable{
 	 */
 	@FXML
 	void ClassIDHandler(ActionEvent event) {
+		lblMsg.setVisible(false);
 		lblSubmissionComments.setVisible(false);
 		taSubmissionComments.setVisible(false);
 		lblMsg.setVisible(false);
@@ -537,7 +563,7 @@ public class TeacherController implements Initializable{
 	@FXML
 	void cbClassHandler(ActionEvent event) {
 		lblTaskCreated.setVisible(false);
-		
+		lblErrorST.setVisible(false);
 	}
 	/**
 	 * changes the window by changing pane to create task.
@@ -553,8 +579,9 @@ public class TeacherController implements Initializable{
 	 */
 	@FXML
 	void createTaskHandler(ActionEvent event) {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDate = LocalDate.now();
+		lblErrorST.setVisible(false);
 		int i=0;
 		course_id= "";
 		class_id="";
@@ -562,7 +589,6 @@ public class TeacherController implements Initializable{
 		HashMap<String,HashMap<String,byte[]>> hm = new HashMap<String,HashMap<String,byte[]>>();
 		HashMap<String,byte[]> hmName = new HashMap<String,byte[]>();
 
-		//HashMap<String,byte[]> hm = new HashMap<String,byte[]>();
 		HashMap<String,ArrayList<String>> hms = new HashMap<String,ArrayList<String>>();
 		ArrayList<String> msg = new ArrayList<String>();
 		File file = new File(tfUploadPath.getText());
@@ -604,7 +630,17 @@ public class TeacherController implements Initializable{
 			msg.clear();
 			msg.add(String.valueOf((((ArrayList<String>)LoginController.userClient.ans)).get(0)));
 			msg.add(selectedFile.getName());
-			msg.add(tfSubmissionDate.getText());
+			try
+			{
+				Date sbd = Date.valueOf(tfSubmissionDate.getText());
+				msg.add(tfSubmissionDate.getText());
+			}
+			catch(Exception e)
+			{
+				lblErrorST.setText("Ilegal submission date");
+				lblErrorST.setVisible(true);
+				return;
+			}
 			msg.add(dtf.format(localDate));
 		}
 		hms.clear();
@@ -612,7 +648,6 @@ public class TeacherController implements Initializable{
 		LoginController.userClient.sendServer(hms);
 		LoginController.syncWithServer();
 		hms.clear();
-		//LoginController.syncWithServer();
 		lblTaskCreated.setVisible(true);
 	}
 
@@ -664,6 +699,7 @@ public class TeacherController implements Initializable{
 	@FXML
 	void TeacherCourseHandler(ActionEvent event) {
 		ArrayList<String> params = new ArrayList<String>();
+		lblMsg.setVisible(false);
 		lblSubmissionComments.setVisible(false);
 		taSubmissionComments.setVisible(false);
 		lblMsg.setVisible(false);
@@ -717,6 +753,7 @@ public class TeacherController implements Initializable{
 	void cbCourseHandler(ActionEvent event) {
 
 		ArrayList<String> params = new ArrayList<String>();
+		lblErrorST.setVisible(false);
 		lblTaskCreated.setVisible(false);
 		lblMsg.setVisible(false);
 		btnDownload.setVisible(false);
