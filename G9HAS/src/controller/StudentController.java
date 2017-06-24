@@ -100,7 +100,7 @@ public class StudentController implements Initializable {
     @FXML
     private Label lblChooseTask;
     @FXML
-    private Button btnUploadTask;
+    private Button btnUploadTask,btnDownloadEvaluation;
     @FXML
     private TextField tfUploadPath;
     @FXML
@@ -136,7 +136,7 @@ public class StudentController implements Initializable {
 
 	@FXML
 	private Label lblClass;
-
+	
 	@FXML
 	private Label lblShowClass;
     @FXML
@@ -147,6 +147,7 @@ public class StudentController implements Initializable {
      */
     @FXML
     void chooseTaskHandler(ActionEvent event) {
+    	btnDownloadEvaluation.setVisible(false);
     	lblLateSubmission.setVisible(false);
     	lblUpload.setVisible(true);
     	btnUploadTask.setVisible(false);
@@ -188,6 +189,7 @@ public class StudentController implements Initializable {
 		{
 			lblGradeInTask.setText("Your task grade is: "+((ArrayList<String>)LoginController.userClient.ans).get(0));
 			lblGradeInTask.setVisible(true);
+			btnDownloadEvaluation.setVisible(true);
 			lblUpload.setVisible(false);
 			tfUploadPath.setVisible(false);
 			btnFile.setVisible(false);
@@ -259,10 +261,7 @@ public class StudentController implements Initializable {
     	 if (selectedFile != null) {
     		 btnUploadTask.setVisible(true);
     		tfUploadPath.setText(selectedFile.getAbsolutePath());
-//    		if(selectedFile.getName().substring(selectedFile.getName().length()-5, selectedFile.getName().length()-2).charAt(0)== '.')
-//    		file_type += selectedFile.getName().substring(selectedFile.getName().length()-5);
-//    		else
-//    			file_type += selectedFile.getName().substring(selectedFile.getName().length()-4);
+
     	 }
     }
     /**
@@ -275,6 +274,7 @@ public class StudentController implements Initializable {
 		LocalDate localDate = LocalDate.now();
 		Date actualSD,sd;
 		String tempstr[],stemp;
+		btnDownloadEvaluation.setVisible(false);
 		tempstr = selectedFile.getName().split("\\.");
 		stemp = tempstr[tempstr.length-1];
 		filename += stemp;
@@ -352,6 +352,7 @@ public class StudentController implements Initializable {
     @FXML
     void ChooseCourseSTHandler(ActionEvent event) {
     	lblLateSubmission.setVisible(false);
+    	btnDownloadEvaluation.setVisible(false);
     	cbChooseTask.getItems().clear();
     	ArrayList<String> arr = new ArrayList<String>();
     	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
@@ -468,6 +469,52 @@ public class StudentController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * handler for teacher evaluation file for student task.
+	 * @param event
+	 */
+	@FXML
+	void evaluationFileHandler(ActionEvent event) {
+		HashMap <String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
+		ArrayList<String> arr = new ArrayList<String>();
+		String path = "",fname="";
+		byte[] by;
+		Stage downloadStage = new Stage();
+		downloadStage.setTitle("Task Download");
+		DirectoryChooser dc = new DirectoryChooser();
+		dc.setTitle("Choose folder");
+		File folderpath = dc.showDialog(downloadStage);
+		if(folderpath != null)
+		{
+			path = folderpath.getAbsolutePath();
+			if(path!= null)
+			{
+				arr.add(LoginController.userClient.userName);
+				arr.add(taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue())));
+				arr.add(cbChooseCourseST.getValue().substring(2, 5));
+				hm.put("get solution file of student", arr);
+				LoginController.userClient.sendServer(hm);
+				LoginController.syncWithServer();
+				if(((ArrayList<String>)LoginController.userClient.ans)!=null)
+				{
+					fname = ((ArrayList<String>)LoginController.userClient.ans).get(0);
+					arr.clear();
+					arr.add(fname);
+					hm.remove("get solution file of student");
+					hm.put("get file from filename for solution file", arr);
+					LoginController.userClient.sendServer(hm);
+					LoginController.syncWithServer();
+					by = ((byte[])LoginController.userClient.ans);
+					try {
+						Files.write(Paths.get(path+"\\"+fname), by);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+
+					}
+				}
+			}
+		}
+	}
     /**
      * Responsible for displaying personal information of the student to selected course.
      * @param event
@@ -510,6 +557,7 @@ public class StudentController implements Initializable {
     }
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		btnDownloadEvaluation.setVisible(false);
 		btnDownload.setVisible(false);
 		lblUpload.setVisible(false);
 		btnUploadTask.setVisible(false);
