@@ -35,9 +35,9 @@
       </Pane>
    </left>
    <center>
-      <Pane fx:id="defineCoursePane" prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
+      <Pane prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane fx:id="createTaskPane" layoutY="1.0" prefHeight="498.0" prefWidth="611.0">
+            <Pane fx:id="createTaskPane" layoutY="1.0" prefHeight="498.0" prefWidth="611.0" visible="false">
                <children>
                   <ImageView fitHeight="531.0" fitWidth="611.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -79,15 +79,20 @@
                   </Label>
                   <TextField fx:id="tfSubmissionDate" layoutX="166.0" layoutY="296.0" />
                   <ComboBox fx:id="cbCourseID" layoutX="134.0" layoutY="156.0" onAction="#cbCourseHandler" prefHeight="31.0" prefWidth="132.0" promptText="Choose Course" />
-                  <TextField fx:id="tfUploadPath" layoutX="133.0" layoutY="243.0" prefHeight="25.0" prefWidth="154.0" />
+                  <TextField fx:id="tfUploadPath" editable="false" layoutX="133.0" layoutY="243.0" prefHeight="25.0" prefWidth="154.0" />
                   <Label fx:id="lblTaskCreated" layoutX="334.0" layoutY="407.0" prefHeight="17.0" prefWidth="139.0" text="Task created!" textFill="#ff0808" visible="false">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
+                  <Label fx:id="lblErrorST" layoutX="163.0" layoutY="331.0" prefHeight="21.0" prefWidth="292.0" textFill="#e40303">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
-            <Pane fx:id="checkTaskPane" prefHeight="498.0" prefWidth="617.0" visible="false">
+            <Pane fx:id="checkTaskPane" prefHeight="498.0" prefWidth="617.0">
                <children>
                   <ImageView fx:id="ivBackground" fitHeight="508.0" fitWidth="611.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -108,7 +113,7 @@
                   <Button fx:id="btnDownload" layoutX="197.0" layoutY="273.0" mnemonicParsing="false" onAction="#DownloadHandler" text="Download" visible="false" />
                   <Label fx:id="lblTaskGrade" layoutX="73.0" layoutY="324.0" text="Task Grade:" visible="false" />
                   <TextField fx:id="tfGrade" layoutX="175.0" layoutY="318.0" prefHeight="29.0" prefWidth="63.0" visible="false" />
-                  <TextField fx:id="tfCheckUploadPath" layoutX="85.0" layoutY="368.0" visible="false" />
+                  <TextField fx:id="tfCheckUploadPath" editable="false" layoutX="85.0" layoutY="368.0" visible="false" />
                   <Button fx:id="btnChooseFile" layoutX="230.0" layoutY="368.0" mnemonicParsing="false" onAction="#CheckfileChooserHandler" prefHeight="25.0" prefWidth="85.0" text="Choose file" visible="false" />
                   <ComboBox fx:id="cbChooseTask" layoutX="174.0" layoutY="183.0" onAction="#selectTaskHandler" prefWidth="150.0" />
                   <Label fx:id="lblSelectTask" layoutX="79.0" layoutY="189.0" text="Select Task:" />
@@ -127,6 +132,11 @@
                   <Label fx:id="lblSubmissionComments" layoutX="388.0" layoutY="359.0" prefHeight="17.0" prefWidth="165.0" text="Comments for solution:" visible="false">
                      <font>
                         <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblCheckTask" layoutX="175.0" layoutY="37.0" prefHeight="41.0" prefWidth="219.0" text="Check Task" textAlignment="CENTER" textFill="#c7a958">
+                     <font>
+                        <Font name="System Bold" size="28.0" />
                      </font>
                   </Label>
                </children>
