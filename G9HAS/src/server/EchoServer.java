@@ -1346,6 +1346,35 @@ public class EchoServer extends AbstractServer {
 						
 						client.sendToClient(report);
 						break;
+						
+						 //*****************************************************	
+				     case "get teacher working hours":
+				         ans=(ArrayList<String>) message.get(key);
+				         query = "SELECT hours_limit,working_hours FROM teacher where id='"+ans.get(0)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				           ans.add(String.valueOf(rs.getInt(1)));
+				           ans.add(String.valueOf(rs.getInt(2)));
+				         }
+				         stmt.close();
+				         rs.close(); 
+				         break;
+				         
+				        case "get course weekly hours":
+				         ans=(ArrayList<String>) message.get(key);
+				         query = "SELECT weekly_hours FROM course where id='"+ans.get(0)+"'";
+				         stmt = conn.createStatement();
+				         rs = stmt.executeQuery(query);
+				         ans.clear();
+				         while (rs.next()) { 
+				           ans.add(String.valueOf(rs.getInt(1)));
+				         }
+				         stmt.close();
+				         rs.close(); 
+				         break;
+				        //*****************************************************
 					}
 				}
 			}

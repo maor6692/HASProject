@@ -51,37 +51,37 @@ public class SchoolManagerController implements Initializable{
 	private ListView<String> lvStudents,lvRequests;//list view to display blocked students in current semester
 
 	@FXML
-	private ComboBox<String> cbStudents,cbClasses;//combo box for class and students in current semester
+	private ComboBox<String> cbStudents,cbClasses,cbOptions,cbYear,cbsemester;//combo box for class and students in current semester
 
 	@FXML
 	private Button btnReturnAccess,btnBlock;
-	
-    @FXML
-    private ComboBox<String> cmbOpGSR;
 
-	
 	@FXML
-  private ComboBox<ArbitratorComboBox> cmbArb;
-	
-	
+	private ComboBox<String> cmbOpGSR;
+
+
 	@FXML
-    private ComboBox<String> cmbPeriodGSR;
-	
-    @FXML
-    private Label lblArb;
-	
-	
+	private ComboBox<ArbitratorComboBox> cmbArb;
+
+
 	@FXML
-    private Button btnShowReportGSR;
-	
+	private ComboBox<String> cmbPeriodGSR;
+
 	@FXML
-    private BarChart<String,Number> bcStatistic;
-	
+	private Label lblArb;
+
+
 	@FXML
-    private NumberAxis axisAvg;
-	
-    @FXML
-    private CategoryAxis axisSem;
+	private Button btnShowReportGSR;
+
+	@FXML
+	private BarChart<String,Number> bcStatistic;
+
+	@FXML
+	private NumberAxis axisAvg;
+
+	@FXML
+	private CategoryAxis axisSem;
 
 	HashMap<String, ArrayList<String>>	msg ;
 	private ObservableList<String> studentsDetails = FXCollections.observableArrayList();//saves student details from db
@@ -114,8 +114,8 @@ public class SchoolManagerController implements Initializable{
 	 * change visible user window to appropriate window
 	 * @param pane
 	 */
-	
-	
+
+
 	/**
 	 * initialize info for choosing report
 	 * @param teachers and classes info that was/is last 4 semesters
@@ -255,7 +255,7 @@ public class SchoolManagerController implements Initializable{
 		String student_id="";
 		String teacher_id="";
 		String query="";
-			if(lvRequests.getSelectionModel().getSelectedItem() == null){
+		if(lvRequests.getSelectionModel().getSelectedItem() == null){
 			return;
 		}else{
 			request_id=lvRequests.getSelectionModel().getSelectedItem().split("\\r?\\n")[0];//get first line of selected item in list view
@@ -469,159 +469,169 @@ public class SchoolManagerController implements Initializable{
 	 * @axisAvg Y axis
 	 * @axisSem X axis
 	 */
-		   @FXML
-		void GetReportGSR(ActionEvent event) {
-			   String op = cmbOpGSR.getSelectionModel().getSelectedItem();
-			   String arb = cmbArb.getSelectionModel().getSelectedItem().getArbId();
-			   String period = cmbPeriodGSR.getSelectionModel().getSelectedItem().substring(6, 10)+cmbPeriodGSR.getSelectionModel().getSelectedItem().substring(21,22);
-			   bcStatistic.setTitle(op+" "+arb);
-			   HashMap<String,ArrayList<String>> msg = new HashMap<>();
-			   ArrayList<String> arrGSR = new ArrayList<>();
-			   arrGSR.add(op);
-			   arrGSR.add(arb);
-			   arrGSR.add(period);
-			   //Sending server [operation,arbitrator,period]
-			   //operation values: ""All Classes of a teacher","All Teachers of a class","All Courses of a class"
-			   ///* uncomment after finish SetReportGSR case in EchoServer
-			   msg.put("GetReportGSR", arrGSR);
-			   LoginController.userClient.sendServer(msg); 
-			   LoginController.syncWithServer();
-			   msg.clear();
-			   HashMap<String,ArrayList<String>> report  = (HashMap<String,ArrayList<String>>) UserClient.ans;
-		
+	@FXML
+	void GetReportGSR(ActionEvent event) {
+		String op = cmbOpGSR.getSelectionModel().getSelectedItem();
+		String arb = cmbArb.getSelectionModel().getSelectedItem().getArbId();
+		String period = cmbPeriodGSR.getSelectionModel().getSelectedItem().substring(6, 10)+cmbPeriodGSR.getSelectionModel().getSelectedItem().substring(21,22);
+		bcStatistic.setTitle(op+" "+arb);
+		HashMap<String,ArrayList<String>> msg = new HashMap<>();
+		ArrayList<String> arrGSR = new ArrayList<>();
+		arrGSR.add(op);
+		arrGSR.add(arb);
+		arrGSR.add(period);
+		//Sending server [operation,arbitrator,period]
+		//operation values: ""All Classes of a teacher","All Teachers of a class","All Courses of a class"
+		///* uncomment after finish SetReportGSR case in EchoServer
+		msg.put("GetReportGSR", arrGSR);
+		LoginController.userClient.sendServer(msg); 
+		LoginController.syncWithServer();
+		msg.clear();
+		HashMap<String,ArrayList<String>> report  = (HashMap<String,ArrayList<String>>) UserClient.ans;
+
+	}
+	/**
+	 * opens period combo box
+	 * @cmbArb get artbitrator for making report
+	 */
+	@FXML
+	void arbGSR(ActionEvent event) {
+
+		lblPeriodGSR.setVisible(true);
+		cmbPeriodGSR.setVisible(true);
+		btnShowReportGSR.setVisible(false);
+		bcStatistic.setVisible(false);
+	}
+	/**
+	 * opens the option to execute report 
+	 * @cmbPeriodGSR get period for the report
+	 */
+	@FXML
+	void periodHandlerGSR(ActionEvent event) {
+		btnShowReportGSR.setVisible(true);
+		bcStatistic.setVisible(false);
+	}
+
+	/**
+	 * showing Arbitrator for chosen operation
+	 * @cmbOpGSR get required operation
+	 */
+	@FXML
+	void OperationGSR(ActionEvent event) {
+		lblArb.setVisible(false);
+		cmbArb.setVisible(false);
+		cmbArb.getItems().clear();
+		btnShowReportGSR.setVisible(false);
+		bcStatistic.setVisible(false);
+		lblPeriodGSR.setVisible(false);
+		cmbPeriodGSR.setVisible(false);
+
+		switch(cmbOpGSR.getSelectionModel().getSelectedItem()){
+		case "All Classes of a teacher":
+			lblArb.setText("Choose teacher:");
+			lblArb.setVisible(true);
+			ArrayList<ArbitratorComboBox> tempList = new ArrayList<>();
+			for(ArrayList<String> arr: teachersGSR)
+				tempList.add(new ArbitratorComboBox(arr.get(0),arr.get(1)) );
+
+			cmbArb.getItems().addAll(tempList);
+			cmbArb.setVisible(true);
+			break;
+		case "All Teachers of a class":
+		case "All Courses of a class":
+			lblArb.setText("Choose class:");
+			lblArb.setVisible(true);
+			for(ArrayList<String> arr: classesGSR)
+				cmbArb.getItems().add(new ArbitratorComboBox(arr.get(0),arr.get(1),arr.get(2),arr.get(3)) );
+			cmbArb.setVisible(true);
+			break;
 		}
-		   /**
-		    * opens period combo box
-		    * @cmbArb get artbitrator for making report
-		    */
-		   @FXML
-		void arbGSR(ActionEvent event) {
-			   
-			   lblPeriodGSR.setVisible(true);
-			   cmbPeriodGSR.setVisible(true);
-			   btnShowReportGSR.setVisible(false);
-			   bcStatistic.setVisible(false);
-		}
-		   /**
-		    * opens the option to execute report 
-		    * @cmbPeriodGSR get period for the report
-		    */
-		   @FXML
-		   void periodHandlerGSR(ActionEvent event) {
-			   btnShowReportGSR.setVisible(true);
-			   bcStatistic.setVisible(false);
-		   }
-		   
-		/**
-		 * showing Arbitrator for chosen operation
-		 * @cmbOpGSR get required operation
-		 */
-		    @FXML
-			void OperationGSR(ActionEvent event) {
-				lblArb.setVisible(false);
-				cmbArb.setVisible(false);
-				cmbArb.getItems().clear();
-				btnShowReportGSR.setVisible(false);
-				bcStatistic.setVisible(false);
-				lblPeriodGSR.setVisible(false);
-				cmbPeriodGSR.setVisible(false);
-				
-				switch(cmbOpGSR.getSelectionModel().getSelectedItem()){
-				case "All Classes of a teacher":
-					lblArb.setText("Choose teacher:");
-					lblArb.setVisible(true);
-					ArrayList<ArbitratorComboBox> tempList = new ArrayList<>();
-					for(ArrayList<String> arr: teachersGSR)
-						tempList.add(new ArbitratorComboBox(arr.get(0),arr.get(1)) );
-					
-					cmbArb.getItems().addAll(tempList);
-					cmbArb.setVisible(true);
-					break;
-				case "All Teachers of a class":
-				case "All Courses of a class":
-					lblArb.setText("Choose class:");
-					lblArb.setVisible(true);
-					for(ArrayList<String> arr: classesGSR)
-						cmbArb.getItems().add(new ArbitratorComboBox(arr.get(0),arr.get(1),arr.get(2),arr.get(3)) );
-					cmbArb.setVisible(true);
-					break;
-				}
-				
-		}
-		    /**
-			 *  display view all information pane
-			 * @param 
-			 */
-			void initializeViewAllInformation(){
-				setPane(viewAllInformationPane);
-			}
+
+	}
+	/**
+	 * showing Arbitrator for chosen operation
+	 *@param
+	 * chosen info option from comboBox
+	 */
+	@FXML
+	void viewButtonHandler(ActionEvent event){
 			
-			public class ArbitratorComboBox {
-		    	private String teacherId;
-		    	private String teacherName;
-		    	private String className;
-		    	private String classId;
-		    	private String classYear;
-		    	private String classSem;
-		    	private String tos;
-		    	private String arbId;
-		    	public ArbitratorComboBox(String id,String name){
-		    		teacherId = id;
-		    		teacherName = name;
-		    		tos = name;
-		    		arbId=id;
-		    	}
-		    	public ArbitratorComboBox(String id,String name,String year,String sem){
-		    		classId = id;
-		    		className = name;
-		    		classYear=year;
-		    		classSem=sem;
-		    		tos = className+" ["+classYear+","+classSem+"]";
-		    		arbId=id;
-		    	}
-		    	public String getTeacherId() {
-		    		return teacherId;
-		    	}
-		    	public void setTeacherId(String teacherId) {
-		    		this.teacherId = teacherId;
-		    	}
-		    	public String getTeacherName() {
-		    		return teacherName;
-		    	}
-		    	public void setTeacherName(String teacherName) {
-		    		this.teacherName = teacherName;
-		    	}
-		    	public String getClassName() {
-		    		return className;
-		    	}
-		    	public void setClassName(String className) {
-		    		this.className = className;
-		    	}
-		    	public String getClassId() {
-		    		return classId;
-		    	}
-		    	public void setClassId(String classId) {
-		    		this.classId = classId;
-		    	}
-		    	public String getClassYear() {
-		    		return classYear;
-		    	}
-		    	public void setClassYear(String classYear) {
-		    		this.classYear = classYear;
-		    	}
-		    	public String getClassSem() {
-		    		return classSem;
-		    	}
-		    	public String getArbId(){
-		    		return arbId;
-		    	}
-		    	public void setClassSem(String classSem) {
-		    		this.classSem = classSem;
-		    	}
-		    	public String toString(){
-		    		return tos;
-		    	}
-		    }
+	}
+	/**
+	 *  display view all information pane and initialize comboBoxes
+	 * @param 
+	 */
+	void initializeViewAllInformation(){
+	//	cbOptions
+		//setPane(viewAllInformationPane);
+	}
+
+	public class ArbitratorComboBox {
+		private String teacherId;
+		private String teacherName;
+		private String className;
+		private String classId;
+		private String classYear;
+		private String classSem;
+		private String tos;
+		private String arbId;
+		public ArbitratorComboBox(String id,String name){
+			teacherId = id;
+			teacherName = name;
+			tos = name;
+			arbId=id;
+		}
+		public ArbitratorComboBox(String id,String name,String year,String sem){
+			classId = id;
+			className = name;
+			classYear=year;
+			classSem=sem;
+			tos = className+" ["+classYear+","+classSem+"]";
+			arbId=id;
+		}
+		public String getTeacherId() {
+			return teacherId;
+		}
+		public void setTeacherId(String teacherId) {
+			this.teacherId = teacherId;
+		}
+		public String getTeacherName() {
+			return teacherName;
+		}
+		public void setTeacherName(String teacherName) {
+			this.teacherName = teacherName;
+		}
+		public String getClassName() {
+			return className;
+		}
+		public void setClassName(String className) {
+			this.className = className;
+		}
+		public String getClassId() {
+			return classId;
+		}
+		public void setClassId(String classId) {
+			this.classId = classId;
+		}
+		public String getClassYear() {
+			return classYear;
+		}
+		public void setClassYear(String classYear) {
+			this.classYear = classYear;
+		}
+		public String getClassSem() {
+			return classSem;
+		}
+		public String getArbId(){
+			return arbId;
+		}
+		public void setClassSem(String classSem) {
+			this.classSem = classSem;
+		}
+		public String toString(){
+			return tos;
+		}
+	}
 }
 
 
