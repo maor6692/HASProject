@@ -182,9 +182,11 @@ public class SecretaryController implements Initializable{
 	//
 	@FXML
 	void changeAppintmentHandler(ActionEvent event) {
+
 		HashMap<String,ArrayList<String>> hm=new HashMap<String,ArrayList<String>>();
 		ArrayList<String> arr=new ArrayList<String>();
 		arr.add(cid);
+		int course_hours;
 		arr.add(classid);
 		arr.add(teacher_username);
 		hm.put("get course in class id", arr);
@@ -204,16 +206,17 @@ public class SecretaryController implements Initializable{
 		req.add(newTeacherId);
 		req.add(class_in_course_id);//class in cours id
 		req.add(cbCourse.getValue());//course name
-
-
 		hm.clear();
 		arr.clear();
 		arr.add(cid);
-		hm.put("get  course weekly hours",arr);
+		arr.add(args.get(0));
+		arr.add(args.get(1));
+		hm.put("get course weekly hours",arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-		int course_hours;
-		course_hours=Integer.parseInt(((ArrayList<String>) (LoginController.userClient.ans)).get(0));
+		String str="";//
+		str+=(String)(((ArrayList<String>)LoginController.userClient.ans).get(0));
+		course_hours=Integer.parseInt(str);
 		hm.clear();
 		arr.clear();
 		arr.add(newTeacherId);
@@ -223,17 +226,27 @@ public class SecretaryController implements Initializable{
 		int hours_limit=Integer.parseInt(((ArrayList<String>) (LoginController.userClient.ans)).get(0));
 		int weekly_hours=Integer.parseInt(((ArrayList<String>) (LoginController.userClient.ans)).get(1));
 		if(weekly_hours+course_hours<=hours_limit){
+			req.add(String.valueOf(weekly_hours+course_hours));
 			hm.put("send change teacher appointment to manager", req); 
 			LoginController.userClient.sendServer(hm);
 			LoginController.syncWithServer();
+			req.clear();
+			hm.clear();
+			arr.clear();
 		}
-		else req.clear();
+		else {
+			req.clear();
+			hm.clear();
+			arr.clear();
+		}
+
 	}
 
 
 	//
 	@SuppressWarnings("unchecked")
 	/////////////////FOR CHANGE TEACHER'S APPOINTMENT///////////////
+
 	@FXML
 	void cbChooseCourseHandler(ActionEvent event) {
 		if(cbCourse.getSelectionModel().getSelectedItem()==null) return;
@@ -257,16 +270,17 @@ public class SecretaryController implements Initializable{
 		LoginController.userClient.sendServer(msg);
 		LoginController.syncWithServer();
 		msg.clear();
-		//			if(UserClient.ans instanceof HashMap<?,?>){
-		//recieve Map<String,ArrayList<String>> -- [class_in_course_id,[class_id,class_name]]	
+		//   if(UserClient.ans instanceof HashMap<?,?>){
+		//recieve Map<String,ArrayList<String>> -- [class_in_course_id,[class_id,class_name]] 
 		tCTA =(HashMap<String,ArrayList<String>>) UserClient.ans;
 		for(ArrayList<String> classes : tCTA.values())
 			if(classes!=null)
 				cbClass.getItems().add(classes.get(0)+"-"+classes.get(1));
 
-		//	    }
+		//     }
 
 	}
+
 
 	@FXML
 	void cbClassHandler(ActionEvent event) {
@@ -340,7 +354,7 @@ public class SecretaryController implements Initializable{
 			hm2.clear();
 			String teacher_name="";
 			teacher_name+=(String)LoginController.userClient.ans;
-			cbTeachers.getItems().add(teacher_name);	
+			cbTeachers.getItems().add(teacher_name); 
 		}
 
 

@@ -174,25 +174,35 @@
                         <Font name="Baskerville Old Face" size="47.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="cbOptions" layoutX="487.0" layoutY="159.0" prefWidth="150.0" promptText="information options" />
-                  <Label layoutX="207.0" layoutY="156.0" text="choose information to display:">
+                  <ComboBox fx:id="cbOptions" layoutX="487.0" layoutY="201.0" onAction="#setLabelFalse" prefWidth="150.0" promptText="information options" />
+                  <Label layoutX="207.0" layoutY="198.0" text="choose information to display:">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <Label layoutX="209.0" layoutY="199.0" text="choose semester:">
+                  <Label layoutX="206.0" layoutY="159.0" text="choose semester:">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="cbSemester" layoutX="569.0" layoutY="202.0" prefHeight="25.0" prefWidth="67.0" promptText="sem'" />
-                  <ComboBox fx:id="cbYear" layoutX="486.0" layoutY="202.0" prefHeight="25.0" prefWidth="83.0" promptText="year" />
+                  <ComboBox fx:id="cbSemester" layoutX="571.0" layoutY="159.0" onAction="#setLabelFalse" prefHeight="25.0" prefWidth="67.0" promptText="sem'" />
+                  <ComboBox fx:id="cbYear" layoutX="487.0" layoutY="159.0" onAction="#setLabelFalse" prefHeight="25.0" prefWidth="83.0" promptText="year" />
                   <Button fx:id="btnView" layoutX="657.0" layoutY="156.0" mnemonicParsing="false" onAction="#viewButtonHandler" prefHeight="72.0" prefWidth="102.0" text="view">
                      <font>
                         <Font size="21.0" />
                      </font>
                   </Button>
                   <TextArea fx:id="textAreaViewAllInfo" editable="false" layoutX="29.0" layoutY="274.0" prefHeight="529.0" prefWidth="956.0" />
+                  <Label fx:id="lblCurrSemseter" layoutX="377.0" layoutY="120.0" text="current semester: 2017 / A " textFill="#0b1cd7" visible="false">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblEmptyCB" layoutX="240.0" layoutY="242.0" text="you must choose year,semester and information option" textFill="#c61313" underline="true" visible="false">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
          </children>

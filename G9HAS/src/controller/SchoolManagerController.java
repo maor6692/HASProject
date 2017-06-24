@@ -37,10 +37,13 @@ import javafx.stage.WindowEvent;
 public class SchoolManagerController implements Initializable{
 
 	@FXML
+	private TextArea textAreaViewAllInfo;
+
+	@FXML
 	private Hyperlink linkLogout;
 
 	@FXML							     //   1-remove student from course, 2-add student to course, 3-change teacher appointment
-	private Label lblUser;				//	                  request details: "2:classInCourse id:userId"
+	private Label lblUser,lblCurrSemseter,lblEmptyCB;				//	                  request details: "2:classInCourse id:userId"
 	@FXML
 	private TextArea tfRequestDetails,tfComments;
 
@@ -51,7 +54,7 @@ public class SchoolManagerController implements Initializable{
 	private ListView<String> lvStudents,lvRequests;//list view to display blocked students in current semester
 
 	@FXML
-	private ComboBox<String> cbStudents,cbClasses,cbOptions,cbYear,cbsemester;//combo box for class and students in current semester
+	private ComboBox<String> cbStudents,cbClasses,cbOptions,cbYear,cbSemester;//combo box for class and students in current semester
 
 	@FXML
 	private Button btnReturnAccess,btnBlock;
@@ -159,6 +162,7 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void setViewAllInformationPaneHandler(ActionEvent event) {
+		initializeViewAllInformation();
 		setPane(viewAllInformationPane);
 	}
 	/**
@@ -555,15 +559,78 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void viewButtonHandler(ActionEvent event){
-			
+		String query="";
+		lblEmptyCB.setVisible(false);
+		if(cbYear.getValue()==null || cbSemester.getValue()==null || cbOptions.getValue()==null){
+			lblEmptyCB.setVisible(true);
+			return;
+		}
+		String info="";
+		ArrayList<String> params = new ArrayList<String>();
+		HashMap<String,ArrayList<String>> hm;
+		HashMap<String, ArrayList<String>> students;
+		switch(cbOptions.getValue()){
+
+		case "all classes":
+			query ="select * from class where year='"+cbYear.getValue()+"' AND semester='"+cbSemester.getValue()+"'";
+			params.add(query);
+			hm = (HashMap<String, ArrayList<String>>) queryGenerator(params,"getAllClassesOfSemester");//class id:name
+
+			for(String key : hm.keySet()){
+				info+="\nclass "+hm.get(key).get(0)+":\n.................."+"\n";
+				info+="students in this class:\n..................................................................................\n";
+				params.clear();
+				params.add(key);
+				queryGenerator(params,"getStudentsInClass");
+				students = (HashMap<String,ArrayList<String>>)UserClient.ans;//id:first name,last name,pBlocked
+				for(String student : students.keySet()){
+					info+="id:"+student+" first name: "+students.get(student).get(0)+", last name: "+students.get(student).get(1)+"\n";
+				}
+			}
+			textAreaViewAllInfo.setText(info);
+			break;
+
+		case "all courses":
+			query ="select * from course where year='"+cbYear.getValue()+"' AND semester='"+cbSemester.getValue()+"'";
+			params.add(query);
+			queryGenerator(params,"getAllCoursesOfSemester");
+
+			break;
+
+		case "classes in courses":
+
+			break;
+
+		case "blocked students":
+
+			break;
+		}
+	}
+	/**
+	 * set lblEmptyCB to visible=false
+	 */
+	@FXML
+	void setLabelFalse(ActionEvent event){
+		lblEmptyCB.setVisible(false);
 	}
 	/**
 	 *  display view all information pane and initialize comboBoxes
 	 * @param 
 	 */
 	void initializeViewAllInformation(){
-	//	cbOptions
-		//setPane(viewAllInformationPane);
+		queryGenerator(null,"getSemesters");
+		cbYear.getItems().clear();
+		cbSemester.getItems().clear();
+		cbOptions.getItems().clear();
+		for(String str: (ArrayList<String>)UserClient.ans ){
+			if(str.substring(5,6).equals("1")) lblCurrSemseter.setText("current semester : "+str.substring(0,4)+" / "+(str.substring(4,5).equals("1")?"A":"B"));
+			if(!cbYear.getItems().contains(str.substring(0,4)))
+				cbYear.getItems().add(str.substring(0,4));
+			if(!cbSemester.getItems().contains(str.substring(4,5)))
+				cbSemester.getItems().add(str.substring(4,5));
+		}
+		cbOptions.getItems().addAll("all classes","all courses","classes in courses","blocked students");
+
 	}
 
 	public class ArbitratorComboBox {
@@ -631,6 +698,14 @@ public class SchoolManagerController implements Initializable{
 		public String toString(){
 			return tos;
 		}
+	}
+
+	Object queryGenerator(ArrayList<String> params , String serverCase){
+		msg.clear();
+		msg.put(serverCase,params);
+		LoginController.userClient.sendServer(msg);//send ask to server 
+		LoginController.syncWithServer();
+		return  UserClient.ans;
 	}
 }
 
