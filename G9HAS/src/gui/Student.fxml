@@ -15,7 +15,7 @@
          <children>
             <ImageView fitHeight="38.0" fitWidth="33.0" layoutX="14.0" layoutY="28.0">
                <image>
-                  <Image url="@../../resources/new-user-image-default.png" />
+                  <Image url="@../../resources/user%20icon.png" />
                </image>
             </ImageView>
             <Label fx:id="lblUser" layoutX="50.0" layoutY="28.0" text="UserName" textFill="WHITE">
@@ -175,6 +175,16 @@
                      </font>
                   </Label>
                   <Button fx:id="btnDownloadEvaluation" layoutX="292.0" layoutY="459.0" mnemonicParsing="false" onAction="#evaluationFileHandler" text="Download Evaluation file" visible="false" />
+                  <ImageView fitHeight="25.0" fitWidth="29.0" layoutX="186.0" layoutY="249.0">
+                     <image>
+                        <Image url="@../../resources/upload_icon.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="439.0" layoutY="138.0">
+                     <image>
+                        <Image url="@../../resources/download.png" />
+                     </image>
+                  </ImageView>
                </children>
             </Pane>
          </children>
