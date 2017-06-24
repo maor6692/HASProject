@@ -16,7 +16,7 @@
             <Image url="@../../resources/background.jpg" />
          </image>
       </ImageView>
-      <Label fx:id="lblWelcome" layoutX="102.0" layoutY="62.0" prefHeight="154.0" prefWidth="404.0" text="Welcome">
+      <Label fx:id="lblWelcome" layoutX="103.0" layoutY="62.0" prefHeight="154.0" prefWidth="404.0" text="Welcome">
          <font>
             <Font size="66.0" />
          </font>
@@ -57,6 +57,11 @@
       <TextField fx:id="tfPort" layoutX="323.0" layoutY="314.0" prefHeight="31.0" prefWidth="149.0" text="5555" />
       <Label fx:id="lblWrongUser" layoutX="323.0" layoutY="164.0" prefHeight="31.0" prefWidth="167.0" text="wrong user name or password" textFill="#eb0909" visible="false" />
       <Label fx:id="lblConnection" layoutX="323.0" layoutY="257.0" prefHeight="31.0" prefWidth="167.0" text="connection failed" textFill="#eb0808" visible="false" />
-      <CheckBox fx:id="checkBox" layoutX="437.0" layoutY="375.0" mnemonicParsing="false" onAction="#checkBoxClicked" />
+      <CheckBox fx:id="checkBox" layoutX="443.0" layoutY="375.0" mnemonicParsing="false" onAction="#checkBoxClicked" prefHeight="17.0" prefWidth="17.0" />
+      <ImageView fx:id="HASLogo1" fitHeight="39.0" fitWidth="38.0" layoutX="435.0" layoutY="364.0">
+         <image>
+            <Image url="@../../resources/login%20icon.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
