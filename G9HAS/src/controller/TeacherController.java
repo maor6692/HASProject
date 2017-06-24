@@ -314,6 +314,8 @@ public class TeacherController implements Initializable{
 				hm.put("get solution file of student", arr);
 				LoginController.userClient.sendServer(hm);
 				LoginController.syncWithServer();
+				if(((ArrayList<String>)LoginController.userClient.ans)!=null)
+				{
 				fname = ((ArrayList<String>)LoginController.userClient.ans).get(0);
 				arr.clear();
 				arr.add(fname);
@@ -327,6 +329,7 @@ public class TeacherController implements Initializable{
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				}
 				}
 			}
 		}
