@@ -237,16 +237,16 @@ public class EchoServer extends AbstractServer {
 					
 				     case "get teacher id for course id":
 				         ans=(ArrayList<String>) message.get(key);
-				         String teacher_id="";
+				         String teacherid="";
 				         query = "SELECT teacher_id FROM class_in_course WHERE course_id='"+ans.get(0)+"'";
 				         stmt = conn.createStatement();
 				         rs = stmt.executeQuery(query);
 				         while (rs.next()) { 
-				          teacher_id =(rs.getString(1));
+				          teacherid =(rs.getString(1));
 				         }
 				         stmt.close();
 				         rs.close();
-				         client.sendToClient(teacher_id);
+				         client.sendToClient(teacherid);
 				         break;
 				     case "send mail to teacher":
 							ans=(ArrayList<String>) message.get(key);
