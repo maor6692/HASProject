@@ -153,17 +153,17 @@
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblErrorST" layoutX="27.0" layoutY="319.0" prefHeight="17.0" prefWidth="494.0" textFill="#f50707">
+                  <Label fx:id="lblErrorST" layoutX="24.0" layoutY="283.0" prefHeight="17.0" prefWidth="152.0" textFill="#f50707">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblGradeInTask" layoutX="8.0" layoutY="281.0" prefHeight="21.0" prefWidth="240.0" textFill="#eb0707">
+                  <Label fx:id="lblGradeInTask" layoutX="292.0" layoutY="264.0" prefHeight="21.0" prefWidth="240.0" textFill="#3a07eb" visible="false">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblTeacherNotes" layoutX="27.0" layoutY="311.0" text="Teacher notes:" textFill="#ee0707" visible="false">
+                  <Label fx:id="lblTeacherNotes" layoutX="295.0" layoutY="292.0" text="Teacher notes:" textFill="#3107ed" visible="false">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
