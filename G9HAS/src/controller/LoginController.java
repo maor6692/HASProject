@@ -36,8 +36,6 @@ public class LoginController extends Application implements Initializable {
 	private PasswordField tfPassword;
 	@FXML
 	public TextField tfUserName,tfPort,tfHost;
-	@FXML
-	public CheckBox checkBox;
 	public ArrayList<String> arrans;
 	public static HashMap<String, ArrayList<String>> msg;
 	public static UserClient userClient;
@@ -119,32 +117,6 @@ public class LoginController extends Application implements Initializable {
 		}
 		else{
 			lblWrongUser.setVisible(true);
-		}
-	}
-
-	@FXML
-	void checkBoxClicked(ActionEvent event) {
-		if(checkBox.isFocused()){
-			try {
-
-				FileInputStream fileInputStream = new FileInputStream("mf.mp3");
-
-				Player player = new Player(fileInputStream);
-				player.play();
-
-			} catch (FileNotFoundException e) {
-
-				// TODO Auto-generated catch block
-
-				e.printStackTrace();
-
-			} catch (JavaLayerException e) {
-
-				// TODO Auto-generated catch block
-
-				e.printStackTrace();
-
-			}
 		}
 	}
 	/**
