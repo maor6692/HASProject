@@ -1008,10 +1008,13 @@ public class EchoServer extends AbstractServer {
 					case "assignStudentsToCourseInClass":
 						ArrayList<String> studentDetails = (ArrayList<String>) message.get(key);
 						query = "UPDATE student SET class_id=? WHERE id=?";
+						
 						pstmt = conn.prepareStatement(query);
+						Statement st22 = conn.createStatement();
 						int classId = Integer.parseInt(studentDetails.get(0));
 						studentDetails.remove(0);
 						for(String studentId : studentDetails){
+							st22.executeUpdate("INSERT INTO student_in_class (student_id,class_id) VALUES ('"+studentId+"','"+classId+"')");
 							pstmt.setInt(1, classId);
 							pstmt.setString(2,studentId);
 							pstmt.executeUpdate();
@@ -1310,7 +1313,7 @@ public class EchoServer extends AbstractServer {
 						}
 						Collections.sort(semesters);
 
-						rs = stmt.executeQuery("select * from class where year<>"+currYear+" OR semester<>"+currSem);
+						rs = stmt.executeQuery("select * from class where year="+currYear+" AND semester="+currSem);
 						while(rs.next()){
 							tempList.add(rs.getString(1));
 							tempList.add(rs.getString(2));
@@ -1391,28 +1394,71 @@ public class EchoServer extends AbstractServer {
 						String pSem = ans.get(2).substring(4);
 
 						String q;
+						Statement st2 = conn.createStatement();
+						ResultSet res2;
 						switch(ans.get(0)){
 						case"All Classes of a teacher":
 							//query on loop by period
+
 							for(;destP<currP;){
 								pYear = String.valueOf(destP).substring(0, 4);
 								pSem = String.valueOf(destP).substring(4);
 
 								ArrayList<String> vals = new ArrayList<>();
-								q = "SELECT cl.name,co.name FROM course co,class_in_course cic,class cl WHERE cic.teacher_id = '"+ans.get(1)+"' AND cic.class_id=cl.id AND cic.course_id=co.id AND cl.year=co.year AND cl.semester = co.semester AND cl.year = '"+pYear+"' AND cl.semester='"+pSem+"'";
+								q = "SELECT cl.name,co.name,cic.id FROM course co,class_in_course cic,class cl WHERE cic.teacher_id = '"+ans.get(1)+"' AND cic.class_id=cl.id AND cic.course_id=co.id AND cl.year=co.year AND cl.semester = co.semester AND cl.year = '"+pYear+"' AND cl.semester='"+pSem+"'";
 								rs=stmt.executeQuery(q);
 
 								while(rs.next()){
-									vals.add(rs.getString(1)+","+rs.getString(2));
+									res2 = st2.executeQuery("SELECT AVG(grade) FROM student_in_course_in_class WHERE course_in_class_id='"+rs.getString(3)+"'");
+									int avg=-1;
+									while(res2.next()) avg = res2.getInt(1);
+									
+									vals.add(rs.getString(1)+","+rs.getString(2)+","+avg);
 								}
 								report.put(String.valueOf(destP), vals);
-								destP = destP%10 == 1 ? destP+1 : ((destP/10)+1)*10+1;
+								destP = destP%10 == 1 ? destP+1 : ((destP/10)+1)*10+1;//get next semester
 							}
 
 							break;
 						case"All Teachers of a class":
+							q="SELECT DISTINCT cic.teacher_id FROM class_in_course cic, class cl WHERE cl.name='"+ans.get(1)+"' AND cl.id=cic.class_id";
+							rs = stmt.executeQuery(q);
+							ArrayList<String> tteachers = new ArrayList<>();
+							while(rs.next()) tteachers.add(rs.getString(1));
+							int preserveDestP = destP;
+							for(String tt:tteachers){// for each teacher
+									for(destP=preserveDestP;destP<currP;){ // for each teacher in each semester
+										pYear = String.valueOf(destP).substring(0, 4);
+										pSem = String.valueOf(destP).substring(4);
+										q="SELECT AVG(grade),co.name FROM class_in_course cic, class cl,student_in_course_in_class sicic,course co WHERE cic.teacher_id='"+tt+"'  AND cl.id=cic.class_id AND cl.year='"+pYear+"' AND cl.semester='"+pSem+"' AND cic.id=sicic.course_in_class_id AND co.id = cic.course_id GROUP BY cic.id";
+										res2 = st2.executeQuery(q);
+										ArrayList<String> vals = new ArrayList<>();
+										int avg=-1;
+										while(res2.next()){
+											avg = res2.getInt(1);
+											vals.add(res2.getString(2)+","+avg);
+										}
+										report.put(tt+","+pYear+","+pSem, vals);
+										destP = destP%10 == 1 ? destP+1 : ((destP/10)+1)*10+1;//get next semester
+									}
+							}
+							
 							break;
 						case"All Courses of a class":
+							for(;destP<currP;){ // for each teacher in each semester
+								pYear = String.valueOf(destP).substring(0, 4);
+								pSem = String.valueOf(destP).substring(4);
+								q="SELECT AVG(sicic.grade),co.name FROM class cl,class_in_course cic,student_in_course_in_class sicic,course co WHERE cl.name='"+ans.get(1)+"' AND cl.year='"+pYear+"' AND cl.semester='"+pSem+"' AND cic.id=sicic.course_in_class_id AND co.id=cic.course_id AND cic.class_id = cl.id GROUP BY cic.id";
+								rs = stmt.executeQuery(q);
+								ArrayList<String> vals = new ArrayList<>();
+								int avg = -1;
+								while(rs.next()){
+									avg = rs.getInt(1);
+									vals.add(rs.getString(2)+","+avg);
+								}
+								report.put(pYear+","+pSem, vals);
+								destP = destP%10 == 1 ? destP+1 : ((destP/10)+1)*10+1;//get next semester
+							}
 							break;
 						}
 

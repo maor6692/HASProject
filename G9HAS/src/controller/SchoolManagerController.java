@@ -475,10 +475,11 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void GetReportGSR(ActionEvent event) {
+		bcStatistic.getData().clear();
 		String op = cmbOpGSR.getSelectionModel().getSelectedItem();
 		String arb = cmbArb.getSelectionModel().getSelectedItem().getArbId();
 		String period = cmbPeriodGSR.getSelectionModel().getSelectedItem().substring(6, 10)+cmbPeriodGSR.getSelectionModel().getSelectedItem().substring(21,22);
-		bcStatistic.setTitle(op+" "+arb);
+		bcStatistic.setTitle(op+" "+cmbArb.getSelectionModel().getSelectedItem());
 		HashMap<String,ArrayList<String>> msg = new HashMap<>();
 		ArrayList<String> arrGSR = new ArrayList<>();
 		arrGSR.add(op);
@@ -492,7 +493,51 @@ public class SchoolManagerController implements Initializable{
 		LoginController.syncWithServer();
 		msg.clear();
 		HashMap<String,ArrayList<String>> report  = (HashMap<String,ArrayList<String>>) UserClient.ans;
-
+		
+		//ObservableList<String> graphCats = FXCollections.observableArrayList();
+		//for(String s: report.keySet())graphCats.add(s);
+		//axisSem.setCategories(graphCats);
+		
+		
+		XYChart.Series <String, Number> series;
+		switch(op){
+		case "All Classes of a teacher":
+		
+					for(String semId : report.keySet()){
+						series = new XYChart.Series<>();
+						series.setName(semId);
+						for(String semInfo : report.get(semId)){
+							String [] semData = semInfo.split(",");
+							series.getData().add(new XYChart.Data<>(semData[1], Integer.parseInt(semData[2])));
+						}
+						bcStatistic.getData().add(series);
+					}
+					break;
+		case "All Teachers of a class":
+			for(String tInSem : report.keySet()){
+				series = new XYChart.Series<>();
+				series.setName(tInSem);
+				for(String tSInfo : report.get(tInSem)){
+					String[] semData = tSInfo.split(","); //course name,average 
+					series.getData().add(new XYChart.Data<>(semData[0], Integer.parseInt(semData[1])));
+					
+				}
+				bcStatistic.getData().add(series);
+			}
+			break;
+		case "All Courses of a class":
+			for(String cInSem : report.keySet()){
+				series = new XYChart.Series<>();
+				series.setName(cInSem);
+				for(String tSInfo : report.get(cInSem)){
+					String[] semData = tSInfo.split(","); //course name,average 
+					series.getData().add(new XYChart.Data<>(semData[0], Integer.parseInt(semData[1])));
+				}
+				bcStatistic.getData().add(series);
+			}
+			break;
+		}
+		bcStatistic.setVisible(true);
 	}
 	/**
 	 * opens period combo box
@@ -522,6 +567,7 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void OperationGSR(ActionEvent event) {
+		if(cmbOpGSR.getSelectionModel().getSelectedItem() == null) return;
 		lblArb.setVisible(false);
 		cmbArb.setVisible(false);
 		cmbArb.getItems().clear();
@@ -688,8 +734,8 @@ public class SchoolManagerController implements Initializable{
 			className = name;
 			classYear=year;
 			classSem=sem;
-			tos = className+" ["+classYear+","+classSem+"]";
-			arbId=id;
+			tos = className;
+			arbId=name;
 		}
 		public String getTeacherId() {
 			return teacherId;
