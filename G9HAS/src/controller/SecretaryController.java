@@ -419,8 +419,10 @@ public class SecretaryController implements Initializable{
 	
 
 	/**
-	 * send adding request of student to a course in class 
-	 * @param event, course, course in class, student
+	 * param send adding request of student to a course in class 
+	 * @course 
+	 * @param course_in_class
+	 * @param student
 	 */
 	@FXML
 	void addStudentASHandler(ActionEvent event){
@@ -492,6 +494,10 @@ public class SecretaryController implements Initializable{
 		}
 
 	}
+	/**
+	 * showing in next combo box the classes who studying this chosen course
+	 * @param course 
+	 */
 	@FXML
 	void chooseCourseASHandler(ActionEvent event) {
 		lblErrAS.setVisible(false);
@@ -517,7 +523,11 @@ public class SecretaryController implements Initializable{
 	}
 
 
-
+	/**
+	 * checking if class added to right side
+	 * @param className
+	 * @return
+	 */
 	private boolean checkClassExists(ClassesInListView className){ // checks if class is exists in right side of table
 		for(ClassInCourseRow temp : classesInCourse){
 			if(temp.getClassName().equals(className.getClassName()))
@@ -527,7 +537,12 @@ public class SecretaryController implements Initializable{
 	}
 
 
-
+	/**
+	 * Create Semester Handler
+	 * getting chosen classes from the left side (all available classes in the next semester) 
+	 * and adding them to the course
+	 * @param classes chosen classes
+	 */
 	@FXML
 	void addClassesToCourseHandler(ActionEvent event) {
 		lblWarning.setVisible(false);
@@ -547,6 +562,12 @@ public class SecretaryController implements Initializable{
 
 		//tblClassTeacher.setItems(classesInCourse); // set table from starter
 	}
+	/**
+	 * Create Semester Handler
+	 * getting chosen classes from the right side (all chosen classes) 
+	 * and removing them from the left list
+	 * @param classes chosen classes
+	 */
 	@FXML
 	void removeClassesFromCourseHandler(ActionEvent event) {
 		lblWarning.setVisible(false);
@@ -564,7 +585,11 @@ public class SecretaryController implements Initializable{
 		tblClassTeacher.setItems(classesInCourse); // set table from starter
 	}
 
-
+	/**
+	 * getting the course to assign classes to him and populating the teacher combo box in teachers
+	 * from the same teaching unit as the course
+	 * @param course 
+	 */
 	@FXML
 	void chooseCourseHandler(ActionEvent event) {
 		lblWarning.setVisible(false);
@@ -609,7 +634,12 @@ public class SecretaryController implements Initializable{
 		teachers.setCellFactory(ComboBoxTableCell.forTableColumn(teachersBoxValues));
 
 	}
-
+	
+	/**
+	 * returning true if teacher already exists in combo box(avoide duplications)
+	 * @param teacherObj
+	 * @return
+	 */
 	public boolean teacherInComboBox(TeacherComboBox teacherObj){
 		for(TeacherComboBox temp : teachersBoxValues){
 			if(temp.getTeacherId().equals(teacherObj.getTeacherId()))
@@ -742,7 +772,13 @@ public class SecretaryController implements Initializable{
 		lblWarningNoStudent.setVisible(false);
 		lblTooLongInput.setVisible(false);
 	}
-
+	/**
+	 * Create Semester Handler
+	 * assigning classes to the course, assigning teachers to each class
+	 * checking exception for teachers limit hours and pre courses for students
+	 * @param tblClassTeacher  chosen classes and teachers
+	 * @param currCourseBox course
+	 */
 	@FXML
 	void assignClassesAndTeachersHandler(ActionEvent event) {
 		ExceptionStudents.clear();
@@ -897,7 +933,10 @@ public class SecretaryController implements Initializable{
 
 
 	}
-
+	/**
+	 * logging out
+	 * @param event
+	 */
 	@FXML
 	void logoutHandler(ActionEvent event) {//goes back to login window
 		Parent nextWindow;
@@ -921,6 +960,10 @@ public class SecretaryController implements Initializable{
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * resets all panes and sets the right pane
+	 * @param pane
+	 */
 	void setPane(Pane pane){
 		paneRemoveStudent.setVisible(false);
 		paneChangeAppointment.setVisible(false);
@@ -933,9 +976,17 @@ public class SecretaryController implements Initializable{
 	}
 
 	@FXML
+	/**
+	 * initialize the pane create semester
+	 * @param event
+	 */
 	void createSemesterHandler(ActionEvent event) {
 		setPane(paneCreateSemester);
 	}
+	/**
+	 * getting all inbox messages of the secretary and showing them on the list
+	 * @param event
+	 */
 	@FXML
 	void viewInboxHandler(ActionEvent event) {
 		setPane(paneViewInbox);
@@ -959,7 +1010,10 @@ public class SecretaryController implements Initializable{
 		tblViewInbox.setItems(secretaryInbox);
 
 	}
-
+	/**
+	 * initializing add student to course, setting the right pane, call the method
+	 * @param event
+	 */
 	@FXML
 	void addStudentToCourseHandler(ActionEvent event) {
 		setPane(paneAddStudent);
@@ -1265,7 +1319,11 @@ public class SecretaryController implements Initializable{
 		}
 		//--
 	}
-
+	/**
+	 * getting the next semester, all the courses that will be opened on the next semester,
+	 * all available class on next semester, and all available teachers from the all teaching units.
+	 * 
+	 */
 	void initializeCreateSemester(){
 		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
 		msg.put("getCurrentSemester",null);
