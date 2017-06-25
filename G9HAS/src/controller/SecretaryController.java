@@ -417,7 +417,7 @@ public class SecretaryController implements Initializable{
 		msg = new HashMap<String, ArrayList<String>>();
 		ArrayList <String> s = new ArrayList<>();
 		s.add(String.valueOf(studentsClass.getClassId()));
-		msg.put("getStudentsInClass",s);
+		msg.put("getStudentsInCourseInClass",s);
 		LoginController.userClient.sendServer(msg);
 		LoginController.syncWithServer();
 		msg.clear();
@@ -921,7 +921,7 @@ public class SecretaryController implements Initializable{
 			sem = ((ArrayList<Character>)LoginController.userClient.ans).get(1);
 			if(sem=='A')
 			{
-				year = year--;
+				year--;
 				semester = 2;
 			}
 			else
@@ -958,12 +958,37 @@ public class SecretaryController implements Initializable{
 		studentCourse.clear();
 		String currStud= "";
 		int spacecnt=0;
+		char sem;
+		int semester=0,year=0;
 		HashMap <String,ArrayList<String>> hm = new HashMap <String,ArrayList<String>>();
 		ArrayList<String> arr = new ArrayList<String>();
-		arr.add(cbChooseCourseRS.getValue().substring(2, 5));
-		hm.put("get students for course", arr);
+		hm.put("getCurrentSemester",null);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
+		if(LoginController.userClient.ans != null){
+			year = ((ArrayList<Integer>)LoginController.userClient.ans).get(0);
+			sem = ((ArrayList<Character>)LoginController.userClient.ans).get(1);
+			if(sem=='A')
+			{
+				year--;
+				semester = 2;
+			}
+			else
+			{
+				semester = 1;
+			}
+		}
+		hm.clear();
+		arr.clear();
+		
+		arr.add(cbChooseCourseRS.getValue().substring(2, 5));
+		arr.add(""+year);
+		arr.add(""+semester);
+		hm.put("get students for course in class", arr);
+		LoginController.userClient.sendServer(hm);
+		LoginController.syncWithServer();
+		
+		//------
 		if(LoginController.userClient.ans != null){
 			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 			{

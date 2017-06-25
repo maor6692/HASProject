@@ -858,6 +858,27 @@ public class EchoServer extends AbstractServer {
 						rs.close();
 						client.sendToClient(ans);
 						break;
+					case "get students for course in class":
+						ans= (ArrayList<String>)message.get(key);
+						String qu1 = "SELECT cic.id,cl.id FROM class_in_course cic,class cl WHERE cic.class_id=cl.id AND cl.year='"+ans.get(1)+"' AND cl.semester='"+ans.get(2)+"' AND cic.course_id='"+ans.get(0)+"'";
+						ArrayList<String> cicGS = new ArrayList<>();
+						stmt = conn.createStatement();
+						stmt2 = conn.createStatement();
+						ResultSet rss2;
+						rs = stmt.executeQuery(qu1);
+						while (rs.next()) { 
+							String qu2 = "SELECT student_id FROM student_in_class WHERE class_id='"+rs.getString(2)+"'";
+							
+							 rss2 = stmt2.executeQuery(qu2);
+							while (rss2.next()) {
+								cicGS.add(rs.getString(1)+" - "+rss2.getString(1));
+							}
+						}
+						
+						stmt.close();
+						rs.close();
+						client.sendToClient(cicGS);
+						break;
 					case "send remove request to manager":
 						dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 						localDate = LocalDate.now();
@@ -906,7 +927,7 @@ public class EchoServer extends AbstractServer {
 							if(currSemester.charAt(4)=='1'){
 								newSemester=2;
 							}else{
-								newSemester=2;
+								newSemester=1;
 								newYear++;
 							}
 						}
@@ -1041,6 +1062,28 @@ public class EchoServer extends AbstractServer {
 							ans.clear();
 						}
 						client.sendToClient(students);//id:first name,last name,pBlocked
+						break;
+						
+					case "getStudentsInCourseInClass":
+						ResultSet rs_usersGS = null;
+						HashMap<String, ArrayList<String>> studentsGS = new HashMap<String, ArrayList<String>>();
+						ans=(ArrayList<String>) message.get(key);
+						query = "SELECT student_id FROM student_in_class WHERE class_id ="+ans.get(0);
+						stmt = conn.createStatement();
+						stmt2=conn.createStatement();
+						rs=stmt.executeQuery(query);
+						ans.clear();
+						while(rs.next()){ 
+							rs_users=stmt2.executeQuery("select first_name,last_name from users where user_name="+"'"+rs.getString(1)+"'");
+							while(rs_users.next()){ 
+								ans.add(rs_users.getString(1));
+								ans.add(rs_users.getString(2));
+								
+								studentsGS.put(rs.getString(1), new ArrayList<String>(ans));
+							}
+							ans.clear();
+						}
+						client.sendToClient(studentsGS);//id:first name,last name,pBlocked
 						break;
 
 					case "blockAccess":
