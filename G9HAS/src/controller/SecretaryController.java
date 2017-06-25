@@ -149,12 +149,17 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	private Button btnMoveRight;
-
+    @FXML
+    private Button btnChangeAppointment;
 	@FXML
 	private Button btnMoveLeft;
 	@FXML
 	private ComboBox<ClassInCourseAS> cmbClassInCourseAS;
+    @FXML
+    private Label lblDenied;
 
+    @FXML
+    private Label lblConfirmation;
 	ObservableList<ClassesInListView> selectedClasses;
 	private HashMap<Integer,HashMap<Integer,String>> courses;
 	HashMap<String, ArrayList<String>>	msg ;
@@ -174,15 +179,10 @@ public class SecretaryController implements Initializable{
 	private HashMap<Integer, Integer> coursesWeeklyHours;
 	@FXML
 	private Pane paneViewInbox; 
-
-	/**
-	 * send adding request of student to a course in class 
-	 * @param event, course, course in class, student
-	 */
-	//
+	
 	@FXML
 	void changeAppintmentHandler(ActionEvent event) {
-
+		
 		HashMap<String,ArrayList<String>> hm=new HashMap<String,ArrayList<String>>();
 		ArrayList<String> arr=new ArrayList<String>();
 		arr.add(cid);
@@ -230,37 +230,60 @@ public class SecretaryController implements Initializable{
 			hm.put("send change teacher appointment to manager", req); 
 			LoginController.userClient.sendServer(hm);
 			LoginController.syncWithServer();
+			LoginController.syncWithServer();
 			req.clear();
 			hm.clear();
 			arr.clear();
+			lblCurTeacher.setText("");
+			classid="";
+			teacher_fname="";
+			teacher_username="";
+			teachers_id.clear();
+			cid="";
+			cbTeachers.getItems().clear();
+			cbClass.getItems().clear();
+			cbCourse.setValue(null);
+			lblConfirmation.setVisible(true);
 		}
 		else {
-			req.clear();
+			//req.clear();
 			hm.clear();
 			arr.clear();
+			btnChangeAppointment.setVisible(false);
+			lblDenied.setVisible(true);
 		}
-
+		
 	}
+	
 
 
 	//
 	@SuppressWarnings("unchecked")
 	/////////////////FOR CHANGE TEACHER'S APPOINTMENT///////////////
-
 	@FXML
 	void cbChooseCourseHandler(ActionEvent event) {
+		lblDenied.setVisible(false);
+		lblConfirmation.setVisible(false);
+		btnChangeAppointment.setVisible(false);
+		lblCurTeacher.setText("Current Teacher:");
+		classid="";
+		teacher_fname="";
+		
+		teachers_id.clear();
+		cid="";
+		cbTeachers.getItems().clear();
+		cbClass.getItems().clear();
 		if(cbCourse.getSelectionModel().getSelectedItem()==null) return;
 		cbClass.getItems().clear();
 		String currCourse = cbCourse.getSelectionModel().getSelectedItem();
 		msg = new HashMap<String, ArrayList<String>>();
 
 		ArrayList<String> p = new ArrayList<>();
-		p.add(cbCourse.getValue());
+		p.add(currCourse);
 		msg.put("get course id from course name",p);
 		LoginController.userClient.sendServer(msg);
 		LoginController.syncWithServer();
 		p.clear();
-		String cid="";
 		cid+=((ArrayList<String>)LoginController.userClient.ans).get(0);
 		p.add(args.get(0));
 		p.add(args.get(1));
@@ -270,20 +293,32 @@ public class SecretaryController implements Initializable{
 		LoginController.userClient.sendServer(msg);
 		LoginController.syncWithServer();
 		msg.clear();
-		//   if(UserClient.ans instanceof HashMap<?,?>){
-		//recieve Map<String,ArrayList<String>> -- [class_in_course_id,[class_id,class_name]] 
-		tCTA =(HashMap<String,ArrayList<String>>) UserClient.ans;
+		if(LoginController.userClient.ans!=null){
+		//			if(UserClient.ans instanceof HashMap<?,?>){
+		//recieve Map<String,ArrayList<String>> -- [class_in_course_id,[class_id,class_name]]
+
+			HashMap<String,ArrayList<String>> tCTA =(HashMap<String,ArrayList<String>>) UserClient.ans;
 		for(ArrayList<String> classes : tCTA.values())
 			if(classes!=null)
 				cbClass.getItems().add(classes.get(0)+"-"+classes.get(1));
 
-		//     }
-
+		//	    }
+		}
+		
+	
 	}
-
 
 	@FXML
 	void cbClassHandler(ActionEvent event) {
+		cbTeachers.getItems().clear();
+		btnChangeAppointment.setVisible(false);
+		classid="";
+		teacher_fname="";
+		teacher_username="";
+		lblCurTeacher.setText("Current Teacher:");
+		
+		//if(cbClass.getValue()!=null){
+		cbTeachers.getItems().clear();
 		HashMap <String,ArrayList<String>> hm=new HashMap <String,ArrayList<String>>();
 		HashMap <String,Integer> hm1=new HashMap <String,Integer>();
 		HashMap <String,String> hm2=new HashMap <String,String>();
@@ -291,7 +326,7 @@ public class SecretaryController implements Initializable{
 		//for(int i=0;i<cbClass.getItems().size();i++)
 		//crs.add(cbClass.getItems().get(i));
 		//String chosenCourse=cbCourse.getValue();
-		;
+		
 		String cls="";
 		//int i=0;
 		//while(chosenClass.charAt(i)!='-')
@@ -299,14 +334,14 @@ public class SecretaryController implements Initializable{
 
 		ArrayList<String> p = new ArrayList<>();
 		p.add(cbCourse.getValue());
-		msg.put("get course id from course name",p);
-		LoginController.userClient.sendServer(msg);
-		LoginController.syncWithServer();
-		p.clear();
-
-
-		cid+=((ArrayList<String>)LoginController.userClient.ans).get(0);
+		//msg.put("get course id from course name",p);
+		//LoginController.userClient.sendServer(msg);
+		//LoginController.syncWithServer();
+		//p.clear();
+		//if(((ArrayList<String>)LoginController.userClient.ans)!=null){
+		//cid+=((ArrayList<String>)LoginController.userClient.ans).get(0);
 		int i=0;
+		if(cbClass.getValue()!=null){
 		cls+=cbClass.getValue();
 		while(cls.charAt(i)!='-'){
 			classid+=cls.charAt(i);
@@ -318,7 +353,7 @@ public class SecretaryController implements Initializable{
 		hm.put("get teacher class in course", crs);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-
+		if((String)LoginController.userClient.ans!=null){
 		teacher_username+=(String)LoginController.userClient.ans;
 		hm.clear();
 		crs.clear();
@@ -327,14 +362,16 @@ public class SecretaryController implements Initializable{
 		LoginController.syncWithServer();
 
 		teacher_fname+=(String)LoginController.userClient.ans;
-		lblCurTeacher.setText(teacher_fname);
+		lblCurTeacher.setText("Current Teacher:"+teacher_fname);
 		crs.clear();
 		hm.clear();
 		crs.add(teacher_username);
 		hm.put("get teacher teaching_unit", crs);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-		int tu=Integer.parseInt(((String)LoginController.userClient.ans));
+		int tu=0;
+		if(((String)LoginController.userClient.ans)!=""){
+		tu=Integer.parseInt(((String)LoginController.userClient.ans));
 		crs.clear();
 		hm.clear();
 
@@ -354,13 +391,37 @@ public class SecretaryController implements Initializable{
 			hm2.clear();
 			String teacher_name="";
 			teacher_name+=(String)LoginController.userClient.ans;
-			cbTeachers.getItems().add(teacher_name); 
+			cbTeachers.getItems().add(teacher_name);	
 		}
-
-
+		
+		}
+		classid="";
+		teacher_username="";
+		
+		}
+		}
 	}
 	/////////////////FOR CHANGE TEACHER'S APPOINTMENT///////////////
-	//
+	
+    @FXML
+    void teacherHandler(ActionEvent event) {
+    	if(cbCourse.getValue()!=null &&cbClass.getValue()!=null && cbTeachers.getValue()!=null)
+    		btnChangeAppointment.setVisible(true);
+    		
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+
+	/**
+	 * send adding request of student to a course in class 
+	 * @param event, course, course in class, student
+	 */
 	@FXML
 	void addStudentASHandler(ActionEvent event){
 		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
@@ -1076,7 +1137,11 @@ public class SecretaryController implements Initializable{
 
 	@FXML
 	void changeAppointmentHandler(ActionEvent event) {
+		lblDenied.setVisible(false);
+		lblConfirmation.setVisible(false);
+		btnChangeAppointment.setVisible(false);
 		setPane(paneChangeAppointment);
+		btnChangeAppointment.setVisible(false);
 		cbCourse.getItems().clear();
 		///////////change teacher's appointment///////////
 		HashMap<Integer,String> cls=new HashMap<Integer,String>();
@@ -1099,7 +1164,7 @@ public class SecretaryController implements Initializable{
 			sem = ((ArrayList<Character>)LoginController.userClient.ans).get(1);
 			if(sem=='A')
 			{
-				year = year--;
+				year--;
 				semester = 2;
 			}
 			else

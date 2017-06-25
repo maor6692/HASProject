@@ -1431,7 +1431,7 @@ public class EchoServer extends AbstractServer {
 				               ans.add(String.valueOf(rs.getInt(1)));
 				             
 				             client.sendToClient(ans);
-				             ans.clear();
+				             
 				             break;
 			
 				         case "get teacher working hours":
@@ -1445,7 +1445,7 @@ public class EchoServer extends AbstractServer {
 				               ans.add(String.valueOf(rs.getInt(2)));
 				             }
 				             client.sendToClient(ans);
-				             ans.clear();
+				       
 				             break;
 				             
 					case "getSemesters":
