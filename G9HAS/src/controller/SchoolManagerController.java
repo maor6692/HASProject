@@ -623,7 +623,21 @@ public class SchoolManagerController implements Initializable{
 			break;
 
 		case "blocked students":
-
+			ArrayList<String> arr;
+			info="";
+			params.clear();
+			query ="SELECT DISTINCT u.first_name,u.last_name,c.name FROM children_of_parent cop,users u, student s, class c WHERE isBlocked=1 AND cop.child_id=u.user_name AND cop.child_id=s.id AND s.class_id=c.id";
+			params.add(query);
+			arr = (ArrayList<String>) queryGenerator(params,"getBlockedStudents");
+			info += "*********************************************************\n";
+			info += "Blocked students for parent view: \n";
+			for(String s : arr)
+			{
+			info += s +"\n";
+					
+			}
+			info += "*********************************************************";
+			textAreaViewAllInfo.setText(info);
 			break;
 		}
 	}

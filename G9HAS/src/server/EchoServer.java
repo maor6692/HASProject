@@ -97,7 +97,31 @@ public class EchoServer extends AbstractServer {
 						rs.close();
 						client.sendToClient(ans);//sends the answer to client.
 						break;
-
+//					case "get students blocked from parent view":
+//						query= "SELECT DISTINCT u.first_name,u.last_name FROM children_of_parent cop,users u WHERE isBlocked=1 AND cop.child_id=u.user_name";
+//						stmt = conn.createStatement();
+//						rs = stmt.executeQuery(query);
+//						ArrayList<String> childfn=new ArrayList<String>();
+//						while (rs.next()) { 
+//							childfn.add(rs.getString(1) + " " +rs.getString(2));
+//						}
+//						stmt.close();
+//						rs.close();
+//						client.sendToClient(childfn);
+//						break;
+					case "getBlockedStudents":
+						ArrayList<String> childfn=new ArrayList<String>();
+						ans=(ArrayList<String>) message.get(key);
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(ans.get(0));
+						ans.clear();
+						while (rs.next()) { 
+							childfn.add(rs.getString(1)+ " " +rs.getString(2) +" belongs to class "+rs.getString(3));
+						}
+						stmt.close();
+						rs.close(); 
+						client.sendToClient(childfn);
+						break;
 					case "get course in class id":
 						ans= (ArrayList<String>)message.get(key);
 						query= "SELECT id  FROM class_in_course WHERE course_id='"+ans.get(0)+"'AND class_id='"+ans.get(1)+"'AND teacher_id='"+ans.get(2)+"'";
