@@ -156,21 +156,13 @@ public class ParentController implements Initializable{
 					arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
 			}
 			hm.remove("get course id");
-			hm.put("get course teaching unit",arr);
-			LoginController.userClient.sendServer(hm);
-			LoginController.syncWithServer();
-			for(int k=0;k<((ArrayList<String>)LoginController.userClient.ans).size();k++){
-					arr2.add(((ArrayList<String>)LoginController.userClient.ans).get(k)+arr.get(k));		
-			}
-
-			hm.remove("get course teaching unit");
 			hm.put("Search for course name",arr);
 			LoginController.userClient.sendServer(hm);
 			LoginController.syncWithServer();
 			if(LoginController.userClient.ans != null){
 				for(int i=0; i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 				{
-					cbCourseInClass.getItems().add(i,arr2.get(i)+" - "+((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
+					cbCourseInClass.getItems().add(i,arr.get(i)+" - "+((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
 				}
 			}
 			arr.clear();
@@ -185,7 +177,7 @@ public class ParentController implements Initializable{
 				sem = ((ArrayList<Character>)LoginController.userClient.ans).get(1);
 				if(sem=='A')
 				{
-					year = year--;
+					year--;
 					semester = 2;
 				}
 				else
