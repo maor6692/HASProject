@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.effect.*?>
@@ -10,13 +8,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="781.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ParentController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="1017.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ParentController">
    <left>
-      <Pane prefHeight="498.0" prefWidth="171.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
+      <Pane prefHeight="668.0" prefWidth="202.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="38.0" fitWidth="33.0" layoutX="14.0" layoutY="28.0">
+            <ImageView fitHeight="46.0" fitWidth="43.0" layoutX="6.0" layoutY="23.0">
                <image>
-                  <Image url="@../../resources/new-user-image-default.png" />
+                  <Image url="@../../resources/user%20icon.png" />
                </image>
             </ImageView>
             <Label fx:id="lblUser" layoutX="50.0" layoutY="28.0" text="UserName" textFill="WHITE">
@@ -29,51 +27,58 @@
                   <Font size="11.0" />
                </font>
             </Hyperlink>
-            <Hyperlink fx:id="hyViewChildInfo" layoutX="24.0" layoutY="118.0" text="View child info" />
+            <Hyperlink fx:id="hyViewChildInfo" layoutX="14.0" layoutY="125.0" text="View child info" textFill="WHITE">
+               <effect>
+                  <Reflection />
+               </effect></Hyperlink>
+            <Separator layoutX="1.0" layoutY="77.0" prefWidth="200.0" />
          </children>
       </Pane>
    </left>
    <center>
       <Pane prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="508.0" fitWidth="611.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="668.0" fitWidth="852.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../resources/background.jpg" />
                </image>
             </ImageView>
-            <ImageView fitHeight="200.0" fitWidth="200.0" layoutY="-59.0">
+            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="14.0" layoutY="-40.0">
                <image>
                   <Image url="@../../resources/logo.png" />
                </image>
             </ImageView>
-            <ComboBox fx:id="cbChild" layoutX="306.0" layoutY="157.0" onAction="#childSelectHandler" prefWidth="150.0" />
-            <Label fx:id="lblSelectChild" layoutX="31.0" layoutY="161.0" text="Select child to view info:">
+            <ComboBox fx:id="cbChild" layoutX="347.0" layoutY="164.0" onAction="#childSelectHandler" prefWidth="150.0" />
+            <Label fx:id="lblSelectChild" layoutX="124.0" layoutY="162.0" text="Select child to view info:">
                <font>
                   <Font size="20.0" />
                </font></Label>
-            <Label layoutX="170.0" layoutY="83.0" prefHeight="53.0" prefWidth="346.0" text="Children Information">
+            <Label layoutX="214.0" layoutY="43.0" prefHeight="53.0" prefWidth="370.0" text="Children Information">
                <font>
-                  <Font size="36.0" />
+                  <Font name="System Bold" size="36.0" />
                </font>
+               <effect>
+                  <Reflection />
+               </effect>
             </Label>
-            <TextField fx:id="tfBlocked" layoutX="1.0" layoutY="249.0" prefHeight="39.0" prefWidth="598.0" text="Information is currently unavailable, please contact school secretariant" visible="false" />
-            <Label fx:id="lblClass" layoutX="31.0" layoutY="210.0" prefHeight="27.0" prefWidth="51.0" text="Class:">
+            <TextField fx:id="tfBlocked" layoutX="144.0" layoutY="315.0" prefHeight="39.0" prefWidth="598.0" text="Information is currently unavailable, please contact school secretariant" visible="false" />
+            <Label fx:id="lblClass" layoutX="135.0" layoutY="241.0" prefHeight="27.0" prefWidth="51.0" text="Class:" visible="false">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <Label fx:id="lblClassID" layoutX="87.0" layoutY="208.0" prefHeight="35.0" prefWidth="73.0">
+            <Label fx:id="lblClassID" layoutX="194.0" layoutY="239.0" prefHeight="35.0" prefWidth="73.0" visible="false">
                <font>
                   <Font size="20.0" />
                </font></Label>
-            <Label fx:id="lblAvg" layoutX="171.0" layoutY="211.0" prefHeight="30.0" prefWidth="164.0" text="Average:">
+            <Label fx:id="lblAvg" layoutX="340.0" layoutY="242.0" prefHeight="30.0" prefWidth="164.0" text="Average:" visible="false">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
-            <ComboBox fx:id="cbCourseInClass" layoutX="131.0" layoutY="250.0" onAction="#cbCourseInClassHandler" prefWidth="150.0" />
-            <TextArea fx:id="taTasks" layoutX="100.0" layoutY="298.0" prefHeight="175.0" prefWidth="200.0" />
-            <Label fx:id="lblCourseAvg" layoutX="360.0" layoutY="331.0" text="lblCourseAvg" />
+            <ComboBox fx:id="cbCourseInClass" layoutX="186.0" layoutY="281.0" onAction="#cbCourseInClassHandler" prefWidth="150.0" promptText="choose course" visible="false" />
+            <TextArea fx:id="taTasks" layoutX="161.0" layoutY="365.0" prefHeight="175.0" prefWidth="200.0" visible="false" />
+            <Label fx:id="lblCourseAvg" layoutX="373.0" layoutY="365.0" text="lblCourseAvg" visible="false" />
          </children>
       </Pane>
    </center>

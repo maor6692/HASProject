@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -11,12 +12,17 @@
 
 
    <children>
-      <ImageView fx:id="ivBackground" fitHeight="598.0" fitWidth="728.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="ivBackground" fitHeight="628.0" fitWidth="789.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../resources/background.jpg" />
          </image>
       </ImageView>
-      <Label fx:id="lblWelcome" layoutX="139.0" layoutY="42.0" prefHeight="154.0" prefWidth="404.0" text="Welcome">
+      <ImageView fitHeight="569.0" fitWidth="684.0" layoutX="44.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../resources/background1.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblWelcome" layoutX="139.0" layoutY="73.0" prefHeight="154.0" prefWidth="404.0" text="Welcome">
          <font>
             <Font size="66.0" />
          </font>
@@ -26,46 +32,39 @@
             <Image url="@../../resources/logo.png" />
          </image>
       </ImageView>
-      <Label layoutX="139.0" layoutY="229.0" prefHeight="49.0" prefWidth="136.0" text="password:">
+      <Label layoutX="132.0" layoutY="251.0" prefHeight="49.0" prefWidth="136.0" text="password:">
          <font>
             <Font size="26.0" />
          </font>
       </Label>
-      <Label layoutX="139.0" layoutY="195.0" prefHeight="49.0" prefWidth="136.0" text="user name:">
+      <Label layoutX="132.0" layoutY="215.0" prefHeight="49.0" prefWidth="136.0" text="user name:">
          <font>
             <Font size="26.0" />
          </font>
       </Label>
-      <PasswordField fx:id="tfPassword" layoutX="294.0" layoutY="238.0" prefHeight="31.0" prefWidth="149.0" text="sm" />
-      <Button fx:id="btnSignIn" layoutX="329.0" layoutY="387.0" mnemonicParsing="false" onAction="#signinHandler" prefHeight="17.0" prefWidth="90.0" text="Sign In" textFill="#b2790e">
+      <TextField fx:id="tfUserName" layoutX="279.0" layoutY="228.0" prefHeight="31.0" prefWidth="149.0" />
+      <PasswordField fx:id="tfPassword" layoutX="279.0" layoutY="263.0" prefHeight="31.0" prefWidth="149.0" />
+      <TextField fx:id="tfHost" layoutX="279.0" layoutY="298.0" prefHeight="31.0" prefWidth="149.0" text="localhost" />
+      <TextField fx:id="tfPort" layoutX="279.0" layoutY="332.0" prefHeight="31.0" prefWidth="149.0" text="5555" />
+      <Label layoutX="135.0" layoutY="318.0" prefHeight="49.0" prefWidth="136.0" text="port:">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnSignIn" layoutX="290.0" layoutY="371.0" mnemonicParsing="false" onAction="#signinHandler" prefHeight="31.0" prefWidth="114.0" text="Sign In" textFill="#b2790e">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
+         <effect>
+            <Reflection />
+         </effect>
       </Button>
-      <TextField fx:id="tfUserName" layoutX="294.0" layoutY="204.0" prefHeight="31.0" prefWidth="149.0" text="sm" />
-      <Label layoutX="158.0" layoutY="285.0" prefHeight="49.0" prefWidth="136.0" text="host:">
+      <Label layoutX="131.0" layoutY="285.0" prefHeight="49.0" prefWidth="136.0" text="host:">
          <font>
             <Font size="26.0" />
          </font>
       </Label>
-      <Label layoutX="158.0" layoutY="318.0" prefHeight="49.0" prefWidth="136.0" text="port:">
-         <font>
-            <Font size="26.0" />
-         </font>
-      </Label>
-      <TextField fx:id="tfHost" layoutX="294.0" layoutY="293.0" prefHeight="31.0" prefWidth="149.0" text="localhost" />
-      <TextField fx:id="tfPort" layoutX="294.0" layoutY="327.0" prefHeight="31.0" prefWidth="149.0" text="5555" />
       <Label fx:id="lblWrongUser" layoutX="323.0" layoutY="164.0" prefHeight="31.0" prefWidth="167.0" text="wrong user name or password" textFill="#eb0909" visible="false" />
       <Label fx:id="lblConnection" layoutX="323.0" layoutY="257.0" prefHeight="31.0" prefWidth="167.0" text="connection failed" textFill="#eb0808" visible="false" />
-      <ImageView fx:id="HASLogo1" fitHeight="39.0" fitWidth="38.0" layoutX="425.0" layoutY="382.0">
-         <image>
-            <Image url="@../../resources/login%20icon.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="200.0" fitWidth="229.0" layoutX="487.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../resources/background1.png" />
-         </image>
-      </ImageView>
    </children>
 </AnchorPane>

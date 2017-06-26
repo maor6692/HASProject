@@ -9,13 +9,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="781.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SystemManagerController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="1054.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SystemManagerController">
    <left>
-      <Pane prefHeight="498.0" prefWidth="171.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
+      <Pane prefHeight="672.0" prefWidth="221.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="38.0" fitWidth="33.0" layoutX="14.0" layoutY="28.0">
+            <ImageView fitHeight="44.0" fitWidth="36.0" layoutX="9.0" layoutY="22.0">
                <image>
-                  <Image url="@../../resources/new-user-image-default.png" />
+                  <Image url="@../../resources/user%20icon.png" />
                </image>
             </ImageView>
             <Label fx:id="lblUser" layoutX="50.0" layoutY="28.0" text="UserName" textFill="WHITE">
@@ -28,54 +28,64 @@
                   <Font size="11.0" />
                </font>
             </Hyperlink>
-            <Hyperlink layoutX="14.0" layoutY="103.0" onAction="#defineCourseHandler" prefHeight="23.0" prefWidth="169.0" text="Define Course" textFill="#529ceb" />
-         </children>
-      </Pane>
-   </left>
-   <center>
-      <Pane fx:id="defineCoursePane" prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
-         <children>
-            <ImageView fitHeight="508.0" fitWidth="611.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+            <Hyperlink layoutX="14.0" layoutY="159.0" onAction="#defineCourseHandler" prefHeight="23.0" prefWidth="169.0" text="Define Course" textFill="WHITE">
+               <effect>
+                  <Reflection />
+               </effect></Hyperlink>
+            <ImageView fitHeight="684.0" fitWidth="840.0" layoutX="218.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../resources/background.jpg" />
                </image>
             </ImageView>
-            <ImageView fitHeight="200.0" fitWidth="200.0" layoutY="-59.0">
+            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="245.0" layoutY="-42.0">
                <image>
                   <Image url="@../../resources/logo.png" />
                </image>
             </ImageView>
-         <Label fx:id="lblDefineCourse" layoutX="178.0" layoutY="63.0" prefHeight="41.0" prefWidth="219.0" text="Define Course" textAlignment="CENTER" textFill="#c7a958">
+            <Separator layoutX="-1.0" layoutY="96.0" prefHeight="3.0" prefWidth="221.0" />
+         </children>
+      </Pane>
+   </left>
+   <center>
+      <Pane fx:id="defineCoursePane" prefHeight="796.0" prefWidth="849.0" BorderPane.alignment="CENTER">
+         <children>
+         <Label fx:id="lblDefineCourse" layoutX="302.0" layoutY="31.0" prefHeight="41.0" prefWidth="219.0" text="Define Course" textAlignment="CENTER" textFill="#030303">
                         <font>
                         <Font name="System Bold" size="28.0" />
                      </font>
+               <effect>
+                  <Reflection />
+               </effect>
                   </Label>
-            <Label fx:id="lblCourseID" layoutX="109.0" layoutY="158.0" text="Course ID:">
+            <Label fx:id="lblCourseID" layoutX="247.0" layoutY="216.0" text="Course ID:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="tfCourseID" layoutX="221.0" layoutY="156.0" promptText="3 letters" />
-            <Label fx:id="lblCourseName" layoutX="94.0" layoutY="202.0" text="Course Name:">
+            <TextField fx:id="tfCourseID" layoutX="359.0" layoutY="214.0" promptText="3 letters" />
+            <Label fx:id="lblCourseName" layoutX="232.0" layoutY="260.0" text="Course Name:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="tfCourseName" layoutX="221.0" layoutY="200.0" />
-            <Label fx:id="lblTeachingUnit" layoutX="93.0" layoutY="118.0" text="Teaching Unit:">
+            <TextField fx:id="tfCourseName" layoutX="359.0" layoutY="258.0" />
+            <Label fx:id="lblTeachingUnit" layoutX="231.0" layoutY="176.0" text="Teaching Unit:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <ComboBox fx:id="cbTeachingUnit" layoutX="221.0" layoutY="116.0" prefHeight="31.0" prefWidth="187.0" promptText="Choose teaching unit" />
-            <Label fx:id="lblWeeklyHours" layoutX="93.0" layoutY="237.0" text="Weekly Hours:">
+            <ComboBox fx:id="cbTeachingUnit" layoutX="359.0" layoutY="174.0" prefHeight="31.0" prefWidth="187.0" promptText="Choose teaching unit" />
+            <Label fx:id="lblWeeklyHours" layoutX="231.0" layoutY="295.0" text="Weekly Hours:">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="tfWeeklyHours" layoutX="221.0" layoutY="235.0" />
-            <Button fx:id="btnCreateCourse" layoutX="241.0" layoutY="278.0" mnemonicParsing="false" onAction="#createCourseHandler" text="Create Course!" />
-            <Label fx:id="lblError" layoutX="210.0" layoutY="344.0" prefHeight="17.0" prefWidth="171.0" text="Course already exist" textFill="#f80a0a" visible="false">
+            <TextField fx:id="tfWeeklyHours" layoutX="359.0" layoutY="293.0" />
+            <Button fx:id="btnCreateCourse" layoutX="379.0" layoutY="336.0" mnemonicParsing="false" onAction="#createCourseHandler" text="Create Course">
+               <effect>
+                  <Reflection />
+               </effect></Button>
+            <Label fx:id="lblError" layoutX="323.0" layoutY="388.0" prefHeight="17.0" prefWidth="171.0" text="Course already exist" textFill="#f80a0a" visible="false">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>

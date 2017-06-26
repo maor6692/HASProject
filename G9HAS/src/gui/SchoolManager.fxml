@@ -15,25 +15,37 @@
    <left>
       <Pane prefHeight="498.0" prefWidth="193.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="14.0" layoutY="31.0">
+            <ImageView fitHeight="41.0" fitWidth="42.0" layoutX="8.0" layoutY="28.0">
                <image>
                   <Image url="@../../resources/user%20icon.png" />
                </image>
             </ImageView>
-            <Label fx:id="lblUser" layoutX="64.0" layoutY="30.0" text="UserName" textFill="#d7d7d7">
+            <Label fx:id="lblUser" layoutX="52.0" layoutY="30.0" text="UserName" textFill="#d7d7d7">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Hyperlink fx:id="linkLogout" layoutX="64.0" layoutY="52.0" onAction="#logoutHandler" style="-fx-border-color: transparent;" text="Logout" textFill="#7c7c7c">
+            <Hyperlink fx:id="linkLogout" layoutX="52.0" layoutY="52.0" onAction="#logoutHandler" style="-fx-border-color: transparent;" text="Logout" textFill="#7c7c7c">
                <font>
                   <Font size="11.0" />
                </font>
             </Hyperlink>
-            <Hyperlink layoutX="11.0" layoutY="130.0" onAction="#setBlockParentAccessPaneHandler" style="-fx-border-color: transparent;" text="block parent accsess" textFill="WHITE" />
-            <Hyperlink layoutX="12.0" layoutY="198.0" onAction="#setGetStatisticReportPaneHandler" style="-fx-border-color: transparent;" text="get statistic report" textFill="WHITE" />
-            <Hyperlink layoutX="12.0" layoutY="272.0" onAction="#setViewAllInformationPaneHandler" style="-fx-border-color: transparent;" text="view all information" textFill="WHITE" />
-            <Hyperlink layoutX="20.0" layoutY="357.0" onAction="#setAnswerRequestPaneHandler" style="-fx-border-color: transparent;" text="answer requests" textFill="WHITE" />
+            <Hyperlink layoutX="11.0" layoutY="170.0" onAction="#setBlockParentAccessPaneHandler" style="-fx-border-color: transparent;" text="block parent accsess" textFill="WHITE">
+               <effect>
+                  <Reflection />
+               </effect></Hyperlink>
+            <Hyperlink layoutX="12.0" layoutY="243.0" onAction="#setGetStatisticReportPaneHandler" style="-fx-border-color: transparent;" text="get statistic report" textFill="WHITE">
+               <effect>
+                  <Reflection />
+               </effect></Hyperlink>
+            <Hyperlink layoutX="12.0" layoutY="318.0" onAction="#setViewAllInformationPaneHandler" style="-fx-border-color: transparent;" text="view all information" textFill="WHITE">
+               <effect>
+                  <Reflection />
+               </effect></Hyperlink>
+            <Hyperlink layoutX="20.0" layoutY="391.0" onAction="#setAnswerRequestPaneHandler" style="-fx-border-color: transparent;" text="answer requests" textFill="WHITE">
+               <effect>
+                  <Reflection />
+               </effect></Hyperlink>
             <Separator layoutX="-4.0" layoutY="97.0" prefWidth="200.0" />
          </children>
       </Pane>
@@ -167,7 +179,7 @@
                   <Button fx:id="btnShowReportGSR" layoutX="482.0" layoutY="164.0" mnemonicParsing="false" onAction="#GetReportGSR" prefHeight="39.0" prefWidth="174.0" text="Show Report" />
                </children>
             </Pane>
-            <Pane fx:id="viewAllInformationPane" layoutX="-7.0" prefHeight="833.0" prefWidth="1014.0">
+            <Pane fx:id="viewAllInformationPane" layoutX="-7.0" prefHeight="833.0" prefWidth="1014.0" visible="false">
                <children>
                   <Label layoutX="310.0" layoutY="53.0" text="School Information" underline="true">
                      <font>

@@ -9,151 +9,147 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="781.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TeacherController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="696.0" prefWidth="1049.0" style="-fx-background-color: #ebebeb;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TeacherController">
    <left>
-      <Pane prefHeight="498.0" prefWidth="171.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
+      <Pane prefHeight="696.0" prefWidth="210.0" style="-fx-background-color: #363535;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="38.0" fitWidth="33.0" layoutX="14.0" layoutY="28.0">
+            <ImageView fitHeight="43.0" fitWidth="43.0" layoutX="9.0" layoutY="23.0">
                <image>
-                  <Image url="@../../resources/new-user-image-default.png" />
+                  <Image url="@../../resources/user%20icon.png" />
                </image>
             </ImageView>
-            <Label fx:id="lblUser" layoutX="50.0" layoutY="28.0" text="UserName" textFill="WHITE">
+            <Label fx:id="lblUser" layoutX="50.0" layoutY="26.0" text="UserName" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Hyperlink fx:id="linkLogout" focusTraversable="false" layoutX="47.0" layoutY="48.0" onAction="#logoutHandler" text="Logout" textFill="#7c7c7c">
+            <Hyperlink fx:id="linkLogout" focusTraversable="false" layoutX="52.0" layoutY="43.0" onAction="#logoutHandler" text="Logout" textFill="#7c7c7c">
                <font>
                   <Font size="11.0" />
                </font>
             </Hyperlink>
-            <Hyperlink fx:id="hlCreateTask" layoutX="14.0" layoutY="103.0" onAction="#hlcreateTaskOnClick" prefHeight="23.0" prefWidth="169.0" text="Create task" textFill="#529ceb" />
-            <Hyperlink fx:id="hlCheckTask" layoutX="14.0" layoutY="138.0" onAction="#hlCheckTaskOnClick" text="Check Task" textFill="#529ceb" />
-            <Hyperlink fx:id="hlViewInbox" layoutX="14.0" layoutY="170.0" onAction="#hlViewInboxHandler" text="View Mailbox" textFill="#529ceb" />
+            <Hyperlink fx:id="hlCreateTask" layoutX="14.0" layoutY="151.0" onAction="#hlcreateTaskOnClick" prefHeight="23.0" prefWidth="169.0" text="Create task" textFill="WHITE">
+               <effect>
+                  <Reflection />
+               </effect></Hyperlink>
+            <Hyperlink fx:id="hlCheckTask" layoutX="14.0" layoutY="226.0" onAction="#hlCheckTaskOnClick" text="Check Task" textFill="WHITE">
+               <effect>
+                  <Reflection />
+               </effect></Hyperlink>
+            <Hyperlink fx:id="hlViewInbox" layoutX="14.0" layoutY="296.0" onAction="#hlViewInboxHandler" text="View Mailbox" textFill="WHITE">
+               <effect>
+                  <Reflection />
+               </effect></Hyperlink>
+            <Separator layoutY="86.0" prefHeight="0.0" prefWidth="214.0" />
          </children>
       </Pane>
    </left>
    <center>
       <Pane prefHeight="498.0" prefWidth="565.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane fx:id="createTaskPane" layoutY="1.0" prefHeight="498.0" prefWidth="611.0" visible="false">
+            <ImageView fitHeight="696.0" fitWidth="853.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../resources/background.jpg" />
+               </image>
+            </ImageView>
+            <Pane fx:id="createTaskPane" layoutY="1.0" prefHeight="696.0" prefWidth="843.0" visible="false">
                <children>
-                  <ImageView fitHeight="531.0" fitWidth="611.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/background.jpg" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="-1.0" layoutY="-54.0">
-                     <image>
-                        <Image url="@../../resources/logo.png" />
-                     </image>
-                  </ImageView>
-                  <ComboBox fx:id="cbClass" layoutX="134.0" layoutY="199.0" onAction="#cbClassHandler" prefHeight="31.0" prefWidth="132.0" promptText="Choose Class" />
-                  <Button fx:id="btnUpload" layoutX="287.0" layoutY="243.0" mnemonicParsing="false" onAction="#fileChooserHandler" prefHeight="25.0" prefWidth="112.0" text="Choose File..." />
-                  <Button fx:id="btnCreateTask" layoutX="247.0" layoutY="404.0" mnemonicParsing="false" onAction="#createTaskHandler" text="Create Task!" />
-                  <Label fx:id="lblClass" layoutX="77.0" layoutY="201.0" text="Class:">
+                  <ComboBox fx:id="cbClass" layoutX="299.0" layoutY="209.0" onAction="#cbClassHandler" prefHeight="31.0" prefWidth="132.0" promptText="Choose Class" />
+                  <Button fx:id="btnUpload" layoutX="452.0" layoutY="253.0" mnemonicParsing="false" onAction="#fileChooserHandler" prefHeight="25.0" prefWidth="112.0" text="Choose File..." />
+                  <Button fx:id="btnCreateTask" layoutX="322.0" layoutY="414.0" mnemonicParsing="false" onAction="#createTaskHandler" text="Create Task!" />
+                  <Label fx:id="lblClass" layoutX="242.0" layoutY="211.0" text="Class:">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblSubmissionDate" layoutX="12.0" layoutY="295.0" text="Submission Date:">
+                  <Label fx:id="lblSubmissionDate" layoutX="177.0" layoutY="305.0" text="Submission Date:">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-               <Label fx:id="lblCreateTask" layoutX="178.0" layoutY="75.0" prefHeight="41.0" prefWidth="219.0" text="Create task" textAlignment="CENTER" textFill="#c7a958">
+               <Label fx:id="lblCreateTask" layoutX="312.0" layoutY="52.0" prefHeight="41.0" prefWidth="219.0" text="Create task" textAlignment="CENTER">
                               <font>
                               <Font name="System Bold" size="28.0" />
                            </font>
+                     <effect>
+                        <Reflection />
+                     </effect>
                         </Label>
-                  <Label fx:id="lblTask" layoutX="80.0" layoutY="242.0" text="Task:">
+                  <Label fx:id="lblTask" layoutX="245.0" layoutY="252.0" text="Task:">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblCourseID" layoutX="65.0" layoutY="158.0" text="Course:">
+                  <Label fx:id="lblCourseID" layoutX="230.0" layoutY="158.0" text="Course:">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="tfSubmissionDate" layoutX="166.0" layoutY="296.0" />
-                  <ComboBox fx:id="cbCourseID" layoutX="134.0" layoutY="156.0" onAction="#cbCourseHandler" prefHeight="31.0" prefWidth="132.0" promptText="Choose Course" />
-                  <TextField fx:id="tfUploadPath" editable="false" layoutX="133.0" layoutY="243.0" prefHeight="25.0" prefWidth="154.0" />
-                  <Label fx:id="lblTaskCreated" layoutX="334.0" layoutY="407.0" prefHeight="17.0" prefWidth="139.0" text="Task created!" textFill="#ff0808" visible="false">
+                  <TextField fx:id="tfSubmissionDate" layoutX="331.0" layoutY="306.0" />
+                  <ComboBox fx:id="cbCourseID" layoutX="299.0" layoutY="166.0" onAction="#cbCourseHandler" prefHeight="31.0" prefWidth="132.0" promptText="Choose Course" />
+                  <TextField fx:id="tfUploadPath" editable="false" layoutX="298.0" layoutY="253.0" prefHeight="25.0" prefWidth="154.0" />
+                  <Label fx:id="lblTaskCreated" layoutX="409.0" layoutY="417.0" prefHeight="17.0" prefWidth="139.0" text="Task created!" textFill="#ff0808">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblErrorST" layoutX="163.0" layoutY="331.0" prefHeight="21.0" prefWidth="292.0" textFill="#e40303">
+                  <Label fx:id="lblErrorST" layoutX="276.0" layoutY="375.0" prefHeight="21.0" prefWidth="292.0" textFill="#e40303" visible="false">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="checkTaskPane" prefHeight="498.0" prefWidth="617.0">
+            <Pane fx:id="checkTaskPane" prefHeight="696.0" prefWidth="843.0" visible="false">
                <children>
-                  <ImageView fx:id="ivBackground" fitHeight="508.0" fitWidth="611.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/background.jpg" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="200.0" fitWidth="200.0" layoutY="-43.0">
-                     <image>
-                        <Image url="@../../resources/logo.png" />
-                     </image>
-                  </ImageView>
-                  <ComboBox fx:id="cbTeacherCourse" layoutX="175.0" layoutY="95.0" onAction="#TeacherCourseHandler" prefWidth="150.0" />
-                  <Label fx:id="lblClassID" layoutX="56.0" layoutY="101.0" text="Select Course:" />
-                  <Label fx:id="lblSelectClass" layoutX="71.0" layoutY="144.0" text="Select Class:" />
-                  <ComboBox fx:id="cbClassID" layoutX="175.0" layoutY="138.0" onAction="#ClassIDHandler" prefWidth="150.0" />
-                  <Label fx:id="lblSelectStudent" layoutX="52.0" layoutY="237.0" text="Select Student:" />
-                  <ComboBox fx:id="cbStudent" layoutX="175.0" layoutY="230.0" onAction="#cbStudentHandler" prefHeight="25.0" prefWidth="153.0" />
-                  <Button fx:id="btnDownload" layoutX="197.0" layoutY="273.0" mnemonicParsing="false" onAction="#DownloadHandler" text="Download" visible="false" />
-                  <Label fx:id="lblTaskGrade" layoutX="73.0" layoutY="324.0" text="Task Grade:" visible="false" />
-                  <TextField fx:id="tfGrade" layoutX="175.0" layoutY="318.0" prefHeight="29.0" prefWidth="63.0" visible="false" />
-                  <TextField fx:id="tfCheckUploadPath" editable="false" layoutX="85.0" layoutY="368.0" visible="false" />
-                  <Button fx:id="btnChooseFile" layoutX="230.0" layoutY="368.0" mnemonicParsing="false" onAction="#CheckfileChooserHandler" prefHeight="25.0" prefWidth="85.0" text="Choose file" visible="false" />
-                  <ComboBox fx:id="cbChooseTask" layoutX="174.0" layoutY="183.0" onAction="#selectTaskHandler" prefWidth="150.0" />
-                  <Label fx:id="lblSelectTask" layoutX="79.0" layoutY="189.0" text="Select Task:" />
-                  <Button fx:id="btnCheckUpload" layoutX="250.0" layoutY="428.0" mnemonicParsing="false" onAction="#CheckUploadHandler" text="Upload" visible="false" />
-                  <Label fx:id="lblDownloadComplete" layoutX="322.0" layoutY="279.0" prefHeight="27.0" prefWidth="246.0" text="Download complete" textFill="RED" visible="false">
+                  <ComboBox fx:id="cbTeacherCourse" layoutX="306.0" layoutY="203.0" onAction="#TeacherCourseHandler" prefWidth="150.0" />
+                  <Label fx:id="lblClassID" layoutX="206.0" layoutY="173.0" text="Select Course:" />
+                  <Label fx:id="lblSelectClass" layoutX="208.0" layoutY="207.0" text="Select Class:" />
+                  <ComboBox fx:id="cbClassID" layoutX="306.0" layoutY="246.0" onAction="#ClassIDHandler" prefWidth="150.0" />
+                  <Label fx:id="lblSelectStudent" layoutX="208.0" layoutY="298.0" text="Select Student:" />
+                  <ComboBox fx:id="cbStudent" layoutX="306.0" layoutY="291.0" onAction="#cbStudentHandler" prefHeight="25.0" prefWidth="153.0" />
+                  <Button fx:id="btnDownload" layoutX="328.0" layoutY="334.0" mnemonicParsing="false" onAction="#DownloadHandler" text="Download" visible="false" />
+                  <Label fx:id="lblTaskGrade" layoutX="204.0" layoutY="385.0" text="Task Grade:" visible="false" />
+                  <TextField fx:id="tfGrade" layoutX="306.0" layoutY="379.0" prefHeight="29.0" prefWidth="63.0" visible="false" />
+                  <TextField fx:id="tfCheckUploadPath" editable="false" layoutX="216.0" layoutY="429.0" visible="false" />
+                  <Button fx:id="btnChooseFile" layoutX="361.0" layoutY="429.0" mnemonicParsing="false" onAction="#CheckfileChooserHandler" prefHeight="25.0" prefWidth="85.0" text="Choose file" visible="false" />
+                  <ComboBox fx:id="cbChooseTask" layoutX="306.0" layoutY="169.0" onAction="#selectTaskHandler" prefWidth="150.0" />
+                  <Label fx:id="lblSelectTask" layoutX="210.0" layoutY="250.0" text="Select Task:" />
+                  <Button fx:id="btnCheckUpload" layoutX="381.0" layoutY="489.0" mnemonicParsing="false" onAction="#CheckUploadHandler" text="Upload" visible="false" />
+                  <Label fx:id="lblDownloadComplete" layoutX="453.0" layoutY="340.0" prefHeight="27.0" prefWidth="246.0" text="Download complete" textFill="RED" visible="false">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblMsg" layoutX="305.0" layoutY="324.0" prefHeight="21.0" prefWidth="251.0" textFill="#eb0b08" visible="false">
+                  <Label fx:id="lblMsg" layoutX="436.0" layoutY="385.0" prefHeight="21.0" prefWidth="251.0" textFill="#eb0b08" visible="false">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="taSubmissionComments" layoutX="388.0" layoutY="377.0" prefHeight="77.0" prefWidth="200.0" visible="false" />
-                  <Label fx:id="lblSubmissionComments" layoutX="388.0" layoutY="359.0" prefHeight="17.0" prefWidth="165.0" text="Comments for solution:" visible="false">
+                  <TextArea fx:id="taSubmissionComments" layoutX="500.0" layoutY="438.0" prefHeight="112.0" prefWidth="219.0" visible="false" />
+                  <Label fx:id="lblSubmissionComments" layoutX="519.0" layoutY="420.0" prefHeight="17.0" prefWidth="165.0" text="Comments for solution:" visible="false">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblCheckTask" layoutX="175.0" layoutY="37.0" prefHeight="41.0" prefWidth="219.0" text="Check Task" textAlignment="CENTER" textFill="#c7a958">
+                  <Label fx:id="lblCheckTask" layoutX="312.0" layoutY="37.0" prefHeight="41.0" prefWidth="219.0" text="Check Task" textAlignment="CENTER">
                      <font>
                         <Font name="System Bold" size="28.0" />
                      </font>
+                     <effect>
+                        <Reflection />
+                     </effect>
                   </Label>
-               </children>
-            </Pane>
-               <Pane fx:id="paneViewInbox" prefHeight="506.0" prefWidth="615.0" visible="false">
-               <children>
-                  <ImageView fitHeight="500.0" fitWidth="626.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../resources/background.jpg" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="200.0" fitWidth="200.0" layoutY="-46.0">
+                  <ImageView fitHeight="208.0" fitWidth="189.0" layoutX="37.0" layoutY="-35.0">
                      <image>
                         <Image url="@../../resources/logo.png" />
                      </image>
                   </ImageView>
-                  <Label layoutX="180.0" layoutY="34.0" text="         view inbox" textAlignment="CENTER">
+               </children>
+            </Pane>
+               <Pane fx:id="paneViewInbox" prefHeight="696.0" prefWidth="842.0" visible="false">
+               <children>
+                  <Label layoutX="255.0" layoutY="34.0" prefHeight="55.0" prefWidth="236.0" text="         view inbox" textAlignment="CENTER">
                      <effect>
                         <Reflection>
                            <input>
@@ -162,27 +158,22 @@
                         </Reflection>
                      </effect>
                      <font>
-                        <Font name="System Bold" size="28.0" />
+                        <Font name="System Bold" size="30.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblErrAS1" layoutX="343.0" layoutY="334.0" text="choose all fiields!" textFill="RED" visible="false">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="lblSuccessAS1" layoutX="286.0" layoutY="359.0" text="Request sent to School Manager" visible="false">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Label>
-                  <TableView fx:id="tblViewInbox" layoutX="27.0" layoutY="132.0" prefHeight="295.0" prefWidth="546.0">
+                  <TableView fx:id="tblViewInbox" layoutX="22.0" layoutY="193.0" prefHeight="414.0" prefWidth="794.0">
                     <columns>
-                      <TableColumn fx:id="colIdVI" prefWidth="75.0" text="id" />
-                      <TableColumn fx:id="colMsgVI" prefWidth="686.0" text="message" />
+                      <TableColumn fx:id="colIdVI" prefWidth="137.0" text="id" />
+                      <TableColumn fx:id="colMsgVI" prefWidth="624.0" text="message" />
                     </columns>
                   </TableView>
                </children>
             </Pane>
+            <ImageView fitHeight="169.0" fitWidth="183.0" layoutX="28.0" layoutY="-26.0">
+               <image>
+                  <Image url="@../../resources/logo.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </center>
