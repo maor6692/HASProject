@@ -59,12 +59,10 @@ public class SecretaryController implements Initializable{
 	char newSemester;
 	private ArrayList<String> studentCourse = new ArrayList<String>();
 	ArrayList<Object> currSemester;
-	//
 	String cid="";
 	String teacher_fname="";
 	String classid="";
 	String teacher_username="";
-	//
 
 
 	@FXML
@@ -179,10 +177,14 @@ public class SecretaryController implements Initializable{
 	private HashMap<Integer, Integer> coursesWeeklyHours;
 	@FXML
 	private Pane paneViewInbox; 
-	
+	/**
+	 * This method handles the event of pressing the change appointment button.
+	 * in case that appointment change is legal it sends request for manager.
+	 * @param event
+	 */
 	@FXML
 	void changeAppintmentHandler(ActionEvent event) {
-		
+		lblCurTeacher.setVisible(false);
 		HashMap<String,ArrayList<String>> hm=new HashMap<String,ArrayList<String>>();
 		ArrayList<String> arr=new ArrayList<String>();
 		arr.add(cid);
@@ -196,8 +198,7 @@ public class SecretaryController implements Initializable{
 		class_in_course_id=(String)LoginController.userClient.ans;
 		arr.clear();
 		String newTeacherId="";
-		newTeacherId+=teachers_id.get(cbTeachers.getSelectionModel().getSelectedIndex());
-		
+		newTeacherId+=teachers_id.get(cbTeachers.getSelectionModel().getSelectedIndex());	
 		ArrayList<String> req=new ArrayList<String>();
 		req.add(LoginController.userClient.userName);
 		req.add(LoginController.userClient.fullName);//secretary fullname
@@ -244,28 +245,30 @@ public class SecretaryController implements Initializable{
 			cbClass.getItems().clear();
 			cbCourse.setValue(null);
 			lblConfirmation.setVisible(true);
+			lblCurTeacher.setVisible(false);
 		}
 		else {
-			//req.clear();
 			hm.clear();
 			arr.clear();
 			btnChangeAppointment.setVisible(false);
 			lblDenied.setVisible(true);
+			lblCurTeacher.setVisible(true);
 		}
 		
 	}
 	
-
-
-	//
-	@SuppressWarnings("unchecked")
-	/////////////////FOR CHANGE TEACHER'S APPOINTMENT///////////////
+	/**
+	 * This method handles the event of choosing course and loads the classes 
+	 * which learns the selected course.
+	 * @param event
+	 */
 	@FXML
 	void cbChooseCourseHandler(ActionEvent event) {
 		lblDenied.setVisible(false);
 		lblConfirmation.setVisible(false);
 		btnChangeAppointment.setVisible(false);
 		lblCurTeacher.setText("Current Teacher:");
+		lblCurTeacher.setVisible(false);
 		classid="";
 		teacher_fname="";
 		
@@ -294,52 +297,38 @@ public class SecretaryController implements Initializable{
 		LoginController.syncWithServer();
 		msg.clear();
 		if(LoginController.userClient.ans!=null){
-		//			if(UserClient.ans instanceof HashMap<?,?>){
-		//recieve Map<String,ArrayList<String>> -- [class_in_course_id,[class_id,class_name]]
-
 			HashMap<String,ArrayList<String>> tCTA =(HashMap<String,ArrayList<String>>) UserClient.ans;
 		for(ArrayList<String> classes : tCTA.values())
 			if(classes!=null)
 				cbClass.getItems().add(classes.get(0)+"-"+classes.get(1));
-
-		//	    }
 		}
-		
-	
 	}
 
+	/**
+	 * This method handles the event of class choosing, enables the option
+	 * to choose replacing teacher and shows the teacher of selected course in the
+	 * selected class.
+	 * @param event
+	 */
 	@FXML
 	void cbClassHandler(ActionEvent event) {
+		lblCurTeacher.setVisible(true);
+		lblDenied.setVisible(false);
+		lblConfirmation.setVisible(false);
 		cbTeachers.getItems().clear();
 		btnChangeAppointment.setVisible(false);
 		classid="";
 		teacher_fname="";
 		teacher_username="";
 		lblCurTeacher.setText("Current Teacher:");
-		
-		//if(cbClass.getValue()!=null){
 		cbTeachers.getItems().clear();
 		HashMap <String,ArrayList<String>> hm=new HashMap <String,ArrayList<String>>();
 		HashMap <String,Integer> hm1=new HashMap <String,Integer>();
 		HashMap <String,String> hm2=new HashMap <String,String>();
 		ArrayList<String> crs = new ArrayList<>();
-		//for(int i=0;i<cbClass.getItems().size();i++)
-		//crs.add(cbClass.getItems().get(i));
-		//String chosenCourse=cbCourse.getValue();
-		
 		String cls="";
-		//int i=0;
-		//while(chosenClass.charAt(i)!='-')
-		//classid+=chosenClass.charAt(i);
-
 		ArrayList<String> p = new ArrayList<>();
 		p.add(cbCourse.getValue());
-		//msg.put("get course id from course name",p);
-		//LoginController.userClient.sendServer(msg);
-		//LoginController.syncWithServer();
-		//p.clear();
-		//if(((ArrayList<String>)LoginController.userClient.ans)!=null){
-		//cid+=((ArrayList<String>)LoginController.userClient.ans).get(0);
 		int i=0;
 		if(cbClass.getValue()!=null){
 		cls+=cbClass.getValue();
@@ -349,7 +338,6 @@ public class SecretaryController implements Initializable{
 		}
 		crs.add(cid);
 		crs.add(classid);
-		
 		hm.put("get teacher class in course", crs);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
@@ -360,7 +348,6 @@ public class SecretaryController implements Initializable{
 		hm2.put("get teacher fullname", teacher_username);
 		LoginController.userClient.sendServer(hm2);
 		LoginController.syncWithServer();
-
 		teacher_fname+=(String)LoginController.userClient.ans;
 		lblCurTeacher.setText("Current Teacher:"+teacher_fname);
 		crs.clear();
@@ -376,15 +363,12 @@ public class SecretaryController implements Initializable{
 		tu=Integer.parseInt(((String)LoginController.userClient.ans));
 		crs.clear();
 		hm.clear();
-
 		hm1.put("get teachers from teaching_unit", tu);
 		LoginController.userClient.sendServer(hm1);
 		LoginController.syncWithServer();
-
 		hm2.clear();
 		int index_to_delete = 0;
 		teachers_id=((ArrayList<String>)LoginController.userClient.ans);
-
 		teachers_id.remove(teacher_username);
 		for(int j=0;j<teachers_id.size();j++){
 			hm2.put("get teacher fullname", teachers_id.get(j));
@@ -396,30 +380,23 @@ public class SecretaryController implements Initializable{
 			cbTeachers.getItems().add(teacher_name);	
 		}
 		
-		}
-	//	classid="";
-		//teacher_username="";
-		
+		}		
 		}
 		}
 	}
-	/////////////////FOR CHANGE TEACHER'S APPOINTMENT///////////////
-	
+	/**
+	 * This method handles the event of choosing the replacing teacher and set the 
+	 * visiabilty of the change appointment button in case of filling all combo boxes.
+	 * @param event
+	 */
     @FXML
     void teacherHandler(ActionEvent event) {
+    	lblDenied.setVisible(false);
+    	lblConfirmation.setVisible(false);
     	if(cbCourse.getValue()!=null &&cbClass.getValue()!=null && cbTeachers.getValue()!=null)
     		btnChangeAppointment.setVisible(true);
     		
     }
-	
-	
-	
-	
-	
-	
-	
-	
-
 	/**
 	 * param send adding request of student to a course in class 
 	 * @course 
@@ -1211,6 +1188,7 @@ public class SecretaryController implements Initializable{
 		lblDenied.setVisible(false);
 		lblConfirmation.setVisible(false);
 		btnChangeAppointment.setVisible(false);
+		lblCurTeacher.setVisible(false);
 		setPane(paneChangeAppointment);
 		btnChangeAppointment.setVisible(false);
 		cbCourse.getItems().clear();

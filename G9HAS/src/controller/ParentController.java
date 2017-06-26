@@ -51,6 +51,14 @@ public class ParentController implements Initializable{
     private Label lblCourseAvg;
 	@FXML
 	private Label lblUser;
+	
+	/**
+	 * This method handles the event of choosing child's specific course from his
+	 * courses,and loads the course's tasks and grades, and the current course
+	 *  average.
+	 * @param event
+	 */
+	
 	@FXML
 	void cbCourseInClassHandler(ActionEvent event) {
 
@@ -89,7 +97,11 @@ public class ParentController implements Initializable{
 		}
 	
 	}
-
+	/**
+	 * This method handles the event of choosing the child name and load 
+	 * the child's current courses,class,and semester average.
+	 * @param event
+	 */
 	@FXML
 	void childSelectHandler(ActionEvent event) {
 		cbCourseInClass.getItems().clear();
@@ -121,7 +133,6 @@ public class ParentController implements Initializable{
 			hm.put("Get student class",cid);
 	        LoginController.userClient.sendServer(hm);
 	        LoginController.syncWithServer();
-	        System.out.println(((ArrayList<String>)LoginController.userClient.ans));
 	        if(!((ArrayList<String>)LoginController.userClient.ans).isEmpty()){
 	        	lblClassID.setText(((ArrayList<String>)LoginController.userClient.ans).get(0));
 	        }
@@ -135,7 +146,6 @@ public class ParentController implements Initializable{
 				for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 					arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
 			}
-			System.out.println("\n"+arr.toString()+"course in class id\n");
 			hm.remove("get course in class");
 			hm.put("get course id",arr);
 			LoginController.userClient.sendServer(hm);
@@ -146,12 +156,9 @@ public class ParentController implements Initializable{
 					arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
 			}
 			hm.remove("get course id");
-			System.out.println("\n"+arr.toString()+"course id\n");
-			///
 			hm.put("get course teaching unit",arr);
 			LoginController.userClient.sendServer(hm);
 			LoginController.syncWithServer();
-			System.out.println(((ArrayList<String>)LoginController.userClient.ans).size());
 			for(int k=0;k<((ArrayList<String>)LoginController.userClient.ans).size();k++){
 					arr2.add(((ArrayList<String>)LoginController.userClient.ans).get(k)+arr.get(k));		
 			}
@@ -160,17 +167,12 @@ public class ParentController implements Initializable{
 			hm.put("Search for course name",arr);
 			LoginController.userClient.sendServer(hm);
 			LoginController.syncWithServer();
-System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString()+"rrrrrrr");
-			System.out.println();
 			if(LoginController.userClient.ans != null){
 				for(int i=0; i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 				{
 					cbCourseInClass.getItems().add(i,arr2.get(i)+" - "+((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
 				}
 			}
-			System.out.println("\n"+arr.toString()+"course name\n");
-			//////////////////////////////////////////
-			//////////////////////////////////////////
 			arr.clear();
 			int year=0,semester = 0;
 			char sem = ' ';
@@ -224,17 +226,16 @@ System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString(
 				}
 			}
 			System.out.println(sumgrades);
-			//System.out.println(sumgrades/((ArrayList<String>)LoginController.userClient.ans).size());
 			lblAvg.setText("Average:"+String.valueOf((Float)(sumgrades/((ArrayList<String>)LoginController.userClient.ans).size())));
-//			hm.remove("get course in class");
-//			hm.put("get course id",((ArrayList<String>)LoginController.userClient.ans));
-//			LoginController.userClient.sendServer(hm);
-//			LoginController.syncWithServer();
-	        
+        
 		}
 
 			
 	}
+	/**
+	 * This method handles the event of pressing the button "x"\logout.
+	 * @param event
+	 */
 	
 	@FXML
 	void logoutHandler(ActionEvent event) {
@@ -252,17 +253,10 @@ System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString(
 			stage.show();
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-/**
- * 
- * @param
- * 
- * @return
- * void -
- */
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		cbCourseInClass.getItems().clear();
@@ -273,7 +267,6 @@ System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString(
 		lblUser.setText(UserClient.fullName);
 		cbChild.getItems().clear();
 		HashMap<String,String> data=new HashMap<String,String>();
-
 		HashMap<String,ArrayList<String>> data2=new HashMap<String,ArrayList<String>>();
 		HashMap<String,ArrayList<String>> hm=new HashMap<String,ArrayList<String>>();
 		data.put("get child id", LoginController.userClient.userName);

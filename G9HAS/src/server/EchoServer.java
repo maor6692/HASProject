@@ -402,7 +402,7 @@ public class EchoServer extends AbstractServer {
 							stmt.close();
 							rs.close();
 						}
-						System.out.println(answ.toString());
+						
 						client.sendToClient(answ);
 						break;
 					case "Search for course name":
@@ -552,13 +552,13 @@ public class EchoServer extends AbstractServer {
 						query = "SELECT id FROM course WHERE name='"+ans.get(0)+"'";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
-						while (rs.next()) { 
+						while (rs.next()) {
+							if(!(crsid.contains(rs.getString(1))))
 							crsid.add(rs.getString(1));
 						}
 						stmt.close();
 
 
-						System.out.println(crsid.toString()+"++");
 						ans.clear();
 						client.sendToClient(crsid);
 						break;
@@ -793,7 +793,6 @@ public class EchoServer extends AbstractServer {
 						while (rs.next()) { 
 							childId.add(rs.getString(1));
 						}
-						System.out.println(childId.toString());
 						stmt.close();
 						rs.close();
 						client.sendToClient(childId);
