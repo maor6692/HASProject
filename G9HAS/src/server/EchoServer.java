@@ -1567,7 +1567,46 @@ public class EchoServer extends AbstractServer {
 						rs.close(); 
 						client.sendToClient(hmAns2);
 						break;
-					}
+						
+					case "getClassesInCoursesOfSemester":
+						HashMap<String,ArrayList<String>> c = new HashMap<String,ArrayList<String>>();
+						ans=(ArrayList<String>) message.get(key);
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(ans.get(0));
+						ans.clear();
+						while (rs.next()) { 
+							ans.add(rs.getString(2));
+							ans.add(rs.getString(3));
+							ans.add(rs.getString(4));
+							ans.add(rs.getString(5));
+							c.put(rs.getString(1), new ArrayList<String>(ans));
+							ans.clear();
+						}
+						stmt.close();
+						rs.close(); 
+						client.sendToClient(c);
+						break;
+						
+					case "getStudentsInCourse":
+						HashMap<String,ArrayList<String>> s = new HashMap<String,ArrayList<String>>();
+						ans=(ArrayList<String>) message.get(key);
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery("select s.student_id,u.first_name,u.last_name,s.grade "
+								+ "from users u,student_in_course_in_class s "
+								+ "where u.user_name=s.student_id AND s.course_in_class_id="+ans.get(0));
+						ans.clear();
+						while (rs.next()) { 
+							ans.add(rs.getString(2)+" "+rs.getString(3));
+							ans.add(rs.getString(4));
+							s.put(rs.getString(1), new ArrayList<String>(ans));
+							ans.clear();
+						}
+						stmt.close();
+						rs.close(); 
+						client.sendToClient(s);
+						break;
+					}	
+					
 				}
 			}
 			catch (SQLException e) {

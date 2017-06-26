@@ -614,8 +614,8 @@ public class SchoolManagerController implements Initializable{
 		}
 		String info="";
 		ArrayList<String> params = new ArrayList<String>();
-		HashMap<String,ArrayList<String>> hm;
-		HashMap<String, ArrayList<String>> students,classes;
+		HashMap<String,ArrayList<String>> hm = null;
+		HashMap<String, ArrayList<String>> students,classes,studentsInCourse;
 		switch(cbOptions.getValue()){
 
 		case "all classes":
@@ -666,7 +666,30 @@ public class SchoolManagerController implements Initializable{
 			break;
 
 		case "classes in courses":
-
+			info="";
+		if (hm!=null) hm.clear();
+			query ="select cic.id,co.name,c.name,u.first_name,u.last_name "
+					+ "from users u ,class_in_course cic,class c,course co  "
+					+ "where cic.teacher_id=u.user_name AND cic.class_id=c.id AND cic.course_id=co.id AND c.year='"+cbYear.getValue()+"' AND co.year='"+cbYear.getValue()+"'  AND co.semester='"+cbSemester.getValue()+"' AND c.semester='"+cbSemester.getValue()+"'";
+			params.add(query);
+			hm = (HashMap<String, ArrayList<String>>) queryGenerator(params,"getClassesInCoursesOfSemester");
+			for(String key : hm.keySet()){
+				if(key!=null)
+				{
+					info+="*************************************************************************************************\n";
+					info+="course name: "+hm.get(key).get(0)+"\n";
+					info+="class name: "+hm.get(key).get(1)+"\n";
+					info+="teacher name :"+hm.get(key).get(2)+" "+hm.get(key).get(3)+"\n-----------------------------------------------------------------------------------\n";
+					params.clear();
+					params.add(key);
+					studentsInCourse = (HashMap<String, ArrayList<String>>) queryGenerator(params,"getStudentsInCourse");
+					for(String id : studentsInCourse.keySet()){
+						info+="student name: "+studentsInCourse.get(id).get(0)+"  -   average grade in course: "+studentsInCourse.get(id).get(1)+"\n";	
+					}
+					info+="***********************************************************************************************\n\n";
+				}
+			}
+			textAreaViewAllInfo.setText(info);
 			break;
 
 		case "blocked students":
