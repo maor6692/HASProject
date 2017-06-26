@@ -689,6 +689,7 @@ public class SchoolManagerController implements Initializable{
 					info+="***********************************************************************************************\n\n";
 				}
 			}
+			
 			textAreaViewAllInfo.setText(info);
 			break;
 

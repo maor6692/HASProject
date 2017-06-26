@@ -1606,7 +1606,6 @@ public class EchoServer extends AbstractServer {
 						client.sendToClient(s);
 						break;
 					}	
-					
 				}
 			}
 			catch (SQLException e) {
