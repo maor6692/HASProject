@@ -577,6 +577,8 @@ public class TeacherController implements Initializable{
 
 		HashMap<String,ArrayList<String>> hms = new HashMap<String,ArrayList<String>>();
 		ArrayList<String> msg = new ArrayList<String>();
+		if(tfUploadPath.getText().equals(""))
+			return;
 		File file = new File(tfUploadPath.getText());
 		try {
 			by = Files.readAllBytes(file.toPath());
