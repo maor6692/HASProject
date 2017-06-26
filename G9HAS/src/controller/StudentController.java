@@ -206,7 +206,7 @@ public class StudentController implements Initializable {
      * @param event
      */
     @FXML
-    void downloadHandler(ActionEvent event) {
+    void downloadHandler(ActionEvent event) {   	
     	ArrayList<String> arr = new ArrayList<String>();
     	HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
     	String path = "",fname="";
@@ -214,19 +214,27 @@ public class StudentController implements Initializable {
 		downloadStage.setTitle("Task Download");
 		DirectoryChooser dc = new DirectoryChooser();
 		dc.setTitle("Choose folder");
-		 File folderpath = dc.showDialog(downloadStage);
-		 if(folderpath != null)
+		File folderpath;
+		try{
+		 folderpath = dc.showDialog(downloadStage);
+		}
+		catch(Exception e)
+		{
+			return;
+		}
+		 if(folderpath == null)
+			 return;
 			 path = folderpath.getAbsolutePath();
 
 			 byte[] by;
-			 arr.add(taskID.get(cbChooseTask.getItems().indexOf(cbChooseTask.getValue())));
+			 arr.add(taskID.get(cbChooseTask.getSelectionModel().getSelectedIndex()));
 			 hm.put("get file name for task id", arr);
 			 LoginController.userClient.sendServer(hm);
 			 LoginController.syncWithServer();
 			 fname = ((ArrayList<String>)LoginController.userClient.ans).get(0);
 			 arr.clear();
 			 arr.add(fname);
-			 hm.remove("get file name for task id");
+			 hm.clear();
 				 hm.put("get file from filename", arr);
 				 LoginController.userClient.sendServer(hm);
 				 LoginController.syncWithServer();
@@ -236,13 +244,14 @@ public class StudentController implements Initializable {
 					 lblDownloadComplete.setVisible(true);
 				 } catch (IOException e1) {
 					 // TODO Auto-generated catch block
-					 //e1.printStackTrace();
+					
 				 }
 			 catch(Exception e)
 			 {
 				 
 			 }	 
 		 
+
     }
     /**
      * responsible for the path of the file we want to upload
@@ -349,6 +358,7 @@ public class StudentController implements Initializable {
      */
     @FXML
     void ChooseCourseSTHandler(ActionEvent event) {
+    	taskID.clear();
     	lblLateSubmission.setVisible(false);
     	btnDownloadEvaluation.setVisible(false);
     	cbChooseTask.getItems().clear();
