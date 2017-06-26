@@ -197,7 +197,7 @@ public class SecretaryController implements Initializable{
 		arr.clear();
 		String newTeacherId="";
 		newTeacherId+=teachers_id.get(cbTeachers.getSelectionModel().getSelectedIndex());
-		System.out.println(teachers_id.toString());
+		
 		ArrayList<String> req=new ArrayList<String>();
 		req.add(LoginController.userClient.userName);
 		req.add(LoginController.userClient.fullName);//secretary fullname
@@ -349,7 +349,7 @@ public class SecretaryController implements Initializable{
 		}
 		crs.add(cid);
 		crs.add(classid);
-		System.out.println(crs.toString());
+		
 		hm.put("get teacher class in course", crs);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
@@ -1068,6 +1068,11 @@ public class SecretaryController implements Initializable{
 
 
 	}
+	
+	/**
+	 * choose course handler - this handler insert data into the class selection combo box
+	 * @param event
+	 */
 	@FXML
 	void ChooseCourseRSHandler(ActionEvent event) {
 		lblRemoveRequest.setVisible(false);
@@ -1116,7 +1121,7 @@ public class SecretaryController implements Initializable{
 
 				for(int j=0;j<((ArrayList<String>)LoginController.userClient.ans).get(i).length();j++)
 				{
-					System.out.println(((ArrayList<String>)LoginController.userClient.ans).get(i));
+					
 					studentCourse.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
 					if(((ArrayList<String>)LoginController.userClient.ans).get(i).charAt(j) == ' ')
 					{
@@ -1141,7 +1146,10 @@ public class SecretaryController implements Initializable{
 		cbChooseStudentRS.setVisible(true);
 
 	}
-
+	/**
+	 * choose student handler - this handler showing the send request to manager button (of removing student from course)
+	 * @param event
+	 */
 	@FXML
 	void ChooseStudentRSHandler(ActionEvent event) {
 
@@ -1149,6 +1157,10 @@ public class SecretaryController implements Initializable{
 		btnSendRequestToManager.setVisible(true);
 
 	}
+	/**
+	 * send request handler - this handler sends remove student request to manager.
+	 * @param event
+	 */
 	@FXML
 	void sendRequestToManagerHandler(ActionEvent event) {
 		ArrayList<String> arr = new ArrayList<String>();

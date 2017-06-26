@@ -288,7 +288,6 @@ public class StudentController implements Initializable {
     	HashMap<String,HashMap<String,byte[]>> hm = new HashMap<String,HashMap<String,byte[]>>();
     	HashMap<String,byte[]> hmName = new HashMap<String,byte[]>();
     	
-    	//HashMap<String,byte[]> hm = new HashMap<String,byte[]>();
     	HashMap<String,ArrayList<String>> hms = new HashMap<String,ArrayList<String>>();
     	ArrayList<String> msg = new ArrayList<String>();
         File file = new File(tfUploadPath.getText());
@@ -298,8 +297,7 @@ public class StudentController implements Initializable {
 			hm.put("Submission upload", hmName);
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		}
         LoginController.userClient.sendServer(hm);
         LoginController.syncWithServer();
@@ -362,11 +360,6 @@ public class StudentController implements Initializable {
     	hm.put("get class in course id for course id", arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-		
-//		if(LoginController.userClient.ans != null){
-//			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
-//				arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
-//		}
 		hm.remove("get class in course id for course id");
 		hm.put("get tasks id",((ArrayList<String>)LoginController.userClient.ans));
 		LoginController.userClient.sendServer(hm);
@@ -401,13 +394,11 @@ public class StudentController implements Initializable {
 		hm.put("get course in class", arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-		//System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString());
 		arr.clear();
 		if(LoginController.userClient.ans != null){
 			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 				arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
 		}
-		//work//
 		hm.remove("get course in class");
 		hm.put("get course id",arr);
 		LoginController.userClient.sendServer(hm);
@@ -418,12 +409,10 @@ public class StudentController implements Initializable {
 				arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
 			}			
 		}
-		//System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString());
 		hm.remove("get course id");
 		hm.put("Search for course name",arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-		//System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString()+"!!!!!");
 		if(LoginController.userClient.ans != null){
 			for(int i=0; i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 			{
@@ -465,8 +454,7 @@ public class StudentController implements Initializable {
 
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		}
 	}
 	/**
@@ -508,7 +496,6 @@ public class StudentController implements Initializable {
 					try {
 						Files.write(Paths.get(path+"\\"+fname), by);
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 
 					}
 				}
@@ -579,18 +566,14 @@ public class StudentController implements Initializable {
 		}
 		else lblShowClass.setText("No class");
 		hm.remove("Get student class");
-		//System.out.println(arr.toString());
-		/////work//////
 		hm.put("get course in class", arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-		//System.out.println(((ArrayList<String>)LoginController.userClient.ans).toString());
 		arr.clear();
 		if(LoginController.userClient.ans != null){
 			for(int i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 				arr.add(((ArrayList<String>)LoginController.userClient.ans).get(i));
 		}
-		//work//
 		hm.remove("get course in class");
 		hm.put("get course id",arr);
 
@@ -611,7 +594,6 @@ public class StudentController implements Initializable {
 				cbCourseInClass.getItems().add(i,arr.get(i)+" - "+((ArrayList<String>)LoginController.userClient.ans).get(i).toString());
 			}
 		}
-		////CHECKING AVERAGE GRADE FOR STUDENT IN CURRENT SEMESTER
 		arr.clear();
 		int year=0,semester = 0;
 		char sem = ' ';
@@ -640,8 +622,6 @@ public class StudentController implements Initializable {
 		hm.put("get course in class",arr);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
-		
-		
 		ArrayList<String> arr1 = new ArrayList<String>();
 		arr1.add(String.valueOf(year));
 		arr1.add(String.valueOf(semester));

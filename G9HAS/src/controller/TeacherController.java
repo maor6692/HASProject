@@ -178,6 +178,10 @@ public class TeacherController implements Initializable{
 		lblTaskGrade.setVisible(false);
 
 	}  
+	/**
+	 * sets the pane to show in the window.
+	 * @param pane - the pane to show in the window
+	 */
 	void setPane(Pane pane){
 		createTaskPane.setVisible(false);
 		checkTaskPane.setVisible(false);
@@ -185,11 +189,6 @@ public class TeacherController implements Initializable{
 		pane.setVisible(true);
 	}
 
-	@FXML
-	void viewInboxHandler(ActionEvent event) {
-
-
-	}
 	/**
 	 * task handler, shows all the students with the given task.
 	 * @param event
@@ -352,7 +351,11 @@ public class TeacherController implements Initializable{
 		}
 		tblViewInbox.setItems(teacherInbox);
     }
-    
+	/**
+	 * returns if the given string is number.
+	 *
+	 * @param str - string to check.
+	 */
     private boolean isNum(String str)
     {
     	try{
@@ -390,8 +393,7 @@ public class TeacherController implements Initializable{
 
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		}
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
@@ -403,7 +405,6 @@ public class TeacherController implements Initializable{
 			lblMsg.setVisible(true);
 			return;
 		}
-///////////////////////////////////////////////////////////
 		
 		evaluation.add(taSubmissionComments.getText());
 		hms.put("insert task grade", evaluation);
@@ -438,7 +439,7 @@ public class TeacherController implements Initializable{
 		sumGrades = 0;
 		if(LoginController.userClient.ans != null)
 		{
-			//System.out.println(((ArrayList<String>)LoginController.userClient.ans));
+			
 			for(i=0;i<((ArrayList<String>)LoginController.userClient.ans).size();i++)
 			{
 				sumGrades += Float.parseFloat(((ArrayList<String>)LoginController.userClient.ans).get(i));
@@ -589,13 +590,7 @@ public class TeacherController implements Initializable{
 		LoginController.syncWithServer();
 		hm.clear();
 		hmName.clear();
-		//  LoginController.syncWithServer();
-		// int i=0;
-		// while(cbCourseID.getValue().charAt(i)!= ' ')
-		//{
 		course_id += cbCourseID.getSelectionModel().getSelectedItem();
-		//i++;
-		//}
 		i=0;
 		while(cbClass.getValue().charAt(i)!= ' ')
 		{
@@ -748,7 +743,6 @@ public class TeacherController implements Initializable{
 
 		HashMap<String,ArrayList<String>> hm = new HashMap<String,ArrayList<String>>();
 
-		///
 		params.add(temp);
 		params.add(LoginController.userClient.userName);
 		hm.put("Get class id for task", params);
@@ -766,7 +760,7 @@ public class TeacherController implements Initializable{
 		cbClass.setVisible(true);
 		lblClass.setVisible(true);
 	}
-	//
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	
 

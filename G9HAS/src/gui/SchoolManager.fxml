@@ -22,7 +22,7 @@
             </ImageView>
             <Label fx:id="lblUser" layoutX="52.0" layoutY="30.0" text="UserName" textFill="#d7d7d7">
                <font>
-                  <Font name="System Bold" size="18.0" />
+                  <Font name="System Bold" size="14.0" />
                </font>
             </Label>
             <Hyperlink fx:id="linkLogout" layoutX="52.0" layoutY="52.0" onAction="#logoutHandler" style="-fx-border-color: transparent;" text="Logout" textFill="#7c7c7c">
