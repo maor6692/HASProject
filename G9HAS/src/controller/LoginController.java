@@ -84,11 +84,11 @@ public class LoginController extends Application implements Initializable {
 			userClient.userName = tfUserName.getText();
 			String user_type = arrans.get(0);
 			Parent nextWindow;
-			//			if(arrans.get(3).equals("online")){
-			//				lblWrongUser.setText("User Already Connected!");
-			//				lblWrongUser.setVisible(true);
-			//				return;
-			//			}
+						if(arrans.get(3).equals("online")){
+							lblWrongUser.setText("User Already Connected!");
+							lblWrongUser.setVisible(true);
+							return;
+						}
 
 			try {
 				if(user_type.equals("Manager"))user_type="SchoolManager";
