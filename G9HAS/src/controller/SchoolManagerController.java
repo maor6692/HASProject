@@ -206,6 +206,7 @@ public class SchoolManagerController implements Initializable{
 		LoginController.syncWithServer();
 		msg.clear();
 		if(studentsInClass!=null) studentsInClass.clear();
+		
 		studentsInClass = (HashMap<String, ArrayList<String>>)UserClient.ans;
 		studentsDetails.clear();
 		for(String id: studentsInClass.keySet())
@@ -627,7 +628,7 @@ public class SchoolManagerController implements Initializable{
 				info+="students in this class:\n..................................................................................\n";
 				params.clear();
 				params.add(key);
-				queryGenerator(params,"getStudentsInClass");
+				queryGenerator(params,"getStudentsInClassVAI");
 				students = (HashMap<String,ArrayList<String>>)UserClient.ans;//id:first name,last name,pBlocked
 				for(String student : students.keySet()){
 					info+="id:"+student+" first name: "+students.get(student).get(0)+", last name: "+students.get(student).get(1)+"\n";
@@ -672,7 +673,7 @@ public class SchoolManagerController implements Initializable{
 			ArrayList<String> arr;
 			info="";
 			params.clear();
-			query ="SELECT DISTINCT u.first_name,u.last_name,c.name FROM children_of_parent cop,users u, student s, class c WHERE isBlocked=1 AND cop.child_id=u.user_name AND cop.child_id=s.id AND s.class_id=c.id";
+			query ="SELECT DISTINCT u.first_name,u.last_name,c.name FROM  users u, student s, class c WHERE s.pblocked=1 AND s.id=u.user_name  AND s.class_id=c.id";
 			params.add(query);
 			arr = (ArrayList<String>) queryGenerator(params,"getBlockedStudents");
 			info += "*********************************************************\n";

@@ -44,6 +44,7 @@ public class LoginController extends Application implements Initializable {
 	 * change user status to 'offline' in DB
 	 */
 	static void logout(){
+		if(!userClient.isConnected()) return;
 		HashMap<String, ArrayList<String>> msg = new HashMap<String, ArrayList<String>>();
 		ArrayList<String> arr = new ArrayList<String>();
 		arr.add(UserClient.userName);
@@ -51,6 +52,7 @@ public class LoginController extends Application implements Initializable {
 		LoginController.userClient.sendServer(msg);
 		syncWithServer();
 		try {
+			
 			userClient.closeConnection();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -126,6 +128,8 @@ public class LoginController extends Application implements Initializable {
 	{
 		synchronized(userClient)
 		{
+			UserClient.setFlagFalse();
+
 			while(!userClient.isready())
 			{
 				try{
@@ -135,7 +139,7 @@ public class LoginController extends Application implements Initializable {
 					e.printStackTrace();
 				}
 			}
-			UserClient.setFlagFalse();
+		//	UserClient.setFlagFalse();
 		}
 	}
 	@Override

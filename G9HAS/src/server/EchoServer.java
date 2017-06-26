@@ -1063,11 +1063,36 @@ public class EchoServer extends AbstractServer {
 								ans.add(rs_users.getString(2));
 								ans.add(rs.getString(2));
 								students.put(rs.getString(1), new ArrayList<String>(ans));
+								ans.clear();
 							}
-							ans.clear();
+							
 						}
 						client.sendToClient(students);//id:first name,last name,pBlocked
 						break;
+						
+
+					case "getStudentsInClassVAI":
+						 rs_users = null;
+						HashMap<String, ArrayList<String>> studentsInClass = new HashMap<String, ArrayList<String>>();
+						ans=(ArrayList<String>) message.get(key);
+						query = "SELECT student_id FROM student_in_class WHERE class_id ="+ans.get(0);
+						stmt = conn.createStatement();
+						stmt2=conn.createStatement();
+						rs=stmt.executeQuery(query);
+						ans.clear();
+						while(rs.next()){ //id:first name,last name,pBlocked
+							rs_users=stmt2.executeQuery("select first_name,last_name from users where user_name="+"'"+rs.getString(1)+"'");
+							while(rs_users.next()){ 
+								ans.add(rs_users.getString(1));
+								ans.add(rs_users.getString(2));
+								studentsInClass.put(rs.getString(1), new ArrayList<String>(ans));
+								ans.clear();
+							}
+							
+						}
+						client.sendToClient(studentsInClass);//id:first name,last name,pBlocked
+						break;
+						
 						
 					case "getStudentsInCourseInClass":
 						ResultSet rs_usersGS = null;
