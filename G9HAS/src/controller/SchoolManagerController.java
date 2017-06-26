@@ -697,7 +697,7 @@ public class SchoolManagerController implements Initializable{
 			ArrayList<String> arr;
 			info="";
 			params.clear();
-			query ="SELECT DISTINCT u.first_name,u.last_name,c.name FROM  users u, student s, class c WHERE s.pblocked=1 AND s.id=u.user_name  AND s.class_id=c.id";
+			query ="SELECT DISTINCT u.first_name,u.last_name,c.name FROM  users u,student s, student_in_class sic, class c WHERE sic.student_id=s.id AND s.pblocked=1 AND s.id=u.user_name  AND sic.class_id=c.id AND c.year="+cbYear.getValue()+" AND c.semester="+cbSemester.getValue();
 			params.add(query);
 			arr = (ArrayList<String>) queryGenerator(params,"getBlockedStudents");
 			info += "*********************************************************\n";
