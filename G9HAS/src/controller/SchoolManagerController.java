@@ -268,7 +268,7 @@ public class SchoolManagerController implements Initializable{
 			case "1":
 				course_in_class_id=managerRequests.get(request_id).get(1).split("\\:")[4];//extract course_in_class_id from details field from table manager_request
 				student_id=managerRequests.get(request_id).get(1).split("\\:")[3];
-				query = "DELETE FROM student_in_course_in_class WHERE course_in_class_id ="+ course_in_class_id +"AND student_id = '"+student_id+"' LIMIT 1";
+				query = "DELETE FROM student_in_course_in_class WHERE course_in_class_id ="+ course_in_class_id +" AND student_id = '"+student_id+"' LIMIT 1";
 				break;
 			case "2":
 				course_in_class_id=managerRequests.get(request_id).get(1).split("\\:")[4];

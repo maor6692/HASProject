@@ -113,7 +113,7 @@ public class EchoServer extends AbstractServer {
 						break;
 					case "get course in class id":
 						ans= (ArrayList<String>)message.get(key);
-						query= "SELECT id  FROM class_in_course WHERE course_id='"+ans.get(0)+"'AND class_id='"+ans.get(1)+"'AND teacher_id='"+ans.get(2)+"'";
+						query= "SELECT id  FROM class_in_course WHERE course_id="+ans.get(0)+" AND class_id="+ans.get(1)+" AND teacher_id='"+ans.get(2)+"'";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
 						ans.clear();
@@ -221,9 +221,9 @@ public class EchoServer extends AbstractServer {
 						client.sendToClient(teacher_name);
 
 						break;
-					case "get teacher teaching_unit":
+					case "get course teaching_unit":
 						ans=(ArrayList<String>) message.get(key);
-						query = "SELECT teaching_unit FROM teacher_teaching_unit WHERE teacher_id='"+ans.get(0)+"'";
+						query = "SELECT teaching_unit FROM course WHERE id="+ans.get(0)+" AND year="+ans.get(1)+" AND semester="+ans.get(2);
 						stmt = conn.createStatement();
 						rs=stmt.executeQuery(query);
 						String tu="";
@@ -233,6 +233,7 @@ public class EchoServer extends AbstractServer {
 						stmt.close();
 						client.sendToClient(tu);
 						break;
+						
 					case "get id":
 						ans=(ArrayList<String>) message.get(key);
 						String teacher_un="";                  
@@ -879,6 +880,7 @@ public class EchoServer extends AbstractServer {
 						rs.close();
 						client.sendToClient(cicGS);
 						break;
+						
 					case "send remove request to manager":
 						dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 						localDate = LocalDate.now();

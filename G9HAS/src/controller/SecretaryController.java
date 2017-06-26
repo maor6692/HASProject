@@ -76,7 +76,7 @@ public class SecretaryController implements Initializable{
 	@FXML
 	private TextField tfClassId,tfClassName,tfStudentId;
 	@FXML
-	private Label lblChooseStudentRS;
+	private Label lblChooseStudentRS,lblRemoveRequest;
 	@FXML
 	private ComboBox<CourseComboBox> cmbCourse;
 
@@ -365,8 +365,10 @@ public class SecretaryController implements Initializable{
 		lblCurTeacher.setText("Current Teacher:"+teacher_fname);
 		crs.clear();
 		hm.clear();
-		crs.add(teacher_username);
-		hm.put("get teacher teaching_unit", crs);
+		crs.add(cid);
+		crs.add(args.get(0));
+		crs.add(args.get(1));
+		hm.put("get course teaching_unit", crs);
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
 		int tu=0;
@@ -395,8 +397,8 @@ public class SecretaryController implements Initializable{
 		}
 		
 		}
-		classid="";
-		teacher_username="";
+	//	classid="";
+		//teacher_username="";
 		
 		}
 		}
@@ -1068,6 +1070,8 @@ public class SecretaryController implements Initializable{
 	}
 	@FXML
 	void ChooseCourseRSHandler(ActionEvent event) {
+		lblRemoveRequest.setVisible(false);
+		lblRemoveRequest.setVisible(false);
 		cbChooseStudentRS.setVisible(true);
 		cbChooseStudentRS.getItems().clear();
 		studentCourse.clear();
@@ -1153,7 +1157,7 @@ public class SecretaryController implements Initializable{
 		int spacecnt=0;
 		String class_in_course_id="", studName="";
 		String arr1[];
-		//
+		
 
 		for(int i=0;i<studentCourse.size();i++)
 		{
@@ -1186,6 +1190,7 @@ public class SecretaryController implements Initializable{
 		LoginController.userClient.sendServer(hm);
 		LoginController.syncWithServer();
 		 */
+		lblRemoveRequest.setVisible(true);
 
 	}
 
