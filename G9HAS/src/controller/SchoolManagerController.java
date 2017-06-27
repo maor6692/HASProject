@@ -112,6 +112,7 @@ public class SchoolManagerController implements Initializable{
 	@FXML
 	void setBlockParentAccessPaneHandler(ActionEvent event) {
 		setPane(blockParentPane);
+		initializeBlockParent();
 	}
 	/**
 	 * change visible user window to appropriate window
@@ -164,6 +165,7 @@ public class SchoolManagerController implements Initializable{
 	void setViewAllInformationPaneHandler(ActionEvent event) {
 		initializeViewAllInformation();
 		setPane(viewAllInformationPane);
+		btnShowReportGSR.setVisible(false);
 	}
 	/**
 	 * change visible user window to appropriate window
@@ -173,6 +175,8 @@ public class SchoolManagerController implements Initializable{
 	void setAnswerRequestPaneHandler(ActionEvent event) {
 		initializeAnswerRequests();
 		setPane(answerRequestsPane);
+		btnShowReportGSR.setVisible(false);
+
 	}
 	/**
 	 * change visible user window to appropriate window
@@ -240,6 +244,7 @@ public class SchoolManagerController implements Initializable{
 		if(lvStudents.getSelectionModel().getSelectedItem()!=null){
 			arr.clear();
 			arr.add(lvStudents.getSelectionModel().getSelectedItem().split("\\s+")[0]);
+			msg.clear();
 			msg.put("returnAccess",arr);
 			LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 			LoginController.syncWithServer();
@@ -363,7 +368,6 @@ public class SchoolManagerController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lblUser.setText(UserClient.fullName);
-		initializeBlockParent();
 	}
 
 
@@ -807,7 +811,8 @@ public class SchoolManagerController implements Initializable{
 	}
 
 	Object queryGenerator(ArrayList<String> params , String serverCase){
-		msg.clear();
+		
+		if(msg!=null) msg.clear(); else msg = new HashMap<String, ArrayList<String>>();
 		msg.put(serverCase,params);
 		LoginController.userClient.sendServer(msg);//send ask to server 
 		LoginController.syncWithServer();
