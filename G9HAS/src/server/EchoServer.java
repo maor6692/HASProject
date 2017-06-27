@@ -937,7 +937,30 @@ public class EchoServer extends AbstractServer {
 						semester.add(newSemester == 1 ? 'A' : 'B');
 						client.sendToClient(semester);//sends next Semester details to SecretaryController.
 						break;
-
+					case "defineNewSemester":
+						ans= (ArrayList<String>)message.get(key);
+						int sem = ans.get(1).equals("A")? 1 : 2;
+						query = "SELECT year,sem FROM semester WHERE year = '"+ans.get(0)+"' AND sem = '"+sem+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						boolean checker = false;
+						while(rs.next())
+							checker = true;
+						int year = Integer.parseInt(ans.get(0));
+						sem = ans.get(1).equals("A")? 1 : 2;
+						if(sem == 1){year--;sem=2;}else{sem=1;}
+						query = "UPDATE semester SET iscurrent = 0 WHERE year = '"+year+"' AND sem = '"+sem+"'";
+						stmt.executeUpdate(query);
+						sem = ans.get(1).equals("A")? 1 : 2;
+						if(checker == true){ // already exists
+							query = "UPDATE semester SET iscurrent = 1 WHERE year = '"+ans.get(0)+"' AND sem = '"+sem+"'";
+							stmt.executeUpdate(query);
+						}else{
+							query = "INSERT INTO semester (year,sem,iscurrent) VALUES('"+ans.get(0)+"','"+sem+"','1')";
+							stmt.executeUpdate(query);
+						}
+						client.sendToClient(null);//sends the answer to client.
+						break;
 					case "Get teaching unit":
 
 						ans=(ArrayList<String>) message.get(key);
