@@ -136,16 +136,8 @@ public class SystemManagerController implements Initializable{
     	LoginController.syncWithServer();
     	if(LoginController.userClient.ans != null){
     		year = ((ArrayList<Integer>)LoginController.userClient.ans).get(0);
-    		sem = ((ArrayList<Character>)LoginController.userClient.ans).get(1);
-    		if(sem=='A')
-    		{
-    			year = year--;
-    			semester = 2;
-    		}
-    		else
-    		{
-    			semester = 1;
-    		}
+    		semester = ((ArrayList<Character>)LoginController.userClient.ans).get(1)=='A'?1:2;
+    
         	try{	
         			courseInfo.add(String.valueOf(Integer.parseInt(tfWeeklyHours.getText())));
         			courseInfo.clear();
