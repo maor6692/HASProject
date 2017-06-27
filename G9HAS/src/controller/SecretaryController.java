@@ -154,7 +154,7 @@ public class SecretaryController implements Initializable{
 	@FXML
 	private ComboBox<ClassInCourseAS> cmbClassInCourseAS;
     @FXML
-    private Label lblDenied;
+    private Label lblDenied,lblNextSemester;
 
     @FXML
     private Label lblConfirmation;
@@ -1332,7 +1332,20 @@ public class SecretaryController implements Initializable{
 		currSemester=(ArrayList<Object>) UserClient.ans;
 		newYear=(int) currSemester.get(0);
 		newSemester=(char) currSemester.get(1);
-		lblSemester.setText("The new semester : "+newYear+"/"+newSemester);
+		lblNextSemester.setText("Define Semester "+newYear+" "+newSemester+" As The Next Semester");
+		int year = newYear; 
+		char sem = newSemester;
+		int semester;
+		if(sem=='A')
+		{
+			year--;
+			sem = 'B';
+		}
+		else
+		{
+			sem = 'A';
+		}
+		lblSemester.setText("Current Semster Is: "+year+" "+sem);
 		ArrayList<String> arr = new ArrayList<String>();
 		arr.add(String.valueOf(newYear));
 		arr.add(String.valueOf(newSemester == 'A' ? 1 : 2));
@@ -1385,6 +1398,28 @@ public class SecretaryController implements Initializable{
 		colCidExp.setCellValueFactory(new PropertyValueFactory<>("classId"));
 		colCnExp.setCellValueFactory(new PropertyValueFactory<>("className"));
 
+	}
+	
+	@FXML
+	void defineNewSemesterHandlerCS(ActionEvent event){
+		HashMap <String,ArrayList<String>> msg = new HashMap<>();
+		msg.put("getCurrentSemester",null);
+		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
+		LoginController.syncWithServer();
+		msg.clear();
+
+		ArrayList <Object> NextSem = (ArrayList<Object>) UserClient.ans;
+		int newCSYear=(int) currSemester.get(0);
+		char newCSSemester=(char) currSemester.get(1);
+		ArrayList<String> defNewSem = new ArrayList<>();
+		defNewSem.add(String.valueOf(newCSYear));
+		defNewSem.add(String.valueOf(newCSSemester));
+		msg.put("defineNewSemester",defNewSem);
+		LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
+		LoginController.syncWithServer();
+		msg.clear();
+		JOptionPane.showMessageDialog(null, "You Changed Semester");
+		initializeCreateSemester();
 	}
 	public class CourseComboBox {
 		private int teachingUnit;
