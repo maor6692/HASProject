@@ -289,6 +289,7 @@ public class SchoolManagerController implements Initializable{
 			}
 			arr.clear();
 			arr.add(query);
+			if(msg!=null) msg.clear(); else msg = new HashMap<String, ArrayList<String>>();
 			msg.put("approveRequest",arr);
 			LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 			LoginController.syncWithServer();
@@ -321,6 +322,7 @@ public class SchoolManagerController implements Initializable{
 		arr.add(managerRequests.get(request_id).get(0));//secretary id
 		//prepare message for secretary includes request details, status(approved/dismissed) and school manager comments
 		arr.add(lvRequests.getSelectionModel().getSelectedItem().split("\\r?\\n")[2]+" :"+status+"\nschool manager comments: "+tfComments.getText());//comments
+		if(msg!=null) msg.clear(); else msg = new HashMap<String, ArrayList<String>>();
 		msg.put("notifySecretary",arr);
 		LoginController.userClient.sendServer(msg);//send comments to secretary INBOX
 		LoginController.syncWithServer();
@@ -480,6 +482,7 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void GetReportGSR(ActionEvent event) {
+		if	(cmbPeriodGSR.getValue()==null ||  cmbOpGSR.getValue()==null) return;
 		bcStatistic.getData().clear();
 		String op = cmbOpGSR.getSelectionModel().getSelectedItem();
 		String arb = cmbArb.getSelectionModel().getSelectedItem().getArbId();
@@ -580,7 +583,7 @@ public class SchoolManagerController implements Initializable{
 		bcStatistic.setVisible(false);
 		lblPeriodGSR.setVisible(false);
 		cmbPeriodGSR.setVisible(false);
-
+	
 		switch(cmbOpGSR.getSelectionModel().getSelectedItem()){
 		case "All Classes of a teacher":
 			lblArb.setText("Choose teacher:");
