@@ -348,7 +348,7 @@ public class SchoolManagerController implements Initializable{
 		Parent nextWindow;
 		try {
 			LoginController.logout();
-			nextWindow = FXMLLoader.load(getClass().getResource("../gui/loginWindow.fxml"));
+			nextWindow = FXMLLoader.load(getClass().getResource("/gui/loginWindow.fxml"));
 			Scene nextScene = new Scene(nextWindow);
 			Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 			stage.setScene(nextScene);

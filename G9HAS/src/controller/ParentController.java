@@ -238,7 +238,7 @@ public class ParentController implements Initializable{
 			arr.add(UserClient.userName);
 			msg.put("logout",arr);
 			LoginController.userClient.sendServer(msg);
-			nextWindow = FXMLLoader.load(getClass().getResource("../gui/loginWindow.fxml"));
+			nextWindow = FXMLLoader.load(getClass().getResource("/gui/loginWindow.fxml"));
 			Scene nextScene = new Scene(nextWindow);
 			Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 			stage.setScene(nextScene);
