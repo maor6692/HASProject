@@ -15,7 +15,7 @@
          <children>
             <ImageView fitHeight="43.0" fitWidth="43.0" layoutX="9.0" layoutY="23.0">
                <image>
-                  <Image url="@../../resources/user%20icon.png" />
+                  <Image url="@../../resources/usericon.png" />
                </image>
             </ImageView>
             <Label fx:id="lblUser" layoutX="50.0" layoutY="26.0" text="UserName" textFill="WHITE">
