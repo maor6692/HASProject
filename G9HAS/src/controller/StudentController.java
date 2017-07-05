@@ -616,7 +616,7 @@ public class StudentController implements Initializable {
 			sem = ((ArrayList<Character>)LoginController.userClient.ans).get(1);
 			if(sem=='A')
 			{
-				year--;
+				year--; 
 				semester = 2;
 			}
 			else
