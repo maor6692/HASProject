@@ -92,7 +92,7 @@ public class LoginController extends Application implements Initializable {
 
 			try {
 				if(user_type.equals("Manager"))user_type="SchoolManager";
-				nextWindow = FXMLLoader.load(getClass().getResource("../gui/"+user_type+".fxml"));//Prepare appropriate window due to user_type
+				nextWindow = FXMLLoader.load(getClass().getResource("/gui/"+user_type+".fxml"));//Prepare appropriate window due to user_type
 				Scene nextScene = new Scene(nextWindow);
 				Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 				stage.setScene(nextScene);
@@ -139,7 +139,7 @@ public class LoginController extends Application implements Initializable {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("../gui/loginWindow.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("/gui/loginWindow.fxml"));
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);

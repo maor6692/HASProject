@@ -112,6 +112,7 @@ public class SchoolManagerController implements Initializable{
 	@FXML
 	void setBlockParentAccessPaneHandler(ActionEvent event) {
 		setPane(blockParentPane);
+		initializeBlockParent();
 	}
 	/**
 	 * change visible user window to appropriate window
@@ -164,6 +165,7 @@ public class SchoolManagerController implements Initializable{
 	void setViewAllInformationPaneHandler(ActionEvent event) {
 		initializeViewAllInformation();
 		setPane(viewAllInformationPane);
+		btnShowReportGSR.setVisible(false);
 	}
 	/**
 	 * change visible user window to appropriate window
@@ -173,6 +175,8 @@ public class SchoolManagerController implements Initializable{
 	void setAnswerRequestPaneHandler(ActionEvent event) {
 		initializeAnswerRequests();
 		setPane(answerRequestsPane);
+		btnShowReportGSR.setVisible(false);
+
 	}
 	/**
 	 * change visible user window to appropriate window
@@ -240,6 +244,7 @@ public class SchoolManagerController implements Initializable{
 		if(lvStudents.getSelectionModel().getSelectedItem()!=null){
 			arr.clear();
 			arr.add(lvStudents.getSelectionModel().getSelectedItem().split("\\s+")[0]);
+			msg.clear();
 			msg.put("returnAccess",arr);
 			LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 			LoginController.syncWithServer();
@@ -284,6 +289,7 @@ public class SchoolManagerController implements Initializable{
 			}
 			arr.clear();
 			arr.add(query);
+			if(msg!=null) msg.clear(); else msg = new HashMap<String, ArrayList<String>>();
 			msg.put("approveRequest",arr);
 			LoginController.userClient.sendServer(msg);//send to server user info to verify user details 
 			LoginController.syncWithServer();
@@ -316,6 +322,7 @@ public class SchoolManagerController implements Initializable{
 		arr.add(managerRequests.get(request_id).get(0));//secretary id
 		//prepare message for secretary includes request details, status(approved/dismissed) and school manager comments
 		arr.add(lvRequests.getSelectionModel().getSelectedItem().split("\\r?\\n")[2]+" :"+status+"\nschool manager comments: "+tfComments.getText());//comments
+		if(msg!=null) msg.clear(); else msg = new HashMap<String, ArrayList<String>>();
 		msg.put("notifySecretary",arr);
 		LoginController.userClient.sendServer(msg);//send comments to secretary INBOX
 		LoginController.syncWithServer();
@@ -341,7 +348,7 @@ public class SchoolManagerController implements Initializable{
 		Parent nextWindow;
 		try {
 			LoginController.logout();
-			nextWindow = FXMLLoader.load(getClass().getResource("../gui/loginWindow.fxml"));
+			nextWindow = FXMLLoader.load(getClass().getResource("/gui/loginWindow.fxml"));
 			Scene nextScene = new Scene(nextWindow);
 			Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 			stage.setScene(nextScene);
@@ -363,7 +370,6 @@ public class SchoolManagerController implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lblUser.setText(UserClient.fullName);
-		initializeBlockParent();
 	}
 
 
@@ -476,6 +482,7 @@ public class SchoolManagerController implements Initializable{
 	 */
 	@FXML
 	void GetReportGSR(ActionEvent event) {
+		if	(cmbPeriodGSR.getValue()==null ||  cmbOpGSR.getValue()==null) return;
 		bcStatistic.getData().clear();
 		String op = cmbOpGSR.getSelectionModel().getSelectedItem();
 		String arb = cmbArb.getSelectionModel().getSelectedItem().getArbId();
@@ -576,7 +583,7 @@ public class SchoolManagerController implements Initializable{
 		bcStatistic.setVisible(false);
 		lblPeriodGSR.setVisible(false);
 		cmbPeriodGSR.setVisible(false);
-
+	
 		switch(cmbOpGSR.getSelectionModel().getSelectedItem()){
 		case "All Classes of a teacher":
 			lblArb.setText("Choose teacher:");
@@ -807,7 +814,8 @@ public class SchoolManagerController implements Initializable{
 	}
 
 	Object queryGenerator(ArrayList<String> params , String serverCase){
-		msg.clear();
+		
+		if(msg!=null) msg.clear(); else msg = new HashMap<String, ArrayList<String>>();
 		msg.put(serverCase,params);
 		LoginController.userClient.sendServer(msg);//send ask to server 
 		LoginController.syncWithServer();

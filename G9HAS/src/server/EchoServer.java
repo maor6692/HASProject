@@ -24,7 +24,6 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.xml.crypto.dsig.spec.HMACParameterSpec;
 
-import common.SClass;
 import ocsf.server.*;
 
 
