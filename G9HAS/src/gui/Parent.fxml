@@ -77,7 +77,7 @@
                </font>
             </Label>
             <ComboBox fx:id="cbCourseInClass" layoutX="186.0" layoutY="281.0" onAction="#cbCourseInClassHandler" prefWidth="150.0" promptText="choose course" visible="false" />
-            <TextArea fx:id="taTasks" layoutX="161.0" layoutY="365.0" prefHeight="175.0" prefWidth="200.0" visible="false" />
+            <TextArea fx:id="taTasks" editable="false" layoutX="161.0" layoutY="365.0" prefHeight="175.0" prefWidth="200.0" visible="false" />
             <Label fx:id="lblCourseAvg" layoutX="373.0" layoutY="365.0" text="lblCourseAvg" visible="false" />
          </children>
       </Pane>
