@@ -232,7 +232,7 @@ public class EchoServer extends AbstractServer {
 						stmt.close();
 						client.sendToClient(tu);
 						break;
-						
+
 					case "get id":
 						ans=(ArrayList<String>) message.get(key);
 						String teacher_un="";                  
@@ -401,7 +401,7 @@ public class EchoServer extends AbstractServer {
 							stmt.close();
 							rs.close();
 						}
-						
+
 						client.sendToClient(answ);
 						break;
 					case "Search for course name":
@@ -553,7 +553,7 @@ public class EchoServer extends AbstractServer {
 						rs = stmt.executeQuery(query);
 						while (rs.next()) {
 							if(!(crsid.contains(rs.getString(1))))
-							crsid.add(rs.getString(1));
+								crsid.add(rs.getString(1));
 						}
 						stmt.close();
 
@@ -867,18 +867,18 @@ public class EchoServer extends AbstractServer {
 						rs = stmt.executeQuery(qu1);
 						while (rs.next()) { 
 							String qu2 = "SELECT student_id FROM student_in_class WHERE class_id='"+rs.getString(2)+"'";
-							
-							 rss2 = stmt2.executeQuery(qu2);
+
+							rss2 = stmt2.executeQuery(qu2);
 							while (rss2.next()) {
 								cicGS.add(rs.getString(1)+" - "+rss2.getString(1));
 							}
 						}
-						
+
 						stmt.close();
 						rs.close();
 						client.sendToClient(cicGS);
 						break;
-						
+
 					case "send remove request to manager":
 						dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 						localDate = LocalDate.now();
@@ -986,8 +986,12 @@ public class EchoServer extends AbstractServer {
 						pstmt.setInt(4, Integer.parseInt(ans.get(3)));
 						pstmt.setInt(5, Integer.parseInt(ans.get(4)));
 						pstmt.setInt(6, Integer.parseInt(ans.get(5)));
-
-						pstmt.executeUpdate();
+						try{
+							pstmt.executeUpdate();
+						}
+						catch(SQLException e){
+							System.err.println("course id already defined");
+						}
 						//client.sendToClient(ans);//sends the answer to client.
 						client.sendToClient(null);
 						break;
@@ -1031,7 +1035,7 @@ public class EchoServer extends AbstractServer {
 					case "assignStudentsToCourseInClass":
 						ArrayList<String> studentDetails = (ArrayList<String>) message.get(key);
 						query = "UPDATE student SET class_id=? WHERE id=?";
-						
+
 						pstmt = conn.prepareStatement(query);
 						Statement st22 = conn.createStatement();
 						int classId = Integer.parseInt(studentDetails.get(0));
@@ -1086,14 +1090,14 @@ public class EchoServer extends AbstractServer {
 								students.put(rs.getString(1), new ArrayList<String>(ans));
 								ans.clear();
 							}
-							
+
 						}
 						client.sendToClient(students);//id:first name,last name,pBlocked
 						break;
-						
+
 
 					case "getStudentsInClassVAI":
-						 rs_users = null;
+						rs_users = null;
 						HashMap<String, ArrayList<String>> studentsInClass = new HashMap<String, ArrayList<String>>();
 						ans=(ArrayList<String>) message.get(key);
 						query = "SELECT student_id FROM student_in_class WHERE class_id ="+ans.get(0);
@@ -1109,12 +1113,12 @@ public class EchoServer extends AbstractServer {
 								studentsInClass.put(rs.getString(1), new ArrayList<String>(ans));
 								ans.clear();
 							}
-							
+
 						}
 						client.sendToClient(studentsInClass);//id:first name,last name,pBlocked
 						break;
-						
-						
+
+
 					case "getStudentsInCourseInClass":
 						ResultSet rs_usersGS = null;
 						HashMap<String, ArrayList<String>> studentsGS = new HashMap<String, ArrayList<String>>();
@@ -1129,7 +1133,7 @@ public class EchoServer extends AbstractServer {
 							while(rs_users.next()){ 
 								ans.add(rs_users.getString(1));
 								ans.add(rs_users.getString(2));
-								
+
 								studentsGS.put(rs.getString(1), new ArrayList<String>(ans));
 							}
 							ans.clear();
@@ -1328,14 +1332,14 @@ public class EchoServer extends AbstractServer {
 						query  = "SELECT c.name,c.id,cic.id, u.first_name, u.last_name FROM class_in_course cic, class c, users u WHERE cic.course_id='"+ans.get(2)+"' AND cic.class_id=c.id AND c.year='"+ans.get(0)+"' AND c.semester='"+ans.get(1)+"' AND cic.teacher_id=u.user_name";
 						stmt = conn.createStatement();
 						rs = stmt.executeQuery(query);
-						
+
 						while(rs.next()){
 							ArrayList<String> t = new ArrayList<>();
 							t.add(rs.getString(2));
 							t.add(rs.getString(1));
 							t.add(rs.getString(4)+" "+rs.getString(5));
 							classesInCourseSM.put(rs.getString(3), t);
-							
+
 						}
 						client.sendToClient(classesInCourseSM);
 						break;
@@ -1460,7 +1464,7 @@ public class EchoServer extends AbstractServer {
 									res2 = st2.executeQuery("SELECT AVG(grade) FROM student_in_course_in_class WHERE course_in_class_id='"+rs.getString(3)+"'");
 									int avg=-1;
 									while(res2.next()) avg = res2.getInt(1);
-									
+
 									vals.add(rs.getString(1)+","+rs.getString(2)+","+avg);
 								}
 								report.put(String.valueOf(destP), vals);
@@ -1475,22 +1479,22 @@ public class EchoServer extends AbstractServer {
 							while(rs.next()) tteachers.add(rs.getString(1));
 							int preserveDestP = destP;
 							for(String tt:tteachers){// for each teacher
-									for(destP=preserveDestP;destP<currP;){ // for each teacher in each semester
-										pYear = String.valueOf(destP).substring(0, 4);
-										pSem = String.valueOf(destP).substring(4);
-										q="SELECT AVG(grade),co.name FROM class_in_course cic, class cl,student_in_course_in_class sicic,course co WHERE cic.teacher_id='"+tt+"'  AND cl.id=cic.class_id AND cl.year='"+pYear+"' AND cl.semester='"+pSem+"' AND cic.id=sicic.course_in_class_id AND co.id = cic.course_id GROUP BY cic.id";
-										res2 = st2.executeQuery(q);
-										ArrayList<String> vals = new ArrayList<>();
-										int avg=-1;
-										while(res2.next()){
-											avg = res2.getInt(1);
-											vals.add(res2.getString(2)+","+avg);
-										}
-										report.put(tt+","+pYear+","+pSem, vals);
-										destP = destP%10 == 1 ? destP+1 : ((destP/10)+1)*10+1;//get next semester
+								for(destP=preserveDestP;destP<currP;){ // for each teacher in each semester
+									pYear = String.valueOf(destP).substring(0, 4);
+									pSem = String.valueOf(destP).substring(4);
+									q="SELECT AVG(grade),co.name FROM class_in_course cic, class cl,student_in_course_in_class sicic,course co WHERE cic.teacher_id='"+tt+"'  AND cl.id=cic.class_id AND cl.year='"+pYear+"' AND cl.semester='"+pSem+"' AND cic.id=sicic.course_in_class_id AND co.id = cic.course_id GROUP BY cic.id";
+									res2 = st2.executeQuery(q);
+									ArrayList<String> vals = new ArrayList<>();
+									int avg=-1;
+									while(res2.next()){
+										avg = res2.getInt(1);
+										vals.add(res2.getString(2)+","+avg);
 									}
+									report.put(tt+","+pYear+","+pSem, vals);
+									destP = destP%10 == 1 ? destP+1 : ((destP/10)+1)*10+1;//get next semester
+								}
 							}
-							
+
 							break;
 						case"All Courses of a class":
 							for(;destP<currP;){ // for each teacher in each semester
@@ -1514,34 +1518,34 @@ public class EchoServer extends AbstractServer {
 						client.sendToClient(report);
 						break;
 
-					  case "get course weekly hours":
-				             ans=(ArrayList<String>) message.get(key);
-				             query = "SELECT weekly_hours FROM course where id='"+Integer.parseInt(ans.get(0))+"' AND year="+ans.get(1)+" AND semester="+ans.get(2);
-				             stmt = conn.createStatement();
-				             rs = stmt.executeQuery(query);
-				             ans.clear();
-				       
-				             while (rs.next()) 
-				               ans.add(String.valueOf(rs.getInt(1)));
-				             
-				             client.sendToClient(ans);
-				             
-				             break;
-			
-				         case "get teacher working hours":
-				             ans=(ArrayList<String>) message.get(key);
-				             query = "SELECT hours_limit,working_hours FROM teacher where id='"+ans.get(0)+"'";
-				             stmt = conn.createStatement();
-				             rs = stmt.executeQuery(query);
-				             ans.clear();
-				             while (rs.next()) { 
-				               ans.add(String.valueOf(rs.getInt(1)));
-				               ans.add(String.valueOf(rs.getInt(2)));
-				             }
-				             client.sendToClient(ans);
-				       
-				             break;
-				             
+					case "get course weekly hours":
+						ans=(ArrayList<String>) message.get(key);
+						query = "SELECT weekly_hours FROM course where id='"+Integer.parseInt(ans.get(0))+"' AND year="+ans.get(1)+" AND semester="+ans.get(2);
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+
+						while (rs.next()) 
+							ans.add(String.valueOf(rs.getInt(1)));
+
+						client.sendToClient(ans);
+
+						break;
+
+					case "get teacher working hours":
+						ans=(ArrayList<String>) message.get(key);
+						query = "SELECT hours_limit,working_hours FROM teacher where id='"+ans.get(0)+"'";
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery(query);
+						ans.clear();
+						while (rs.next()) { 
+							ans.add(String.valueOf(rs.getInt(1)));
+							ans.add(String.valueOf(rs.getInt(2)));
+						}
+						client.sendToClient(ans);
+
+						break;
+
 					case "getSemesters":
 						query = "SELECT * FROM semester";
 						stmt = conn.createStatement();
@@ -1588,7 +1592,7 @@ public class EchoServer extends AbstractServer {
 						rs.close(); 
 						client.sendToClient(hmAns2);
 						break;
-						
+
 					case "getClassesInCoursesOfSemester":
 						HashMap<String,ArrayList<String>> c = new HashMap<String,ArrayList<String>>();
 						ans=(ArrayList<String>) message.get(key);
@@ -1607,7 +1611,7 @@ public class EchoServer extends AbstractServer {
 						rs.close(); 
 						client.sendToClient(c);
 						break;
-						
+
 					case "getStudentsInCourse":
 						HashMap<String,ArrayList<String>> s = new HashMap<String,ArrayList<String>>();
 						ans=(ArrayList<String>) message.get(key);
