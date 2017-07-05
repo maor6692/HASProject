@@ -85,7 +85,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="tfSubmissionDate" layoutX="331.0" layoutY="306.0" />
+                  <TextField fx:id="tfSubmissionDate" layoutX="331.0" layoutY="306.0" promptText="format : yyyy-mm-dd" />
                   <ComboBox fx:id="cbCourseID" layoutX="296.0" layoutY="156.0" onAction="#cbCourseHandler" prefHeight="31.0" prefWidth="132.0" promptText="Choose Course" />
                   <TextField fx:id="tfUploadPath" editable="false" layoutX="298.0" layoutY="253.0" prefHeight="25.0" prefWidth="154.0" />
                   <Label fx:id="lblTaskCreated" layoutX="314.0" layoutY="376.0" prefHeight="17.0" prefWidth="139.0" text="Task created!" textFill="#ff0808" visible="false">
