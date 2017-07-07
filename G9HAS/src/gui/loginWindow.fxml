@@ -42,8 +42,8 @@
             <Font size="26.0" />
          </font>
       </Label>
-      <TextField fx:id="tfUserName" layoutX="279.0" layoutY="228.0" prefHeight="31.0" prefWidth="149.0" />
-      <PasswordField fx:id="tfPassword" layoutX="279.0" layoutY="263.0" prefHeight="31.0" prefWidth="149.0" />
+      <TextField fx:id="tfUserName" layoutX="279.0" layoutY="228.0" prefHeight="31.0" prefWidth="149.0" text="systemmanager1" />
+      <PasswordField fx:id="tfPassword" layoutX="279.0" layoutY="263.0" prefHeight="31.0" prefWidth="149.0" text="1234" />
       <TextField fx:id="tfHost" layoutX="279.0" layoutY="298.0" prefHeight="31.0" prefWidth="149.0" text="localhost" />
       <TextField fx:id="tfPort" layoutX="279.0" layoutY="332.0" prefHeight="31.0" prefWidth="149.0" text="5555" />
       <Label layoutX="135.0" layoutY="318.0" prefHeight="49.0" prefWidth="136.0" text="port:">

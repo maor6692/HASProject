@@ -995,10 +995,10 @@ public class EchoServer extends AbstractServer {
 						//client.sendToClient(ans);//sends the answer to client.
 						client.sendToClient(null);
 						break;
+						
 					case "check if course exists":
-
 						ans=(ArrayList<String>) message.get(key);
-						query = "SELECT id,teaching_unit FROM Course WHERE id='"+ans.get(0)+"' AND teaching_unit='"+ans.get(2)+"'";
+						query = "SELECT * FROM Course WHERE id='"+ans.get(1)+"' AND teaching_unit='"+ans.get(2)+"'";
 						stmt = conn.createStatement();
 						rs=stmt.executeQuery(query);
 						if(rs.next()) client.sendToClient("exist");
