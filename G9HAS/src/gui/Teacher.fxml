@@ -154,7 +154,7 @@
                         <Image url="@../../resources/logo.png" />
                      </image>
                   </ImageView>
-                  <Label layoutX="255.0" layoutY="34.0" prefHeight="55.0" prefWidth="236.0" text="         view inbox" textAlignment="CENTER">
+                  <Label layoutX="255.0" layoutY="34.0" prefHeight="55.0" prefWidth="457.0" text="         view inbox" textAlignment="CENTER">
                      <effect>
                         <Reflection>
                            <input>

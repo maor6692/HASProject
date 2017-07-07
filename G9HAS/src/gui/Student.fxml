@@ -122,7 +122,7 @@
             </Pane>
             <Pane fx:id="SubmitTaskPane" prefHeight="714.0" prefWidth="869.0" visible="false">
                <children>
-                  <Label fx:id="lblSubmitTask" layoutX="343.0" layoutY="34.0" prefHeight="41.0" prefWidth="183.0" text="Submit Task" textAlignment="CENTER" textFill="#030303">
+                  <Label fx:id="lblSubmitTask" layoutX="343.0" layoutY="34.0" prefHeight="46.0" prefWidth="400.0" text="Submit Task" textAlignment="CENTER" textFill="#030303">
                      <font>
                         <Font name="System Bold" size="31.0" />
                      </font>
