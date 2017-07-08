@@ -52,7 +52,7 @@ public class UserClient extends AbstractClient {
 		synchronized (this) {
 			ans = msg;
 			flag = true;
-			notify();//release the GUI thread from wait to new answer from server
+			notifyAll();//release the GUI thread from wait to new answer from server
 		}
 
 	}

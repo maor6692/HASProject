@@ -10,7 +10,7 @@ import controller.UserClient;
 import fit.ActionFixture;
 
 public class DefineCourse extends ActionFixture {
-//	SystemManagerController controllerTest;
+	//	SystemManagerController controllerTest;
 	public static UserClient userClient;
 	private String teachingUnit;
 	private String courseID;
@@ -18,11 +18,12 @@ public class DefineCourse extends ActionFixture {
 	private String weeklyHours;
 	private String year;
 	private String semester;
+	private ArrayList<String> units;
 
 	public void setWeeklyHours(String weeklyHours) {
 		this.weeklyHours = weeklyHours;
 	}
-	
+
 	public void setTeachingUnit(String teachingUnit) {
 		this.teachingUnit = teachingUnit;
 	}
@@ -35,7 +36,8 @@ public class DefineCourse extends ActionFixture {
 		this.courseID = courseID;
 	}
 
-	public String checksIfThereIsEmptyField() {
+	public String checkIfThereIsEmptyField() {
+		if(!units.contains(teachingUnit)) return "choose exist teaching unit"; 
 		return String.valueOf(SystemManagerController.isEmptyFields( courseID,courseName,weeklyHours,teachingUnit));
 	}
 
@@ -48,21 +50,25 @@ public class DefineCourse extends ActionFixture {
 	}
 
 	public String checkIsCourseAlreadyExist() {
-		return String.valueOf(SystemManagerController.isCourseAlreadyExist(courseName,courseID,teachingUnit,weeklyHours,year,semester,userClient));
+		return String.valueOf(SystemManagerController.isCourseAlreadyExist(courseName,courseID,teachingUnit,weeklyHours,year,semester));
 	}
 
 	public void startController() {
-		try {
-			userClient = new UserClient("localhost",5555);
-			HashMap<String,ArrayList<String>> msg = new HashMap<String,ArrayList<String>>();
-			msg.put("getCurrentSemester",null);
-			userClient.sendServer(msg);
-			syncWithServer();
-			if(userClient.ans != null){
-				this.year = String.valueOf(((ArrayList<Integer>)userClient.ans).get(0));
-				this.semester = String.valueOf(((ArrayList<Character>)userClient.ans).get(1)=='A'?1:2);
-			}else return;
-		} catch (Exception e1) {return;}
+		units= new ArrayList<String>();
+		units.add("10");
+		units.add("20");
+		units.add("30");
+				try {
+					userClient = new UserClient("localhost",5555);
+					HashMap<String,ArrayList<String>> msg = new HashMap<String,ArrayList<String>>();
+					msg.put("getCurrentSemester",null);
+					userClient.sendServer(msg);
+					syncWithServer();
+					if(userClient.ans != null){
+						this.year = String.valueOf(((ArrayList<Integer>)userClient.ans).get(0));
+						this.semester = String.valueOf(((ArrayList<Character>)userClient.ans).get(1)=='A'?1:2);
+					}else return;
+				} catch (Exception e1) {System.err.println("fit start failed");}
 	}
 
 	/**

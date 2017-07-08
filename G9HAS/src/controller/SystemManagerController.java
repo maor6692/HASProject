@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
+import Fixtures.Controller.DefineCourse;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -131,7 +132,7 @@ public class SystemManagerController implements Initializable{
 			year = ((ArrayList<Integer>)LoginController.userClient.ans).get(0);
 			semester = ((ArrayList<Character>)LoginController.userClient.ans).get(1)=='A'?1:2;
 
-			if (isCourseAlreadyExist(tfCourseID.getText(), tfCourseName.getText(), cbTeachingUnit.getValue(), tfWeeklyHours.getText(), String.valueOf(year), String.valueOf(semester),LoginController.userClient))
+			if (isCourseAlreadyExist(tfCourseID.getText(), tfCourseName.getText(), cbTeachingUnit.getValue(), tfWeeklyHours.getText(), String.valueOf(year), String.valueOf(semester)))
 			{
 				lblError.setVisible(true);
 				return;
@@ -180,7 +181,10 @@ public class SystemManagerController implements Initializable{
 		return true;
 	}
 
-	public static boolean isCourseAlreadyExist(String courseName ,String courseID,String teachingUnit,String weeklyHours,String year,String semester,UserClient userClient){
+	public static boolean isCourseAlreadyExist(String courseName ,String courseID,String teachingUnit,String weeklyHours,String year,String semester){
+		if(LoginController.userClient == null){
+				LoginController.userClient = DefineCourse.userClient;
+		}
 		ArrayList<String> courseInfo = new ArrayList<String>();
 		HashMap<String, ArrayList<String>> msg = new HashMap<String, ArrayList<String>>();
 		courseInfo.add(courseID);
@@ -190,22 +194,14 @@ public class SystemManagerController implements Initializable{
 		courseInfo.add(year);
 		courseInfo.add(semester);
 		msg.put("check if course exists",courseInfo);
-		userClient.sendServer(msg); 
-		
-		synchronized(userClient)
-		{
-			UserClient.setFlagFalse();
-			while(!userClient.isready())
-			{
-				try{
-					userClient.wait();	
-				}
-				catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+		LoginController.userClient.sendServer(msg); 
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		if(userClient.ans != null &&((String)userClient.ans).equals("exist")) return true;
+		if(LoginController.userClient.ans != null &&((String)LoginController.userClient.ans).equals("exist")) return true;
 		return false;
 	}
 
