@@ -128,7 +128,8 @@ public class SystemManagerController implements Initializable{
 		 if(LoginController.userClient.ans != null){
 			 year = ((ArrayList<Integer>)LoginController.userClient.ans).get(0);
 			 semester = ((ArrayList<Character>)LoginController.userClient.ans).get(1)=='A'?1:2;
-			 if (isCourseAlreadyExist(tfCourseID.getText(), tfCourseName.getText(), cbTeachingUnit.getValue(), tfWeeklyHours.getText(), String.valueOf(year), String.valueOf(semester)))
+			 
+			 if (isCourseAlreadyExist(tfCourseID.getText(), tfCourseName.getText(), cbTeachingUnit.getValue(), tfWeeklyHours.getText(), String.valueOf(year), String.valueOf(semester),LoginController.userClient))
 			 {
 				 lblError.setVisible(true);
 				 return;
@@ -152,12 +153,12 @@ public class SystemManagerController implements Initializable{
 			 }
 		 }
 	 }
-	 public boolean isEmptyFields(String courseID,String courseName, String weeklyHours , String teachingUnit ) {
+	 public static boolean isEmptyFields(String courseID,String courseName, String weeklyHours , String teachingUnit ) {
 		 if (courseID.equals("") || courseName.equals("") || weeklyHours.equals("") || teachingUnit==null) return true;
 		 else return false;
 	 }
 
-	 public boolean checkWeeklyHours(String weeklyHours){
+	 public static boolean checkWeeklyHours(String weeklyHours){
 		 try{
 			 if((Integer.parseInt(weeklyHours))<0) return false;
 		 }catch(NumberFormatException e){
@@ -166,7 +167,7 @@ public class SystemManagerController implements Initializable{
 		 return true;
 	 }
 
-	 public boolean checkCourseID(String courseID){
+	 public static boolean checkCourseID(String courseID){
 		 try{
 			 if(courseID.length()!=3 || (Integer.parseInt(courseID))<0) return false;
 		 }catch(NumberFormatException e){
@@ -175,7 +176,7 @@ public class SystemManagerController implements Initializable{
 		 return true;
 	 }
 
-	 public boolean isCourseAlreadyExist(String courseName ,String courseID,String teachingUnit,String weeklyHours,String year,String semester){
+	 public static boolean isCourseAlreadyExist(String courseName ,String courseID,String teachingUnit,String weeklyHours,String year,String semester,UserClient userClient){
 		 ArrayList<String> courseInfo = new ArrayList<String>();
 		 HashMap<String, ArrayList<String>> msg = new HashMap<String, ArrayList<String>>();
 		 courseInfo.add(courseID);
@@ -185,9 +186,21 @@ public class SystemManagerController implements Initializable{
 		 courseInfo.add(year);
 		 courseInfo.add(semester);
 		 msg.put("check if course exists",courseInfo);
-		 LoginController.userClient.sendServer(msg); 
-		 LoginController.syncWithServer();
-		 if(LoginController.userClient.ans != null &&((String)LoginController.userClient.ans).equals("exist")) return true;
+		 userClient.sendServer(msg); 
+		 synchronized(userClient)
+			{
+				UserClient.setFlagFalse();
+				while(!userClient.isready())
+				{
+					try{
+						userClient.wait();	
+					}
+					catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		 if(userClient.ans != null &&((String)userClient.ans).equals("exist")) return true;
 		 return false;
 	 }
 

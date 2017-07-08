@@ -1,0 +1,426 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="font-kerning: none">&nbsp;</span></p>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="font-kerning: none"><b>Define courses - Acceptance Test</b></span></p>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="text-decoration: underline ; font-kerning: none">test 1: getChosenTeachingUnit</span></p>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="font-kerning: none">check if user chose teaching unit from combo box</span></p>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="text-decoration: underline ; font-kerning: none">part 2 :checkCourseDetails</span></p>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="font-kerning: none">Before entering a new course we checks if the course details are correct, and we checks if the course name is already exist in the DB.</span></p>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="font-kerning: none">So in the first time we enter course name: &#39;Test&#39; and teaching unit and hours, the checkCourseDetails should return true becouse &#39;Test&#39; name course should not be exist in the DB!!.</span></p>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="font-kerning: none">after we check 4 wrong inputs, at the first time we enter course name that already exist in the DB then we enter wrong details in the 3 other tests.</span></p>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="text-decoration: underline ; font-kerning: none">part 3: insertCourse</span></p>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="font-kerning: none">In this test we assumed that the inserted values are correct, so we just checks if the data is inserted succesfuly to the DB.<br />
+			in the first test we insert an not existing data but with correct fields so it succed.</span></p>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="font-kerning: none">in the second test we insert an existing data in the DB so it return false.</span></p>
+		<table cellpadding="0" cellspacing="0" style="width: 763px; border-style: solid; border-color: rgb(128, 128, 128);" width="763.0">
+			<tbody>
+				<tr>
+					<td colspan="3" style="width: 751px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">fit.ActionFixture</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 110.2px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">start</span></p>
+					</td>
+					<td style="width: 446.4px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">Fixtures.controller.DefineCourse</span></p>
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">&nbsp;</span></p>
+					</td>
+					<td style="width: 170.3px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">&nbsp;</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 110.2px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">press</span></p>
+					</td>
+					<td style="width: 446.4px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">start controller</span></p>
+					</td>
+					<td style="width: 170.3px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">&nbsp;</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 110.2px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">check</span></p>
+					</td>
+					<td style="width: 446.4px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							setCourseID</p>
+					</td>
+					<td style="width: 170.3px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">true</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 110.2px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">enter</span></p>
+					</td>
+					<td style="width: 446.4px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">setCourseName</span></p>
+					</td>
+					<td style="width: 170.3px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">Test</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 110.2px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">enter</span></p>
+					</td>
+					<td style="width: 446.4px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">setTeachingUnit</span></p>
+					</td>
+					<td style="width: 170.3px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">321</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 110.2px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">enter</span></p>
+					</td>
+					<td style="width: 446.4px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">setWeeklyHours</span></p>
+					</td>
+					<td style="width: 170.3px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">15</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 110.2px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">check</span></p>
+					</td>
+					<td style="width: 446.4px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							checkIfThereIsEmptyField</p>
+					</td>
+					<td style="width: 170.3px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">true</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 110.2px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">check</span></p>
+					</td>
+					<td style="width: 446.4px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">checkIsCourseAlreadyExist</span></p>
+					</td>
+					<td style="width: 170.3px; border-style: solid; border-color: rgb(128, 128, 128); padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="font-kerning: none">Algebra 1</span></p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			&nbsp;</p>
+		<table cellpadding="0" cellspacing="0" style="border-style: solid; border-color: rgb(128, 128, 128); width: 763px;" width="763.0">
+			<tbody>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">check</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							setCourseID</p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">true</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">enter</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">setCourseName</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">Test</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">enter</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">setTeachingUnit</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">321</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">enter</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">setWeeklyHours</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">15</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">check</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							checkIfThereIsEmptyField</p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">true</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">check</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">checkIsCourseAlreadyExist</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">Algebra 1</span></p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			&nbsp;</p>
+		<table cellpadding="0" cellspacing="0" style="border-style: solid; border-color: rgb(128, 128, 128); width: 763px;" width="763.0">
+			<tbody>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">check</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							setCourseID</p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">true</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">enter</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">setCourseName</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">Test</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">enter</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">setTeachingUnit</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">321</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">enter</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">setWeeklyHours</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">15</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">check</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							checkIfThereIsEmptyField</p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">true</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">check</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">checkIsCourseAlreadyExist</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">Algebra 1</span></p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			&nbsp;</p>
+		<table cellpadding="0" cellspacing="0" style="border-style: solid; border-color: rgb(128, 128, 128); width: 763px;" width="763.0">
+			<tbody>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">check</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							setCourseID</p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">true</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">enter</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">setCourseName</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">Test</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">enter</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">setTeachingUnit</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">321</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">enter</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">setWeeklyHours</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">15</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">check</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							checkIfThereIsEmptyField</p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">true</span></p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 110.2px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">check</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 446.4px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">checkIsCourseAlreadyExist</span></p>
+					</td>
+					<td style="border-style: solid; border-color: rgb(128, 128, 128); width: 170.3px; padding: 5px;" valign="middle">
+						<p style="margin: 0px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+							<span style="-webkit-font-kerning: none;">Algebra 1</span></p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p style="margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<span style="font-kerning: none">DefineCourse FIT Test &copy; 2017 Bardugo Maor</span></p></body>
+</html>
+<title></title>
+<body></body>

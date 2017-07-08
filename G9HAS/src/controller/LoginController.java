@@ -133,7 +133,6 @@ public class LoginController extends Application implements Initializable {
 					e.printStackTrace();
 				}
 			}
-		//	UserClient.setFlagFalse();
 		}
 	}
 	@Override
