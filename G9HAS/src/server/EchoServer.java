@@ -1000,7 +1000,7 @@ public class EchoServer extends AbstractServer {
 						ans=(ArrayList<String>) message.get(key);
 						query = "SELECT * FROM Course WHERE id='"+ans.get(1)+"' AND teaching_unit='"+ans.get(2)+"'";
 						stmt = conn.createStatement();
-						rs=stmt.executeQuery("SELECT * FROM Course WHERE id='jjj' AND teaching_unit='10'");
+						rs=stmt.executeQuery(query);
 						if(rs.next()) client.sendToClient("exist");
 						else
 							client.sendToClient(null);

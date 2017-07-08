@@ -42,7 +42,7 @@ public class DefineCourse extends ActionFixture {
 	}
 
 	public String checkWeeklyHours() {
-		return String.valueOf(SystemManagerController.checkWeeklyHours(courseID));
+		return String.valueOf(SystemManagerController.checkWeeklyHours(weeklyHours));
 	}
 
 	public String checkCourseID() {
@@ -50,7 +50,7 @@ public class DefineCourse extends ActionFixture {
 	}
 
 	public String checkIsCourseAlreadyExist() {
-		return String.valueOf(SystemManagerController.isCourseAlreadyExist(courseName,courseID,teachingUnit,weeklyHours,year,semester));
+		return String.valueOf(SystemManagerController.isCourseAlreadyExist(courseID,courseName,teachingUnit,weeklyHours,year,semester));
 	}
 
 	public void startController() {
