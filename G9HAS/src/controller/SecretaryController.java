@@ -869,7 +869,11 @@ public class SecretaryController implements Initializable{
 			HashMap<String,String> studentsId = (HashMap<String,String>) UserClient.ans;
 			ArrayList<String> studentsToAssign = new ArrayList<>();
 			studentsToAssign.add(String.valueOf(currCourse_in_classId)); // first elemnt will be class_in_course_id
-			for(String sid : studentsId.keySet()){ // foreach student in this class
+			
+			checkClassPreCourse(studentsId,studentsToAssign,ExceptionStudents,preCourses,t);
+			
+			
+			/*for(String sid : studentsId.keySet()){ // foreach student in this class
 				boolean preReq=true;
 				for(String cid : preCourses.keySet()){ // foreach preCourse for this course
 					//check if he has this course:
@@ -888,7 +892,9 @@ public class SecretaryController implements Initializable{
 				}
 				if(!preReq) continue; // if student has no pre classes than skip and move to next iteration
 				studentsToAssign.add(sid);
-			}
+			}*/
+			
+			
 			msg.put("AssignStudentsToClassInCourse",studentsToAssign);
 			LoginController.userClient.sendServer(msg);
 			LoginController.syncWithServer();
@@ -911,6 +917,38 @@ public class SecretaryController implements Initializable{
 
 
 
+	}
+	/**
+	 * for each class check for all students pre courses
+	 */
+	void checkClassPreCourse(HashMap<String,String> studentsId,ArrayList<String> studentsToAssign,ObservableList<StudentsExp> ExceptionStudents,HashMap <String,ArrayList<String>> preCourses,ClassInCourseRow t){
+		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
+		//first preActions: make conversion table, class name --> class id
+		HashMap <String,String> classConvertToId = new HashMap<>();
+		for(ClassesInListView c: lvClasses.getItems()){
+			classConvertToId.put(c.getClassName(), String.valueOf(c.getClassId()));
+		}
+		//--
+		for(String sid : studentsId.keySet()){ // foreach student in this class
+			boolean preReq=true;
+			for(String cid : preCourses.keySet()){ // foreach preCourse for this course
+				//check if he has this course:
+				ArrayList<String> pack = new ArrayList<>(preCourses.get(cid));
+				pack.add(0,sid);
+				msg.put("checkPreCourseFromArray",pack);
+				LoginController.userClient.sendServer(msg);
+				LoginController.syncWithServer();
+				msg.clear();
+				preReq = (boolean) UserClient.ans;
+				//--
+				if(!preReq){
+					ExceptionStudents.add(new StudentsExp(sid,studentsId.get(sid),classConvertToId.get(t.getClassName()),t.getClassName()));
+					break;
+				}
+			}
+			if(!preReq) continue; // if student has no pre classes than skip and move to next iteration
+			studentsToAssign.add(sid);
+		}
 	}
 	/**
 	 * logging out
