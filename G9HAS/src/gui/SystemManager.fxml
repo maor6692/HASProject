@@ -85,7 +85,7 @@
                <effect>
                   <Reflection />
                </effect></Button>
-            <Label fx:id="lblError" layoutX="323.0" layoutY="388.0" prefHeight="17.0" prefWidth="171.0" text="Course already exist" textFill="#f80a0a" visible="false">
+            <Label fx:id="lblError" alignment="CENTER" layoutX="122.0" layoutY="388.0" prefHeight="20.0" prefWidth="582.0" text="Course already exist" textFill="#f80a0a" visible="false">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
