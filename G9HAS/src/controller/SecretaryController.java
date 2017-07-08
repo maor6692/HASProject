@@ -834,6 +834,7 @@ public class SecretaryController implements Initializable{
 		HashMap <String,String> classConvertToId = new HashMap<>();
 		for(ClassesInListView c: lvClasses.getItems()){
 			classConvertToId.put(c.getClassName(), String.valueOf(c.getClassId()));
+			//System.out.println("classConvertToId.put(\""+c.getClassName()+"\",\" "+String.valueOf(c.getClassId())+"\");");
 		}
 		//--
 		//1. foreach right table row do:
@@ -1547,11 +1548,11 @@ public class SecretaryController implements Initializable{
 		private final SimpleStringProperty teacher;
 		private TeacherComboBox teacherComboBox=null;
 
-		private ClassInCourseRow(String className,String teacher) {
+		public ClassInCourseRow(String className,String teacher) {
 			this.className = new SimpleStringProperty(className);
 			this.teacher = new SimpleStringProperty(teacher);
 		}
-		private ClassInCourseRow(String className) {
+		public ClassInCourseRow(String className) {
 			this.className = new SimpleStringProperty(className);
 			this.teacher = new SimpleStringProperty("");
 		}
