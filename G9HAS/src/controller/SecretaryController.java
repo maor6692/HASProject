@@ -14,6 +14,8 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
+import Fixtures.Controller.DefineCourse;
+import JunitTests.TestCreateSemester;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -870,7 +872,7 @@ public class SecretaryController implements Initializable{
 			ArrayList<String> studentsToAssign = new ArrayList<>();
 			studentsToAssign.add(String.valueOf(currCourse_in_classId)); // first elemnt will be class_in_course_id
 			
-			checkClassPreCourse(studentsId,studentsToAssign,ExceptionStudents,preCourses,t);
+			checkClassPreCourse(studentsId,studentsToAssign,ExceptionStudents,preCourses,t,classConvertToId);
 			
 			
 			/*for(String sid : studentsId.keySet()){ // foreach student in this class
@@ -921,13 +923,9 @@ public class SecretaryController implements Initializable{
 	/**
 	 * for each class check for all students pre courses
 	 */
-	void checkClassPreCourse(HashMap<String,String> studentsId,ArrayList<String> studentsToAssign,ObservableList<StudentsExp> ExceptionStudents,HashMap <String,ArrayList<String>> preCourses,ClassInCourseRow t){
+	void checkClassPreCourse(HashMap<String,String> studentsId,ArrayList<String> studentsToAssign,ObservableList<StudentsExp> ExceptionStudents,HashMap <String,ArrayList<String>> preCourses,ClassInCourseRow t,HashMap <String,String> classConvertToId){
 		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
-		//first preActions: make conversion table, class name --> class id
-		HashMap <String,String> classConvertToId = new HashMap<>();
-		for(ClassesInListView c: lvClasses.getItems()){
-			classConvertToId.put(c.getClassName(), String.valueOf(c.getClassId()));
-		}
+
 		//--
 		for(String sid : studentsId.keySet()){ // foreach student in this class
 			boolean preReq=true;
