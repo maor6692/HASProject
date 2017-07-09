@@ -50,8 +50,10 @@ import javafx.util.converter.DefaultStringConverter;
 
 
 public class SecretaryController implements Initializable{
-	ComboBoxTableCell cb = new ComboBoxTableCell();
-
+	//ComboBoxTableCell cb = new ComboBoxTableCell();
+	public SecretaryController(){
+		;
+	}
 	private ObservableList<String> students = FXCollections.observableArrayList();
 	private ObservableList<ClassInCourseRow> classesInCourse = FXCollections.observableArrayList();
 	private ObservableList<String> teachersnames = FXCollections.observableArrayList();
@@ -924,7 +926,7 @@ public class SecretaryController implements Initializable{
 	/**
 	 * for each class check for all students pre courses
 	 */
-	void checkClassPreCourse(HashMap<String,String> studentsId,ArrayList<String> studentsToAssign,ObservableList<StudentsExp> ExceptionStudents,HashMap <String,ArrayList<String>> preCourses,ClassInCourseRow t,HashMap <String,String> classConvertToId){
+	public void checkClassPreCourse(HashMap<String,String> studentsId,ArrayList<String> studentsToAssign,ObservableList<StudentsExp> ExceptionStudents,HashMap <String,ArrayList<String>> preCourses,ClassInCourseRow t,HashMap <String,String> classConvertToId){
 		HashMap<String, ArrayList<String>>	msg = new HashMap<String, ArrayList<String>>();
 
 		//--
