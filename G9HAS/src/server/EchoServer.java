@@ -1649,7 +1649,7 @@ public class EchoServer extends AbstractServer {
 					case "check if classInCourseId exists":
 						ans=(ArrayList<String>) message.get(key);
 						stmt = conn.createStatement();
-						rs = stmt.executeQuery("SELECT id FROM class_in_course id='"+ans.get(0)+"'");
+						rs = stmt.executeQuery("SELECT id FROM class_in_course WHERE id='"+ans.get(0)+"'");
 						if(rs.next())
 							client.sendToClient("true");
 						else client.sendToClient("false");

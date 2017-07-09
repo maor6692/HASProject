@@ -12,10 +12,11 @@ import java.util.HashMap;
 import controller.SystemManagerController;
 import controller.TeacherController;
 import controller.UserClient;
+import fit.ActionFixture;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-public class CreateNewAssignment {
+public class CreateNewAssignment extends ActionFixture { 
 	public static UserClient userClient;
 	private String id;
 	private String class_in_course_id;
@@ -34,7 +35,7 @@ public class CreateNewAssignment {
 	public void setTaskSubDate(String task_sub_date){
 		this.task_sub_date=task_sub_date;
 	}
-	public String checksIfThereIsEmptyField() {
+	public String checkIfThereIsEmptyField() {
 		return String.valueOf(TeacherController.isEmpty(id,class_in_course_id,task_name,task_sub_date));
 	}
 	public String checkDateFormat(){

@@ -837,16 +837,19 @@ public class TeacherController implements Initializable{
 		return true;
 	}
 	public static boolean isDateFormat(String subDate){
-		String submissionDate[]=subDate.split("-");
-		if(submissionDate.length ==0)
-			return false;
+
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate localDate = LocalDate.now();
-		String currDate[]=String.valueOf(dtf.format(localDate)).split("-");
-		if(Integer.parseInt(currDate[0])>=Integer.parseInt(submissionDate[0]) || Integer.parseInt(currDate[1])>=Integer.parseInt(submissionDate[1])  ||Integer.parseInt(submissionDate[1])<0 || Integer.parseInt(submissionDate[2])>31 || Integer.parseInt(submissionDate[2])<0)
+		try{
+		if(localDate.isAfter(LocalDate.parse(subDate)))	
 			return false;
+		else
 		return true;
-
+		}
+		catch(Exception e)
+		{
+			return false;
+		}
 	}
 	public static boolean isClassInCourseExist(String class_in_course_id,UserClient userClient){
 		ArrayList<String> courseInfo = new ArrayList<String>();
