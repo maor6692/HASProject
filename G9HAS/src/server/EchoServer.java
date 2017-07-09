@@ -1630,6 +1630,30 @@ public class EchoServer extends AbstractServer {
 						rs.close(); 
 						client.sendToClient(s);
 						break;
+						
+					case "Submission Test":
+						ans=(ArrayList<String>) message.get(key);
+						stmt = conn.createStatement();
+						query="INSERT INTO task_of_student_in_course (student_id,task_id,course_id,submission_file) values(?,?,?,?) ";
+						pstmt = conn.prepareStatement(query);
+						pstmt.setString(1, ans.get(0));
+						pstmt.setInt(2,Integer.parseInt(ans.get(1)));
+						pstmt.setInt(3, Integer.parseInt(ans.get(2)));
+						pstmt.setString(4,ans.get(3));
+						pstmt.executeUpdate();
+						rs = stmt.executeQuery("SELECT * FROM task_of_student_in_course WHERE student_id='"+ans.get(0)+"' AND task_id='"+ans.get(1)+"' AND course_id='"+ans.get(2)+"' AND submission_file='"+ans.get(3)+"'");
+						if(rs.next())
+							client.sendToClient("true");
+						else client.sendToClient("false");
+						break;
+					case "check if classInCourseId exists":
+						ans=(ArrayList<String>) message.get(key);
+						stmt = conn.createStatement();
+						rs = stmt.executeQuery("SELECT id FROM class_in_course id='"+ans.get(0)+"'");
+						if(rs.next())
+							client.sendToClient("true");
+						else client.sendToClient("false");
+						break;
 					}	
 				}
 			}

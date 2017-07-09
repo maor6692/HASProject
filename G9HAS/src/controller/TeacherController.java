@@ -8,6 +8,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javafx.application.Platform;
@@ -602,10 +604,8 @@ public class TeacherController implements Initializable{
 		msg.add(course_id);
 		msg.add(class_id);
 		hms.put("Search for class_in_course_id",msg);
-
 		LoginController.userClient.sendServer(hms);
 		LoginController.syncWithServer();
-
 		if(LoginController.userClient.ans != null)
 		{
 			class_in_course_id= String.valueOf((((ArrayList<String>)LoginController.userClient.ans)).get(0));
@@ -617,6 +617,7 @@ public class TeacherController implements Initializable{
 				Date sbd = Date.valueOf(tfSubmissionDate.getText());
 				msg.add(tfSubmissionDate.getText());
 			}
+			
 			catch(Exception e)
 			{
 				lblErrorST.setText("Ilegal submission date");
@@ -826,4 +827,49 @@ public class TeacherController implements Initializable{
 			return messageContent;
 		}
 	}
+	public static boolean isEmpty(String id,String class_in_course_id,String task_name,String task_sub_date){
+		if (id.equals("") || class_in_course_id.equals("") || task_name.equals("") || task_sub_date.equals("")) return true;
+		else return false;
+	}
+	public static boolean is3digits(String id){
+		if(id.length()!=3)
+			return false;
+		return true;
+	}
+	public static boolean isDateFormat(String subDate){
+		String submissionDate[]=subDate.split("-");
+		if(submissionDate.length ==0)
+			return false;
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate localDate = LocalDate.now();
+		String currDate[]=String.valueOf(dtf.format(localDate)).split("-");
+		if(Integer.parseInt(currDate[0])>=Integer.parseInt(submissionDate[0]) || Integer.parseInt(currDate[1])>=Integer.parseInt(submissionDate[1])  ||Integer.parseInt(submissionDate[1])<0 || Integer.parseInt(submissionDate[2])>31 || Integer.parseInt(submissionDate[2])<0)
+			return false;
+		return true;
+
+	}
+	public static boolean isClassInCourseExist(String class_in_course_id,UserClient userClient){
+		ArrayList<String> courseInfo = new ArrayList<String>();
+		HashMap<String, ArrayList<String>> msg = new HashMap<String, ArrayList<String>>();
+		courseInfo.add(class_in_course_id);
+		msg.put("check if classInCourseId exists",courseInfo);
+		userClient.sendServer(msg); 
+		synchronized(userClient)
+		{
+			UserClient.setFlagFalse();
+			while(!userClient.isready())
+			{
+				try{
+					userClient.wait();	
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		if(userClient.ans != null &&((String)userClient.ans).equals("true")) return true;
+		return false;
+
+	}
+	
 }
