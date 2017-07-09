@@ -10,7 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import controller.LoginController;
+import controller.SecretaryController;
 import controller.UserClient;
+import java.util.Collections;
 import controller.SecretaryController.ClassInCourseRow;
 import controller.SecretaryController.StudentsExp;
 import javafx.collections.FXCollections;
@@ -27,6 +29,7 @@ public class TestCreateSemester {
 	public HashMap<String,String> studentsWithoutGrade;
 	public HashMap<String,String> studentsWithoutCourse;
 	public HashMap<String,String> approvedStudents;
+	SecretaryController sec = new SecretaryController();
 	@Before
 	public void setUp() throws Exception {
 		try {
@@ -47,16 +50,102 @@ public class TestCreateSemester {
 
 
 
-
+	/*
 	@After
 	public void tearDown() throws Exception {
-	}
-
+	}*/
+	/**
+	 * sending students without pre course at all,
+	 * Expecting to get back in ExceptionStudents the same list
+	 */
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testStudentsWitouhtPreCourse() {
+		studentsToAssign = new ArrayList<>();
+		ExceptionStudents = FXCollections.observableArrayList();
+		sec.checkClassPreCourse(studentsWithoutCourse,studentsToAssign,ExceptionStudents,preCourses,t,classConvertToId);
+		//** make array list of students without pre course for equal
+		ArrayList<String> forTest = new ArrayList<>();
+		for(String s: studentsWithoutCourse.keySet())
+			forTest.add(s);
+		//** change exception list to array list for equal
+		ArrayList<String> expList = new ArrayList<>();
+		for(StudentsExp se : ExceptionStudents){
+			expList.add(se.getId());
+		}
+		//**
+		assertEquals(expList, forTest);
 	}
-	
+	/**
+	 * sending students that have done this course but didnt passed him,
+	 * Expecting to get back in ExceptionStudents the same list
+	 */
+	@Test
+	public void testStudentsWitouhtPreGrade() {
+		studentsToAssign = new ArrayList<>();
+		ExceptionStudents = FXCollections.observableArrayList();
+		sec.checkClassPreCourse(studentsWithoutGrade,studentsToAssign,ExceptionStudents,preCourses,t,classConvertToId);
+		//** make array list of students without grade of pre course for equal
+		ArrayList<String> forTest = new ArrayList<>();
+		for(String s: studentsWithoutGrade.keySet())
+			forTest.add(s);
+		//** change exception list to array list for equal
+		ArrayList<String> expList = new ArrayList<>();
+		for(StudentsExp se : ExceptionStudents){
+			expList.add(se.getId());
+		}
+		//**
+		assertEquals(expList, forTest);
+	}
+	/**
+	 * sending students that have done this and passed him with grade >= 55,
+	 * Expecting to get back in studentsToAssign the same list
+	 */
+	@Test
+	public void testApprovedStudents() {
+		studentsToAssign = new ArrayList<>();
+		ExceptionStudents = FXCollections.observableArrayList();
+		sec.checkClassPreCourse(approvedStudents,studentsToAssign,ExceptionStudents,preCourses,t,classConvertToId);
+		//** make array list of appreved students
+		ArrayList<String> forTest = new ArrayList<>();
+		for(String s: approvedStudents.keySet())
+			forTest.add(s);
+
+		assertEquals(studentsToAssign, forTest);
+	}
+	/**
+	 * sending mixed students list with students without pre course, without sufficient grade and approved students,
+	 * Expecting to get back in studentsToAssign the approved list, in ExcptionStudents the students without sufficient grade,or pre course
+	 */
+	@Test
+	public void testMixStudents() {
+		studentsToAssign = new ArrayList<>();
+		ExceptionStudents = FXCollections.observableArrayList();
+		sec.checkClassPreCourse(studentsId,studentsToAssign,ExceptionStudents,preCourses,t,classConvertToId);
+		//** make array list of approved students
+		ArrayList<String> approvedForTest = new ArrayList<>();
+		for(String s: approvedStudents.keySet())
+			approvedForTest.add(s);
+		
+		//** change exception list to array list for equal
+		ArrayList<String> expList = new ArrayList<>();
+		for(StudentsExp se : ExceptionStudents){
+			expList.add(se.getId());
+		}
+		//**
+		//** combining students without pre course & without grade for equal with exception students list
+		ArrayList<String> nonApprovedList = new ArrayList<>();
+		for(String sid: studentsWithoutCourse.keySet())
+			nonApprovedList.add(sid);
+		for(String sid: studentsWithoutGrade.keySet())
+			nonApprovedList.add(sid);
+		//**
+		Collections.sort(approvedForTest);
+		Collections.sort(studentsToAssign);
+		Collections.sort(expList);
+		Collections.sort(nonApprovedList);
+		assertEquals(studentsToAssign, approvedForTest); // equal approved
+		assertEquals(expList, nonApprovedList); // equal non approved
+	}
 	
 	private void initClassConvertToId() {
 		classConvertToId.put("Tet2"," 64");
@@ -114,11 +203,13 @@ public class TestCreateSemester {
 		studentsId.put("Student480","Student480 Student480");
 		studentsId.put("Student481","Student481 Student481");
 		//init list without sufficient grade
+		studentsWithoutGrade = new HashMap<>();
 		studentsWithoutGrade.put("Student1","Student1 Student1");
 		studentsWithoutGrade.put("Student11","Student11 Student11");
 		studentsWithoutGrade.put("Student14","Student14 Student14");
 		studentsWithoutGrade.put("Student3","Student3 Student3");
 		//init list of students who has preRequisits
+		approvedStudents = new HashMap<>();
 		approvedStudents.put("Student10","Student10 Student10");
 		approvedStudents.put("Student12","Student12 Student12");
 		approvedStudents.put("Student13","Student13 Student13");
@@ -131,6 +222,7 @@ public class TestCreateSemester {
 		approvedStudents.put("Student8","Student8 Student8");
 		approvedStudents.put("Student9","Student9 Student9");
 		//students who havent done the pre course yet at all
+		studentsWithoutCourse = new HashMap<>();
 		studentsWithoutCourse.put("Student480","Student480 Student480");
 		studentsWithoutCourse.put("Student481","Student481 Student481");
 		
