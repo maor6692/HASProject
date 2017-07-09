@@ -7,8 +7,18 @@
 			<span style="font-kerning: none;">&nbsp;</span></p>
 		<p style="margin: 0px 0px 12px; line-height: normal; font-family: Times; font-size: 12px; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
 			<span style="font-kerning: none;"><b>Create new assignment - Acceptance Test</b></span></p>
-		<p style="margin: 0px 0px 12px; line-height: normal; font-family: Times; font-size: 12px; -webkit-text-stroke-width: initial; -webkit-text-stroke-color: rgb(0, 0, 0);">
-			&nbsp;</p>
+		<p style="-webkit-text-stroke-width: initial; margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			<u>in order to create new assignment , the teacher needs to fill these fields:</u></p>
+		<p style="-webkit-text-stroke-width: initial; margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			course id which task will be belongs to(must be 3 digits),</p>
+		<p style="-webkit-text-stroke-width: initial; margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			local path to task file,</p>
+		<p style="-webkit-text-stroke-width: initial; margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			submission date in format of : yyyy-mm-dd(can&#39;t be earlier then current date).</p>
+		<p style="-webkit-text-stroke-width: initial; margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			these tests check that all inserted parameters is valid and that the course exists.</p>
+		<p style="-webkit-text-stroke-width: initial; margin: 0px 0px 12px; font-size: 12px; line-height: normal; font-family: Times; -webkit-text-stroke-color: rgb(0, 0, 0);">
+			and that all required fields were filled corerctly.</p>
 		<table cellpadding="0" cellspacing="0" style="border-style: solid; border-color: rgb(128, 128, 128); width: 763px;" width="763">
 			<tbody>
 				<tr>
@@ -384,7 +394,7 @@
 					</td>
 				</tr>
 			</tbody>
-		</table>
-	</body>
+		</table></body>
 </html>
 <title></title>
+<br />
