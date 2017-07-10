@@ -1640,7 +1640,12 @@ public class EchoServer extends AbstractServer {
 						pstmt.setInt(2,Integer.parseInt(ans.get(1)));
 						pstmt.setInt(3, Integer.parseInt(ans.get(2)));
 						pstmt.setString(4,ans.get(3));
+						try{
 						pstmt.executeUpdate();
+						}
+						catch(Exception e)
+						{	
+						}
 						rs = stmt.executeQuery("SELECT * FROM task_of_student_in_course WHERE student_id='"+ans.get(0)+"' AND task_id='"+ans.get(1)+"' AND course_id='"+ans.get(2)+"' AND submission_file='"+ans.get(3)+"'");
 						if(rs.next())
 							client.sendToClient("true");
