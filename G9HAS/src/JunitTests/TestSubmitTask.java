@@ -46,6 +46,9 @@ public class TestSubmitTask extends TestCase {
 		submission_file = "10100_student1-blabla.doc";
 		userClient = new UserClient("localhost",5555);
 	}
+	/**
+	 * upload the submission of the student to server and returns true if the submission uploaded.
+	 */
 	public void testSubmissionUpload()
 	{
 		String arrans="";
@@ -68,6 +71,9 @@ public class TestSubmitTask extends TestCase {
 		
 		
 	}
+	/**
+	 * wait for the answer to be ready from server.
+	 */
 	public void syncWithServer()
 	{
 		synchronized(userClient)
