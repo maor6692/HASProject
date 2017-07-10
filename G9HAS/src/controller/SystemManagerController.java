@@ -37,7 +37,6 @@ public class SystemManagerController implements Initializable{
 	@FXML
 	private TextField tfWeeklyHours;
 
-
 	@FXML
 	private Label lblYear;
 
@@ -134,26 +133,18 @@ public class SystemManagerController implements Initializable{
 
 			if (isCourseAlreadyExist(tfCourseID.getText(), tfCourseName.getText(), cbTeachingUnit.getValue(), tfWeeklyHours.getText(), String.valueOf(year), String.valueOf(semester)))
 			{
+				lblError.setText("Course already exist");
 				lblError.setVisible(true);
 				return;
 			}
 			else
 			{
-				courseInfo.clear();
-				courseInfo.add(String.valueOf(Integer.parseInt(tfCourseID.getText())));
-				courseInfo.add(tfCourseName.getText());
-				courseInfo.add(tu[0]);
-				courseInfo.add(tfWeeklyHours.getText());
-				courseInfo.add(String.valueOf(year));
-				courseInfo.add(String.valueOf(semester));
 				lblError.setVisible(false);
-				msg.clear();	
-				msg.put("Create Course",courseInfo);
-				LoginController.userClient.sendServer(msg);
-				LoginController.syncWithServer();
-				lblError.setText("Course added successfully");
-				lblError.setVisible(true);
-			//	JOptionPane.showMessageDialog(null, "Course added successfully");
+				if(checkDefineCourse(tfCourseID.getText(), tfCourseName.getText(), cbTeachingUnit.getValue(), tfWeeklyHours.getText(), String.valueOf(year), String.valueOf(semester)))
+				{	
+					lblError.setText("Course added successfully");
+					lblError.setVisible(true);
+				}
 				return;
 			}
 		}
@@ -181,7 +172,7 @@ public class SystemManagerController implements Initializable{
 		return true;
 	}
 
-	public static boolean isCourseAlreadyExist(String courseName ,String courseID,String teachingUnit,String weeklyHours,String year,String semester){
+	public static boolean isCourseAlreadyExist(String courseID ,String courseName,String teachingUnit,String weeklyHours,String year,String semester){
 		if(LoginController.userClient == null){
 				LoginController.userClient = DefineCourse.userClient;
 		}
@@ -195,21 +186,33 @@ public class SystemManagerController implements Initializable{
 		courseInfo.add(semester);
 		msg.put("check if course exists",courseInfo);
 		LoginController.userClient.sendServer(msg); 
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		LoginController.syncWithServer();
 		if(LoginController.userClient.ans != null &&((String)LoginController.userClient.ans).equals("exist")) return true;
 		return false;
 	}
-
-
 	/**
 	 * logout handler, logout the user if X is pressed and change the window to login window.
 	 * @param event
 	 */
+	
+	public static boolean checkDefineCourse(String courseID ,String courseName,String teachingUnit,String weeklyHours,String year,String semester){
+		ArrayList<String> courseInfo = new ArrayList<String>();
+		HashMap<String, ArrayList<String>> msg = new HashMap<String, ArrayList<String>>();
+		courseInfo.add(courseID);
+		courseInfo.add(courseName);
+		courseInfo.add(teachingUnit.split("\\s")[0]);
+		courseInfo.add(weeklyHours);
+		courseInfo.add(year);
+		courseInfo.add(semester);
+		msg.put("Create Course",courseInfo);
+		LoginController.userClient.sendServer(msg); 
+		LoginController.syncWithServer();
+		if((boolean) LoginController.userClient.ans ) return true;
+		return false;
+	}
+
+
+	
 	@FXML
 	void logoutHandler(ActionEvent event) {
 		Parent nextWindow;
