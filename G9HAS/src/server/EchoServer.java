@@ -991,14 +991,14 @@ public class EchoServer extends AbstractServer {
 						}
 						catch(SQLException e){
 							System.err.println("course id already defined");
+							break;
 						}
-						//client.sendToClient(ans);//sends the answer to client.
-						client.sendToClient(null);
+						client.sendToClient(true);
 						break;
 						
 					case "check if course exists":
 						ans=(ArrayList<String>) message.get(key);
-						query = "SELECT * FROM Course WHERE id='"+ans.get(1)+"' AND teaching_unit='"+ans.get(2)+"'";
+						query = "SELECT * FROM Course WHERE id='"+ans.get(0)+"' AND teaching_unit='"+ans.get(2)+"'";
 						stmt = conn.createStatement();
 						rs=stmt.executeQuery(query);
 						if(rs.next()) client.sendToClient("exist");
@@ -1642,10 +1642,7 @@ public class EchoServer extends AbstractServer {
 						pstmt.setString(4,ans.get(3));
 						try{
 						pstmt.executeUpdate();
-						}
-						catch(Exception e)
-						{	
-						}
+						}catch(Exception e){};
 						rs = stmt.executeQuery("SELECT * FROM task_of_student_in_course WHERE student_id='"+ans.get(0)+"' AND task_id='"+ans.get(1)+"' AND course_id='"+ans.get(2)+"' AND submission_file='"+ans.get(3)+"'");
 						if(rs.next())
 							client.sendToClient("true");
