@@ -50,7 +50,13 @@ public class DefineCourse extends ActionFixture {
 	}
 
 	public String checkIsCourseAlreadyExist() {
+		if(checkIfThereIsEmptyField().equals("true") || checkWeeklyHours().equals("false") || checkCourseID().equals("false")) return "false";
 		return String.valueOf(SystemManagerController.isCourseAlreadyExist(courseID,courseName,teachingUnit,weeklyHours,year,semester));
+	}
+
+	public String checkDefineCourse() {
+		if(checkIsCourseAlreadyExist().equals("true") || checkIfThereIsEmptyField().equals("true") || checkWeeklyHours().equals("false") || checkCourseID().equals("false")) return "false";
+		return String.valueOf(SystemManagerController.checkDefineCourse(courseID,courseName,teachingUnit,weeklyHours,year,semester));
 	}
 
 	public void startController() {
@@ -58,17 +64,17 @@ public class DefineCourse extends ActionFixture {
 		units.add("10");
 		units.add("20");
 		units.add("30");
-				try {
-					userClient = new UserClient("localhost",5555);
-					HashMap<String,ArrayList<String>> msg = new HashMap<String,ArrayList<String>>();
-					msg.put("getCurrentSemester",null);
-					userClient.sendServer(msg);
-					syncWithServer();
-					if(userClient.ans != null){
-						this.year = String.valueOf(((ArrayList<Integer>)userClient.ans).get(0));
-						this.semester = String.valueOf(((ArrayList<Character>)userClient.ans).get(1)=='A'?1:2);
-					}else return;
-				} catch (Exception e1) {System.err.println("fit start failed");}
+		try {
+			userClient = new UserClient("localhost",5555);
+			HashMap<String,ArrayList<String>> msg = new HashMap<String,ArrayList<String>>();
+			msg.put("getCurrentSemester",null);
+			userClient.sendServer(msg);
+			syncWithServer();
+			if(userClient.ans != null){
+				this.year = String.valueOf(((ArrayList<Integer>)userClient.ans).get(0));
+				this.semester = String.valueOf(((ArrayList<Character>)userClient.ans).get(1)=='A'?1:2);
+			}else return;
+		} catch (Exception e1) {System.err.println("fit start failed");}
 	}
 
 	/**
